@@ -1,0 +1,17 @@
+Package: GeoDE
+Type: Package
+Title: A geometrical Approach to Differential expression and gene-set
+        enrichment
+Version: 1.0
+Date: 2014-06-06
+Author: Neil R. Clark and Avi Ma'ayan
+Maintainer: Neil Clark <neil.clark@mssm.edu>
+Description: Given expression data this package calculate a multivariate
+    geometrical characterization of the differential expression and can also
+    perform gene-set enrichment.
+License: GPL-2
+Depends: R (>= 2.10), Matrix, MASS
+Packaged: 2014-07-30 21:26:23 UTC; Neil Clark
+NeedsCompilation: no
+Repository: CRAN
+Date/Publication: 2014-07-31 07:17:53
