@@ -148,7 +148,7 @@ chdirSig <- function(data,sampleclass,gammas=list(1.0),nnull=10,CalculateSig=FAL
   # Map back to the full expression space
   
   
-  b <- lapply(ShrunkMats, function(x) matrix(V%*%x%*%t(V)%*%meanvec,dimnames=list(c(as.list(as.character(data[[1]]))), 1)))
+  b <- lapply(ShrunkMats, function(x) matrix(V %*% {x %*% {t(V) %*% meanvec}}, dimnames=list(c(as.list(as.character(data[[1]]))), 1)))
   
   # Normalize the characteristic directions
   
