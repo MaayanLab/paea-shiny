@@ -148,7 +148,7 @@ chdirSig <- function(data,sampleclass,gammas=list(1.0),nnull=10,CalculateSig=FAL
   # Map back to the full expression space
   
   
-  b <- lapply(ShrunkMats, function(x) matrix(V %*% {x %*% {t(V) %*% meanvec}}, dimnames=list(c(as.list(as.character(data[[1]]))), 1)))
+  b <- lapply(ShrunkMats, function(x) matrix(V %*% (x %*% (t(V) %*% meanvec)), dimnames=list(c(as.list(as.character(data[[1]]))), 1)))
   
   # Normalize the characteristic directions
   
@@ -208,7 +208,7 @@ chdirSig <- function(data,sampleclass,gammas=list(1.0),nnull=10,CalculateSig=FAL
           
             
             sm <- solve(x*Dd + sigma*(1-x)*diag(keepPC))        
-            bn <-  matrix(V %*% {sm %*% {t(V) %*% as.numeric(mv%*%t(V))}},dimnames=list(c(as.list(as.character(data[[1]]))), 1))
+            bn <-  matrix(V %*% (sm %*% (t(V) %*% as.numeric(mv%*%t(V)))), dimnames=list(c(as.list(as.character(data[[1]]))), 1))
             bn <- bn/sqrt(sum(bn^2))
             bn<-bn^2
             bn<-sort(bn,decreasing=TRUE)
