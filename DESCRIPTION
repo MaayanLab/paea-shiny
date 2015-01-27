@@ -1,0 +1,17 @@
+Package: nasbMicrotaskViewerHelpers
+Type: Package
+Title: Helpers
+Version: 1.0
+Date: 2015-01-27
+Author: Maciej Szymkiewicz
+Maintainer: Maciej Szymkiewicz <matthew.szymkiewicz@gmail.com>
+Description:  NASB 2015 microtask viewer helper functions
+License: AGPL-3
+Depends: data.table
+Imports: Rcpp (>= 0.11.4),
+    dplyr,
+    tidyr,
+    httr,
+    stringi,
+    data.table
+Suggests: testthat
