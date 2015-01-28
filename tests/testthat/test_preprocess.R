@@ -45,3 +45,11 @@ testthat::test_that('Test extract_genes', {
     testthat::expect_equal(nrow(filter(genes_table, category == 'downregulated')), length(downregulated))
 })
 
+
+testthat::test_that('Test extract_description', {
+    data(example_data)
+    example_data <- preprocess_data(example_data)
+    testthat::expect_equal(nrow(extract_description(example_data)), nrow(example_data))
+    testthat::expect_equal(extract_description(example_data)$gene, example_data$gene)
+    testthat::expect_equal(extract_description(example_data)$id, example_data$id)
+})

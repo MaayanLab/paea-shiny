@@ -6,6 +6,7 @@ library(data.table)
 
 url <- 'https://localhost/microtask.csv'
 
+
 #' Download microtask dataset and 
 #'
 #' @param url character
@@ -19,6 +20,7 @@ download_data <- function(url) {
     close(con)
     df
 }
+
 
 #' Convert do tbl_dt, add names, and clean strings
 #'
@@ -42,6 +44,7 @@ preprocess_data <- function(df) {
     mutate(gene = factor(stri_trim_both(as.character(gene))))
 }
 
+
 #' Create tidy table with sample ids
 #'
 #' @param df tbl_df as returned from preprocess_data
@@ -57,7 +60,6 @@ extract_samples <- function(df) {
         stri_split_fixed(df$samples, ',')
     )))) %>% rename(id=V1, group=V2, sample=V3)
 }
-
 
 
 #' Create tidy table with gene ids and optional chdir coefficients
@@ -86,4 +88,13 @@ extract_genes <- function(df) {
     mutate(gene = stri_extract_first_regex(V3, '([^\t,]+)')) %>%
     mutate(chdir = stri_extract_first_regex(V3, '(?<=\t|,)([0-9\\.]+)$')) %>%
     select(id, category, gene, chdir)
+}
+
+
+#' Extract general information about the dataset
+#' 
+#' @param df tbl_df as returned from preprocess_data
+#' @return tbl_df with columns: id, geo_accession, gene, perturbation, species, tissue_cell_line
+extract_description <- function(df) {
+    df %>% select(id, geo_accession, gene, perturbation, species, tissue_cell_line)
 }
