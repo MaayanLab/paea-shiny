@@ -14,7 +14,7 @@ testthat::test_that('Test preprocess_data', {
 })
 
 
-testthat::test_that('extract_samples', {
+testthat::test_that('Test extract_samples', {
     data(example_data)
     example_data <- preprocess_data(example_data)
     samples_table <- extract_samples(example_data)
@@ -56,3 +56,19 @@ testthat::test_that('Test extract_description', {
     testthat::expect_equal(extract_description(example_data)$id, example_data$id)
     testthat::expect_equal(extract_description(example_data)$geo_accession, example_data$geo_accession)
 })
+
+
+testthat::test_that('Test download_data', {
+    # TODO
+    # We don't want't to download data with every test
+    # so either we have to mock httr.GET
+    # or use local server
+})
+
+
+testthat::test_that('Test preprocess', {
+    # TODO
+    # See: Test preprocess for explanations
+})
+
+
