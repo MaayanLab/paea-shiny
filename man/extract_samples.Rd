@@ -10,7 +10,7 @@ extract_samples(df)
 \item{df}{tbl_df as returned from preprocess_data}
 }
 \value{
-tbl_df with 3 columns, id, group and sample
+tbl_df with 3 columns: id, group and sample
 }
 \description{
 Create tidy table with sample ids

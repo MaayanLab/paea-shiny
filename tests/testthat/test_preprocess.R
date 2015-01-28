@@ -1,4 +1,6 @@
 library(testthat)
+library(stringi)
+library(dplyr)
 
 testthat::test_that('Test preprocess_data', {
     data(example_data)
@@ -26,3 +28,17 @@ testthat::test_that('extract_samples', {
         c('GSM1133119', 'GSM1133120', 'GSM1133121', 'GSM1133122', 'GSM1133123')
     )  
 })
+
+testthat::test_that('Test extract_genes', {
+    data(example_data)
+    example_data <- preprocess_data(example_data)
+    genes_table <- extract_genes(example_data)
+    upregulated <- unlist(stri_split_fixed(example_data$upregulated, '\n'))
+    downregulated <- unlist(stri_split_fixed(example_data$downregulated, '\n'))
+    
+    testthat::expect_equal(length(unique(genes_table$id)), length(example_data$id))
+    testthat::expect_equal(dim(filter(genes_table, id == 24, category == 'upregulated'))[1], 140)
+    testthat::expect_equal(nrow(filter(genes_table, category == 'upregulated')), length(upregulated))
+    testthat::expect_equal(nrow(filter(genes_table, category == 'downregulated')), length(downregulated))
+})
+

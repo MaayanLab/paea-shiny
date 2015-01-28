@@ -40,7 +40,7 @@ preprocess_data <- function(df) {
 #' Create tidy table with sample ids
 #'
 #' @param df tbl_df as returned from preprocess_data
-#' @return tbl_df with 3 columns, id, group and sample
+#' @return tbl_df with 3 columns: id, group and sample
 #'
 extract_samples <- function(df) {
     df <- df %>% select(id, control, treatment) %>% 
@@ -51,4 +51,34 @@ extract_samples <- function(df) {
         as.character(df$group),
         stri_split_fixed(df$samples, ',')
     )))) %>% rename(id=V1, group=V2, sample=V3)
+}
+
+
+
+#' Create tidy table with gene ids and optional chdir coefficients
+#'
+#' @param df tbl_df as returned from preprocess_data
+#' @return tbl_df with 4 columns: id, category, gene, chdir
+#'
+extract_genes <- function(df) {
+    split_fields <- function(x) {
+        as.data.frame(do.call(rbind, lapply(
+            stri_split_regex(x, ',|\\s+', omit_empty = TRUE),
+            function(x) if(length(x) == 1) { c(x[1], "") } else x
+        )))
+    }
+    
+    df <- df %>% select(id, upregulated, downregulated) %>%
+        gather('category', 'samples', upregulated:downregulated)
+    
+    tbl_df(as.data.frame(do.call(rbind, mapply(
+        cbind,
+        df$id,
+        as.character(df$category),
+        stri_split_regex(df$samples, '\n', omit_empty = TRUE)
+    )))) %>%
+    rename(id=V1, category=V2) %>%
+    mutate(gene = stri_extract_first_regex(V3, '([^\t,]+)')) %>%
+    mutate(chdir = stri_extract_first_regex(V3, '(?<=\t|,)([0-9\\.]+)$')) %>%
+    select(id, category, gene, chdir)
 }
