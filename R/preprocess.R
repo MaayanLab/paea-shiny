@@ -16,17 +16,17 @@ download_data <- function(url = 'https://localhost/microtask.csv') {
     con <- textConnection(httr::content(r, as="text"))
     df <- read.csv(con, header=FALSE)
     close(con)
-    df
+    as.data.table(df)
 }
 
 
 #' Convert do tbl_dt, add names, and clean strings
 #'
-#' @param df data.frame
+#' @param dt data.table
 #' @return tbl_dt
 #'
-preprocess_data <- function(df) {
-    tbl_dt(df) %>% rename(
+preprocess_data <- function(dt) {
+    tbl_dt(dt) %>% rename(
         geo_accession=V1, control=V2, treatment=V3,
         gene=V4, perturbation=V5, species=V6, tissue_cell_line=V7,
         upregulated=V8, downregulated=V9, user=V10, datetime=V11, id=V12
@@ -44,27 +44,27 @@ preprocess_data <- function(df) {
 
 #' Create tidy table with sample ids
 #'
-#' @param df tbl_df as returned from preprocess_data
-#' @return tbl_df with 3 columns: id, group and sample
+#' @param dt tbl_dt as returned from preprocess_data
+#' @return tbl_dt with 3 columns: id, group and sample
 #'
-extract_samples <- function(df) {
-    df <- df %>% select(id, control, treatment) %>% 
+extract_samples <- function(dt) {
+    dt <- dt %>% select(id, control, treatment) %>% 
         gather('group', 'samples', control:treatment)
-    tbl_df(as.data.frame(do.call(rbind, mapply(
+    tbl_dt(as.data.table(do.call(rbind, mapply(
         cbind,
-        df$id,
-        as.character(df$group),
-        stri_split_fixed(df$samples, ',')
+        dt$id,
+        as.character(dt$group),
+        stri_split_fixed(dt$samples, ',')
     )))) %>% rename(id=V1, group=V2, sample=V3)
 }
 
 
 #' Create tidy table with gene ids and optional chdir coefficients
 #'
-#' @param df tbl_df as returned from preprocess_data
-#' @return tbl_df with 4 columns: id, category, gene, chdir
+#' @param dt tbl_dt as returned from preprocess_data
+#' @return tbl_dt with 4 columns: id, category, gene, chdir
 #'
-extract_genes <- function(df) {
+extract_genes <- function(dt) {
     split_fields <- function(x) {
         as.data.frame(do.call(rbind, lapply(
             stri_split_regex(x, ',|\\s+', omit_empty = TRUE),
@@ -72,14 +72,14 @@ extract_genes <- function(df) {
         )))
     }
     
-    df <- df %>% select(id, upregulated, downregulated) %>%
+    dt <- dt %>% select(id, upregulated, downregulated) %>%
         gather('category', 'samples', upregulated:downregulated)
     
-    tbl_df(as.data.frame(do.call(rbind, mapply(
+    tbl_dt(as.data.table(do.call(rbind, mapply(
         cbind,
-        df$id,
-        as.character(df$category),
-        stri_split_regex(df$samples, '\n', omit_empty = TRUE)
+        dt$id,
+        as.character(dt$category),
+        stri_split_regex(dt$samples, '\n', omit_empty = TRUE)
     )))) %>%
     rename(id=V1, category=V2) %>%
     mutate(gene = stri_extract_first_regex(V3, '([^\t,]+)')) %>%
@@ -90,8 +90,8 @@ extract_genes <- function(df) {
 
 #' Extract general information about the dataset
 #' 
-#' @param df tbl_df as returned from preprocess_data
-#' @return tbl_df with columns: id, geo_accession, gene, perturbation, species, tissue_cell_line
-extract_description <- function(df) {
-    df %>% select(id, geo_accession, gene, perturbation, species, tissue_cell_line)
+#' @param dt tbl_dt as returned from preprocess_data
+#' @return tbl_dt with columns: id, geo_accession, gene, perturbation, species, tissue_cell_line
+extract_description <- function(dt) {
+    dt %>% select(id, geo_accession, gene, perturbation, species, tissue_cell_line)
 }
