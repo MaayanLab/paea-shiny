@@ -4,13 +4,13 @@
 \alias{extract_genes}
 \title{Create tidy table with gene ids and optional chdir coefficients}
 \usage{
-extract_genes(df)
+extract_genes(dt)
 }
 \arguments{
-\item{df}{tbl_df as returned from preprocess_data}
+\item{dt}{tbl_dt as returned from preprocess_data}
 }
 \value{
-tbl_df with 4 columns: id, category, gene, chdir
+tbl_dt with 4 columns: id, category, gene, chdir
 }
 \description{
 Create tidy table with gene ids and optional chdir coefficients

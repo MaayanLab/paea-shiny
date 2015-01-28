@@ -4,13 +4,13 @@
 \alias{extract_description}
 \title{Extract general information about the dataset}
 \usage{
-extract_description(df)
+extract_description(dt)
 }
 \arguments{
-\item{df}{tbl_df as returned from preprocess_data}
+\item{dt}{tbl_dt as returned from preprocess_data}
 }
 \value{
-tbl_df with columns: id, geo_accession, gene, perturbation, species, tissue_cell_line
+tbl_dt with columns: id, geo_accession, gene, perturbation, species, tissue_cell_line
 }
 \description{
 Extract general information about the dataset

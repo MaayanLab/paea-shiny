@@ -4,13 +4,13 @@
 \alias{extract_samples}
 \title{Create tidy table with sample ids}
 \usage{
-extract_samples(df)
+extract_samples(dt)
 }
 \arguments{
-\item{df}{tbl_df as returned from preprocess_data}
+\item{dt}{tbl_dt as returned from preprocess_data}
 }
 \value{
-tbl_df with 3 columns: id, group and sample
+tbl_dt with 3 columns: id, group and sample
 }
 \description{
 Create tidy table with sample ids
