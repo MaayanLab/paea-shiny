@@ -8,7 +8,9 @@ Maintainer: Maciej Szymkiewicz <matthew.szymkiewicz@gmail.com>
 Description:  NASB 2015 microtask viewer helper functions
 License: AGPL-3
 Depends: data.table,
-    tidyr
+    tidyr,
+    dplyr,
+    stringi
 Imports: Rcpp (>= 0.11.4),
     dplyr,
     tidyr,
