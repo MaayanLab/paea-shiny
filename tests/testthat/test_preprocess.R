@@ -13,6 +13,7 @@ testthat::test_that('Test preprocess_data', {
     testthat::expect_false(any(grepl('&Acirc;&nbsp;', preprocess_data(example_data)$control)))
 })
 
+
 testthat::test_that('extract_samples', {
     data(example_data)
     example_data <- preprocess_data(example_data)
@@ -31,6 +32,7 @@ testthat::test_that('extract_samples', {
         c('GSM1133119', 'GSM1133120', 'GSM1133121', 'GSM1133122', 'GSM1133123')
     )  
 })
+
 
 testthat::test_that('Test extract_genes', {
     data(example_data)
@@ -52,4 +54,5 @@ testthat::test_that('Test extract_description', {
     testthat::expect_equal(nrow(extract_description(example_data)), nrow(example_data))
     testthat::expect_equal(extract_description(example_data)$gene, example_data$gene)
     testthat::expect_equal(extract_description(example_data)$id, example_data$id)
+    testthat::expect_equal(extract_description(example_data)$geo_accession, example_data$geo_accession)
 })

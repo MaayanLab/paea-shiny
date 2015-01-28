@@ -4,7 +4,7 @@
 \alias{download_data}
 \title{Download microtask dataset and}
 \usage{
-download_data(url)
+download_data(url = "https://localhost/microtask.csv")
 }
 \arguments{
 \item{url}{character}

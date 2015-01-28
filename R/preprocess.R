@@ -4,15 +4,13 @@ library(httr)
 library(stringi)
 library(data.table)
 
-url <- 'https://localhost/microtask.csv'
-
 
 #' Download microtask dataset and 
 #'
 #' @param url character
 #' @return data.frame
 #'
-download_data <- function(url) {
+download_data <- function(url = 'https://localhost/microtask.csv') {
     r <- httr::GET(url)
     if (r$status_code != 200) stop()
     con <- textConnection(httr::content(r, as="text"))
