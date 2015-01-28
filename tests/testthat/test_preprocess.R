@@ -5,7 +5,10 @@ library(dplyr)
 testthat::test_that('Test preprocess_data', {
     data(example_data)
     testthat::expect_equal(dim(preprocess_data(example_data)), dim(example_data))
-    testthat::expect_equal(preprocess_data(example_data)$geo_accession, example_data$V1)
+    testthat::expect_equal(
+        preprocess_data(example_data)$geo_accession,
+        factor(unlist(stri_replace_all_fixed(stri_trim_both(example_data$V1), '[ACCN]', '')))
+    )
     testthat::expect_equal(preprocess_data(example_data)$id, example_data$V12)
     testthat::expect_false(any(grepl('&Acirc;&nbsp;', preprocess_data(example_data)$control)))
 })

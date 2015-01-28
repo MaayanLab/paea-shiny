@@ -28,13 +28,18 @@ download_data <- function(url) {
 preprocess_data <- function(df) {
     clean_stri <- function(x) stri_replace_all_fixed(x, '&Acirc;&nbsp;', '')
     
-    df <- tbl_dt(df) %>% rename(
+    tbl_dt(df) %>% rename(
         geo_accession=V1, control=V2, treatment=V3,
         gene=V4, perturbation=V5, species=V6, tissue_cell_line=V7,
         upregulated=V8, downregulated=V9, user=V10, datetime=V11, id=V12
-    ) %>% mutate_each(funs(clean_stri), control:treatment)
-    
-    df
+    ) %>% 
+    # Remove weird characters    
+    mutate_each(funs(clean_stri), control:treatment) %>%
+    # Remove [ACCN]
+    mutate(geo_accession = factor(
+        stri_trim_both(stri_replace_all_fixed(geo_accession, '[ACCN]', '')))) %>%
+    # Strip whitespaces
+    mutate(gene = factor(stri_trim_both(as.character(gene))))
 }
 
 #' Create tidy table with sample ids
