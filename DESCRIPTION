@@ -6,7 +6,7 @@ Date: 2015-01-27
 Author: Maciej Szymkiewicz
 Maintainer: Maciej Szymkiewicz <matthew.szymkiewicz@gmail.com>
 Description:  NASB 2015 microtask viewer helper functions
-License: AGPL-3
+License: MIT
 Depends: data.table,
     tidyr,
     dplyr,
