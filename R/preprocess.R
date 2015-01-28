@@ -95,3 +95,19 @@ extract_genes <- function(dt) {
 extract_description <- function(dt) {
     dt %>% select(id, geo_accession, gene, perturbation, species, tissue_cell_line)
 }
+
+
+#' Download dataset and extract relevant data
+#' 
+#' @param url 
+#' @return list with description, genes and samples dt
+#'
+preprocess <- function(
+    url='https://localhost/microtask.csv') {
+    dt <- preprocess_data(download_data())
+    list(
+        description = extract_description(dt),
+        genes = extract_genes(dt),
+        samples = extract_samples(dt)
+    )
+}
