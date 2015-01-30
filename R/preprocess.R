@@ -111,3 +111,16 @@ preprocess <- function(
         samples = extract_samples(dt)
     )
 }
+
+
+#' Take genes table and prepare list of the gene sets
+#' 
+#' @param genes tbl_dt
+#' @return list of the character vectors
+#'
+prepare_gene_sets <- function(genes) {
+    genes_grouped <- genes %>% group_by(id, category) %>%
+        summarise(genes=list(gene)) %>%
+        mutate(id_cat = stri_join(id, category, sep="_"))
+    mapply(c, genes_grouped$id_cat, genes_grouped$genes)
+}

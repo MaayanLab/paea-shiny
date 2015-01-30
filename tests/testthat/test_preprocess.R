@@ -58,6 +58,24 @@ testthat::test_that('Test extract_description', {
 })
 
 
+testthat::test_that('Test prepare_gene_sets ', {
+    data(example_data)
+    example_data <- preprocess_data(example_data)
+    genes_table <- extract_genes(example_data)
+    gene_sets <- prepare_gene_sets(genes_table)
+    
+    testthat::expect_equal(
+        length(gene_sets),
+        nrow(genes_table %>% select(id, category) %>% unique)
+    )
+    
+    testthat::expect_equal(
+        gene_sets[[1]][1:6],
+        c('24_upregulated', 'TMEM59L', 'G0S2' , 'SPAG4', 'IL15RA', 'ACSM3')
+    )
+})
+
+
 testthat::test_that('Test download_data', {
     # TODO
     # We don't want't to download data with every test
