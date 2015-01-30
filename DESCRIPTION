@@ -10,11 +10,13 @@ License: MIT
 Depends: data.table,
     tidyr,
     dplyr,
-    stringi
+    stringi,
+    ggvis
 Imports: Rcpp (>= 0.11.4),
     dplyr,
     tidyr,
     httr,
     stringi,
-    data.table
+    data.table,
+    ggvis
 Suggests: testthat
