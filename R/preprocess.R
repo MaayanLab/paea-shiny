@@ -104,7 +104,7 @@ extract_description <- function(dt) {
 #'
 preprocess <- function(
     url='https://localhost/microtask.csv') {
-    dt <- preprocess_data(download_data())
+    dt <- preprocess_data(download_data(url))
     list(
         description = extract_description(dt),
         genes = extract_genes(dt),
