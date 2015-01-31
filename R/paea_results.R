@@ -14,5 +14,5 @@ prepare_paea_results <- function(paea_pvalues, data_description) {
         tidyr::separate(set, into=c('id', 'category'), sep='_') %>% 
         mutate(id=as.numeric(id)) %>%
         left_join(data_description) %>%
-        select(geo_accession,  gene, perturbation, species, category, neg_log_pval)
+        select(id, geo_accession,  gene, perturbation, species, category, neg_log_pval)
 }
