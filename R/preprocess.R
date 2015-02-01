@@ -102,8 +102,7 @@ extract_description <- function(dt) {
 #' @param url 
 #' @return list with description, genes and samples dt
 #'
-preprocess <- function(
-    url='https://localhost/microtask.csv') {
+preprocess <- function(url='https://localhost/microtask.csv') {
     dt <- preprocess_data(download_data(url))
     list(
         description = extract_description(dt),
