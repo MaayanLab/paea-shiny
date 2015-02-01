@@ -4,8 +4,7 @@
 \alias{preprocess}
 \title{Download dataset and extract relevant data}
 \usage{
-
-  preprocess(url = "https://localhost/microtask.csv")
+preprocess(url = "https://localhost/microtask.csv")
 }
 \arguments{
 \item{url}{}
