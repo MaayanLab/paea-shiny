@@ -1,4 +1,5 @@
 library(ggvis)
+library(dplyr)
 
 #' Prepare chdir results for plotting
 #' @param results numeric vector extracted from pchdir results
@@ -15,6 +16,23 @@ prepare_results <- function(results, n=40) {
         v = results
     )
 }
+
+#' Extract downregulated genes from results
+#' @param results numeric vector extracted from pchdir results
+#' @return data.frame
+#'
+prepare_down_genes <- function(results) {
+    prepare_results(results, length(results)) %>% filter(v < 0)
+}
+
+#' Extract upregulated genes from results
+#' @param results numeric vector extracted from pchdir results
+#' @return data.frame
+#'
+prepare_up_genes <- function(results) {
+    prepare_results(results, length(results)) %>% filter(v > 0)
+}
+
 
 #' Plot top genes from chdirAnalysis
 #' @param results data frame returned from prepare_results 
