@@ -11,9 +11,9 @@ chdir_analysis_wrapper(datain, sampleclass, gamma, nnull)
 
 \item{sampleclass}{}
 
-\item{gamma}{}
-
 \item{nnull}{}
+
+\item{gammas}{}
 }
 \description{
 chdirAnalysis wrapper. Redirects plots to /dev/null and handles data aggregation

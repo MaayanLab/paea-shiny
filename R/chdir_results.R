@@ -58,7 +58,7 @@ plot_top_genes <- function(results) {
 #'
 #' @param datain
 #' @param sampleclass
-#' @param gamma
+#' @param gammas
 #' @param nnull
 #'
 chdir_analysis_wrapper <- function(datain, sampleclass, gamma, nnull) {
