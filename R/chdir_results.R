@@ -52,3 +52,27 @@ plot_top_genes <- function(results) {
         add_axis('y', grid=FALSE, title = 'Coefficient') %>%
         add_axis('x', grid=FALSE, offset = 10, title = '', properties = properties)
 }
+
+
+#' chdirAnalysis wrapper. Redirects plots to /dev/null and handles data aggregation
+#'
+#' @param datain
+#' @param sampleclass
+#' @param gamma
+#' @param nnull
+#'
+chdir_analysis_wrapper <- function(datain, sampleclass, gamma, nnull) {
+    datain <- datain %>% group_by_(as.symbol(colnames(datain)[1])) %>% summarise_each(funs(mean))
+    png('/dev/null')
+    chdir <- GeoDE::chdirAnalysis(
+        # Group by gene label and compute mean
+        datain,
+        sampleclass=sampleclass,
+        CalculateSig=TRUE,
+        gammas=gamma,
+        nnull=nnull
+    )
+    dev.off()
+    chdir
+}
+

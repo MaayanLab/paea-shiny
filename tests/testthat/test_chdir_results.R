@@ -30,3 +30,31 @@ testthat::test_that('Test prepare_down_genes and prepare_up_genes ', {
     testthat::expect_equal(nrow(prepare_up_genes(results)), 5)
     testthat::expect_true(all(prepare_up_genes(results)$v > 0))
 })
+
+testthat::test_that('Test chdir_analysis_wrapper', {
+    set.seed(323)
+    datain <- data.frame(stri_rand_strings(100, 20), replicate(6, rlnorm(100)))
+    colnames(datain) <- c('genes', 'c1', 'c2', 'c3', 't1', 't2', 't3')
+    sampleclass <- structure(c(1L, 1L, 1L, 2L, 2L, 2L), .Label = c("1", "2"), class = "factor")
+    gammas <- list(1)
+
+    testthat::expect_equal(
+        {
+            set.seed(323)
+            png('/dev/null')
+            chdir <- GeoDE::chdirAnalysis(
+                datain[order(datain$genes), ],
+                sampleclass, gammas, CalculateSig=TRUE, nnull=5
+            )
+            dev.off()
+            chdir 
+        },
+        {
+            set.seed(323)
+            chdir_analysis_wrapper(datain, sampleclass, gammas, 5)
+        }
+    )
+    
+})
+
+
