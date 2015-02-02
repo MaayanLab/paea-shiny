@@ -27,7 +27,7 @@ prepare_paea_results <- function(paea_pvalues, data_description) {
 
 paea_analysis_wrapper <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
     png('/dev/null')
-    paea <- GeoDE::PAEAAnalysis(chdirresults, gmtfile, gammas, casesensitive, casesensitive)
+    paea <- GeoDE::PAEAAnalysis(chdirresults, gmtfile, gammas, casesensitive, casesensitive, showprogress=TRUE)
     dev.off()
     paea
 }
