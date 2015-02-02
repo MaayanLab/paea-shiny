@@ -25,5 +25,8 @@ testthat::test_that('Test prepare_down_genes and prepare_up_genes ', {
         .Names = c("MCL1", "LIMD2", "RPL27", "MRPS18A", "TBL1X", "SOD1", "DPP4", "NOX4", "POLR2I", "ZDHHC20")
     )
     testthat::expect_equal(nrow(prepare_down_genes(results)), 5)
+    testthat::expect_true(all(prepare_down_genes(results)$v < 0))
+    
     testthat::expect_equal(nrow(prepare_up_genes(results)), 5)
+    testthat::expect_true(all(prepare_up_genes(results)$v > 0))
 })
