@@ -13,6 +13,7 @@ Depends: data.table,
     stringi,
     ggvis
 Imports: Rcpp (>= 0.11.4),
+    GeoDE,
     dplyr,
     tidyr,
     httr,
