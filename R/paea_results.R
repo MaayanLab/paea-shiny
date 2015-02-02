@@ -16,3 +16,18 @@ prepare_paea_results <- function(paea_pvalues, data_description) {
         left_join(data_description, by='id') %>%
         select(id, geo_accession,  gene, perturbation, species, category, neg_log_pval)
 }
+
+#' PAEAAnalysis wrapper. Redirects plots to /dev/null 
+#'
+#' @param chdirprops
+#' @param gmt
+#' @param gammas
+#' @param casesensitive
+#'
+
+paea_analysis_wrapper <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
+    png('/dev/null')
+    paea <- GeoDE::PAEAAnalysis(chdirresults, gmtfile, gammas, casesensitive, casesensitive)
+    dev.off()
+    paea
+}
