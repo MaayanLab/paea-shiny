@@ -40,17 +40,22 @@ prepare_up_genes <- function(results) {
 #'
 plot_top_genes <- function(results) {
 
-    properties <- axis_props(
+    properties_x <- axis_props(
         axis=list(stroke=NULL), 
         ticks = list(stroke = NULL),
-        labels=list(angle=-90, fontSize = 10, align='right' )
+        labels=list(angle=-90, fontSize = 12, align='right'),
+        title=list(fontSize=14, dx=-35)
+    )
+    
+    properties_y <- axis_props(
+        labels=list(fontSize=12), title=list(fontSize=14, dy=-35)
     )
     
     ggvis(results, ~g, ~v) %>% 
         ggvis::layer_bars(width = 0.75) %>%
         scale_numeric('y', domain = c(min(results$v), max(results$v))) %>%
-        add_axis('y', grid=FALSE, title = 'Coefficient') %>%
-        add_axis('x', grid=FALSE, offset = 10, title = '', properties = properties)
+        add_axis('y', grid=FALSE, title = 'Coefficient', properties = properties_y) %>%
+        add_axis('x', grid=FALSE, offset = 10, title = '', properties = properties_x)
 }
 
 
