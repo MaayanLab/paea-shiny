@@ -4,15 +4,15 @@ library(dplyr)
 
 #' Create density plots for input data
 #' 
-#' @param indata data.frame with genenames in first columns and samples in following
+#' @param datain data.frame with genenames in first columns and samples in following
 #' @return ggvis
 #'
-plot_density <- function(indata) {
+plot_density <- function(datain) {
     # Rename first column to identifier
-    indata %>% rename_(identifier = as.symbol(colnames(indata)[1])) %>%
+    d <- datain  %>% rename_(identifier = as.symbol(colnames(datain)[1])) %>%
     # Convert to long
-    gather(sample, value, -identifier) %>% 
+    gather(sample, value, -identifier)
     # Create plot
-    ggvis(~value) %>% group_by(sample) %>% 
+    d %>% ggvis(~value) %>% group_by(sample) %>% 
     layer_densities(stroke = ~sample, fill := NA)
 }
