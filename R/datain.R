@@ -1,6 +1,5 @@
 library(ggvis)
 library(tidyr)
-library(dplyr)
 
 #' Create density plots for input data
 #' 
@@ -12,7 +11,9 @@ plot_density <- function(datain) {
     datain  %>% rename_(identifier = as.symbol(colnames(datain)[1])) %>%
     # Convert to long
     gather(sample, value, -identifier) %>%
+    # Ugly and slow but works for now    
+    as.data.frame() %>%
     # Create plot 
-    ggvis(~value) %>% group_by(sample) %>% 
+    ggvis(~value) %>% group_by(sample) %>%
     layer_densities(stroke = ~sample, fill := NA)
 }
