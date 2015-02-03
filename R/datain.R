@@ -9,10 +9,10 @@ library(dplyr)
 #'
 plot_density <- function(datain) {
     # Rename first column to identifier
-    d <- datain  %>% rename_(identifier = as.symbol(colnames(datain)[1])) %>%
+    datain  %>% rename_(identifier = as.symbol(colnames(datain)[1])) %>%
     # Convert to long
-    gather(sample, value, -identifier)
-    # Create plot
-    d %>% ggvis(~value) %>% group_by(sample) %>% 
+    gather(sample, value, -identifier) %>%
+    # Create plot 
+    ggvis(~value) %>% group_by(sample) %>% 
     layer_densities(stroke = ~sample, fill := NA)
 }
