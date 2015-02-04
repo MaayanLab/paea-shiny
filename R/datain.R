@@ -31,7 +31,7 @@ plot_density <- function(datain) {
 #' @return list with logical field valid, may change in the future
 #'
 datain_is_valid <- function(datain) {
-    result <- list(valid=TRUE, messages=NULL)
+    result <- list(valid=TRUE, message=NULL)
     if(is.null(datain)) {
         result$valid <- FALSE
         result$message <- 'datain is null'
