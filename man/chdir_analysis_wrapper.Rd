@@ -7,13 +7,13 @@
 chdir_analysis_wrapper(datain, sampleclass, gamma, nnull)
 }
 \arguments{
-\item{datain}{}
+\item{datain}{see GeoDE::chdirAnalysis}
 
-\item{sampleclass}{}
+\item{sampleclass}{see GeoDE::chdirAnalysis}
 
-\item{nnull}{}
+\item{nnull}{see GeoDE::chdirAnalysis}
 
-\item{gammas}{}
+\item{gammas}{see GeoDE::chdirAnalysis}
 }
 \description{
 chdirAnalysis wrapper. Redirects plots to /dev/null and handles data aggregation

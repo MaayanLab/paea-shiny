@@ -61,10 +61,10 @@ plot_top_genes <- function(results) {
 
 #' chdirAnalysis wrapper. Redirects plots to /dev/null and handles data aggregation
 #'
-#' @param datain
-#' @param sampleclass
-#' @param gammas
-#' @param nnull
+#' @param datain see GeoDE::chdirAnalysis
+#' @param sampleclass see GeoDE::chdirAnalysis
+#' @param gammas see GeoDE::chdirAnalysis
+#' @param nnull see GeoDE::chdirAnalysis
 #'
 chdir_analysis_wrapper <- function(datain, sampleclass, gamma, nnull) {
     datain <- datain %>% group_by_(as.symbol(colnames(datain)[1])) %>% summarise_each(funs(mean))
