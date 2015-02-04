@@ -42,6 +42,7 @@ datain_is_valid <- function(datain) {
         result$valid <- FALSE
         result$message <- 'not enough columns'
     } else {
+        # Not pretty but should handle all flavours of data.frames 
         if(any(lapply(datain %>% select_(.dots=colnames(datain)[-1]), class) != 'numeric')) {
             result$valid <- FALSE
             result$message <- 'not numeric'
