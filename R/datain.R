@@ -46,11 +46,16 @@ datain_is_valid <- function(datain) {
         if(any(lapply(datain %>% select_(.dots=colnames(datain)[-1]), class) != 'numeric')) {
             result$valid <- FALSE
             result$message <- 'not numeric'
-        }
-        if(any(datain %>% select_(.dots=colnames(datain)[-1]) < 0)) {
+        } else if(any(datain %>% select_(.dots=colnames(datain)[-1]) < 0)) {
             result$valid <- FALSE
             result$message <- 'negative values'
         }
     }
     result
 }
+
+
+dt <- as.data.table(read.csv('/tmp/RtmpdUnOzr/fb1bd60a4af7ee268ba9b645/0'))
+
+datain_is_valid(dt)
+
