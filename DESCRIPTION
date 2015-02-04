@@ -7,7 +7,8 @@ Author: Maciej Szymkiewicz
 Maintainer: Maciej Szymkiewicz <matthew.szymkiewicz@gmail.com>
 Description:  NASB 2015 microtask viewer helper functions
 License: MIT
-Depends: data.table,
+Depends: R (>= 2.10),
+    data.table,
     tidyr,
     dplyr,
     stringi,
