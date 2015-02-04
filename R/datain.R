@@ -2,10 +2,11 @@ library(ggvis)
 library(tidyr)
 library(dplyr)
 library(data.table)
+library(preprocessCore)
 
 #' Create density plots for input data
 #' 
-#' @param datain data.frame with genenames in first columns and samples in following
+#' @param datain data.table with genenames in first columns and samples in following
 #' @return ggvis
 #'
 plot_density <- function(datain) {
@@ -54,3 +55,46 @@ datain_is_valid <- function(datain) {
     result
 }
 
+
+#' log2 transform expression data
+#' 
+#' @param datain data.frame
+#' @return data.frame where columns 2:ncol are log2 transformed
+#'
+datain_log2_transform <- function(datain) {
+    data.table(
+        datain %>% select_(1),
+        datain %>% select_(-1) %>% mutate_each(funs(log2))
+    )
+}
+
+
+#' quantile normalize expression data
+#'
+#' @param datain data.frame
+#' @return data.frame where columns 2:ncol are quantile normalized
+#'
+datain_quantile_normalize <- function(datain) {
+    setNames(
+        data.table(
+            datain %>% select_(1),
+            datain %>% select_(-1) %>% as.matrix() %>% normalize.quantiles()
+        ),
+        colnames(datain)
+    )
+}
+
+
+#' Apply preprocesing steps to expression data
+#'
+#' @param datain data.frame 
+#' @param log2_transform logical
+#' @param quantile_normalize logical
+#' @return data.table
+#'
+datain_preprocess <- function(datain, log2_transform=FALSE, quantile_normalize=FALSE) {
+    log2_f <- if(log2_transform) { datain_log2_transform } else { identity }
+    quant_norm_f <- if(quantile_normalize) { datain_quantile_normalize } else { identity }
+    
+    datain %>% log2_f() %>% quant_norm_f()
+}

@@ -20,5 +20,6 @@ Imports: Rcpp (>= 0.11.4),
     httr,
     stringi,
     data.table,
-    ggvis
+    ggvis,
+    preprocessCore
 Suggests: testthat

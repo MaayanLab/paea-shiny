@@ -7,7 +7,7 @@
 plot_density(datain)
 }
 \arguments{
-\item{datain}{data.frame with genenames in first columns and samples in following}
+\item{datain}{data.table with genenames in first columns and samples in following}
 }
 \value{
 ggvis
