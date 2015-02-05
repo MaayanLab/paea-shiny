@@ -78,7 +78,7 @@ datain_quantile_normalize <- function(datain) {
     setNames(
         data.table(
             datain %>% select_(1),
-            datain %>% select_(-1) %>% as.matrix() %>% normalize.quantiles()
+            datain %>% select_(-1) %>% as.matrix() %>% preprocessCore::normalize.quantiles()
         ),
         colnames(datain)
     )
