@@ -46,7 +46,7 @@ datain_is_valid <- function(datain) {
         if(any(lapply(datain %>% select_(-1), class) != 'numeric')) {
             result$valid <- FALSE
             result$message <- 'not numeric'
-        } else if(any(datain %>% select_(-1) < 0)) {
+        } else if(!all(datain %>% select_(-1) >= 0 | datain %>% select_(-1) %>% is.null())) {
             result$valid <- FALSE
             result$message <- 'negative values'
         }
@@ -61,9 +61,10 @@ datain_is_valid <- function(datain) {
 #' @return data.frame where columns 2:ncol are log2 transformed
 #'
 datain_log2_transform <- function(datain) {
+    adjust <- function(x) { x + 1e-21 }
     data.table(
         datain %>% select_(1),
-        datain %>% select_(-1) %>% mutate_each(funs(log2))
+        datain %>% select_(-1) %>% adjust() %>% log2()
     )
 }
 
@@ -102,7 +103,7 @@ datain_preprocess <- function(datain, log2_transform=FALSE, quantile_normalize=F
     log2_f <- if(log2_transform) { datain_log2_transform } else { identity }
     quant_norm_f <- if(quantile_normalize) { datain_quantile_normalize } else { identity }
     
-    datain %>% log2_f() %>% quant_norm_f()
+    datain %>% log2_f() %>% quant_norm_f() %>% na.omit()
 }
 
 
