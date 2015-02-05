@@ -62,9 +62,10 @@ datain_is_valid <- function(datain) {
 #' @return data.frame where columns 2:ncol are log2 transformed
 #'
 datain_log2_transform <- function(datain) {
+    adjust <- function(x) { x + 1e-21 }
     data.table(
         datain %>% select_(1),
-        datain %>% select_(-1) %>% mutate_each(funs(log2))
+        datain %>% select_(-1) %>% adjust() %>% log2()
     )
 }
 
