@@ -73,7 +73,7 @@ datain_log2_transform <- function(datain) {
 #' @param datain data.frame
 #' @return data.frame where columns 2:ncol are quantile normalized
 #'
-datain_quantile_normalize <- function(datain, add_noise=FALSE) {
+datain_quantile_normalize <- function(datain, add_noise=TRUE) {
     add_noise <- if(add_noise) { function(x) x + runif(length(x), 0, 1e-12) } else { identity }
     
     setNames(
