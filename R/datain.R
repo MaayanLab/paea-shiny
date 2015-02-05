@@ -96,5 +96,5 @@ datain_preprocess <- function(datain, log2_transform=FALSE, quantile_normalize=F
     log2_f <- if(log2_transform) { datain_log2_transform } else { identity }
     quant_norm_f <- if(quantile_normalize) { datain_quantile_normalize } else { identity }
     
-    datain %>% log2_f() %>% quant_norm_f()
+    datain %>% log2_f() %>% quant_norm_f() %>% na.omit()
 }
