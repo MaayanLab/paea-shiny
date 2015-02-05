@@ -4,7 +4,7 @@
 \alias{datain_quantile_normalize}
 \title{quantile normalize expression data}
 \usage{
-datain_quantile_normalize(datain, add_noise = FALSE)
+datain_quantile_normalize(datain, add_noise = TRUE)
 }
 \arguments{
 \item{datain}{data.frame}
