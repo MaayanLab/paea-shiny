@@ -2,7 +2,6 @@ library(ggvis)
 library(tidyr)
 library(dplyr)
 library(data.table)
-library(preprocessCore)
 
 #' Create density plots for input data
 #' 
@@ -74,11 +73,18 @@ datain_log2_transform <- function(datain) {
 #' @param datain data.frame
 #' @return data.frame where columns 2:ncol are quantile normalized
 #'
-datain_quantile_normalize <- function(datain) {
+datain_quantile_normalize <- function(datain, add_noise=FALSE) {
+    add_noise <- if(add_noise) { function(x) x + runif(length(x), 0, 1e-12) } else { identity }
+    
     setNames(
         data.table(
             datain %>% select_(1),
-            datain %>% select_(-1) %>% as.matrix() %>% preprocessCore::normalize.quantiles()
+            datain %>% select_(-1) %>% as.matrix() %>%
+            preprocessCore::normalize.quantiles() %>% 
+            # Ugly workaround for issue with GeoDE 
+            # TODO Remove as soon as possible 
+            as.data.frame() %>% 
+            mutate_each(funs(add_noise))
         ),
         colnames(datain)
     )
@@ -98,3 +104,5 @@ datain_preprocess <- function(datain, log2_transform=FALSE, quantile_normalize=F
     
     datain %>% log2_f() %>% quant_norm_f()
 }
+
+
