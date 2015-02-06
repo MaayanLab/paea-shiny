@@ -120,14 +120,10 @@ chdir_tab <- tabPanel(
                 ),
                 tabPanel(
                     'Upregulated genes',
-                    #TODO style with css
-                    p(),
                     dataTableOutput('chdir_up_genes_table')
                 ),
                 tabPanel(
                     'Downregulated genes',
-                    #TODO style with css
-                    p(),
                     dataTableOutput('chdir_down_genes_table')
                 )
             )

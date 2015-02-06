@@ -1,3 +1,7 @@
 .ggvis-output-container {
     margin-bottom: 5%;
 }
+
+.shiny-datatable-output {
+    margin-top: 1%;
+}
