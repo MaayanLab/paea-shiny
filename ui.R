@@ -82,8 +82,8 @@ chdir_tab <- tabPanel(
    
         column(4, wellPanel(
             h3('CHDIR parameters', id='chdir_parameters'),
-            numericInput('chdir_gamma', 'Gamma', 1.0, min = NA, max = NA, step = 1),
-            numericInput('chdir_nnull', 'Nnull', 10, min = 1, max = 1000, step = 1),
+            sliderInput('chdir_gamma', 'Gamma', 1.0, min = 0, max = 1, step = 0.05),
+            sliderInput('chdir_nnull', 'Nnull', 10, min = 2, max = 100, step = 1, round=TRUE),
             uiOutput('random_seed_container'),
             checkboxInput('set_random_seed', "Set RNG seed manually", FALSE),
             helpText(paste(
