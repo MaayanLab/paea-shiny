@@ -144,7 +144,8 @@ paea_tab <- tabPanel(
         column(12, p('')),
         column(6, wellPanel(
             h3('PAEA parameters', id='paea_parameters'),
-            checkboxInput('paea_casesensitive', "Casesensitive", FALSE),
+            checkboxInput('paea_casesensitive', 'Case Sensitive', FALSE),
+            helpText('Check if you want gene lables comparisons should be case sensitive. Not recommended.'),
             uiOutput('run_paea_container')
         )),
         column(6, wellPanel(
