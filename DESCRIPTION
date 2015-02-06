@@ -9,17 +9,12 @@ Description:  NASB 2015 microtask viewer helper functions
 License: MIT
 Depends: R (>= 2.10),
     data.table,
-    tidyr,
-    dplyr,
-    stringi,
     ggvis
 Imports: Rcpp (>= 0.11.4),
     GeoDE,
-    dplyr,
-    tidyr,
     httr,
+    tidyr,
+    dplyr,
     stringi,
-    data.table,
-    ggvis,
     preprocessCore
 Suggests: testthat

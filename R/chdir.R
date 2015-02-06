@@ -1,6 +1,3 @@
-library(ggvis)
-library(dplyr)
-
 #' Prepare chdir results for plotting
 #' @param results numeric vector extracted from pchdir results
 #' @param n numeric max number of genes to keep
@@ -22,7 +19,7 @@ prepare_results <- function(results, n=40) {
 #' @return data.frame
 #'
 prepare_down_genes <- function(results) {
-    prepare_results(results, length(results)) %>% filter(v < 0)
+    prepare_results(results, length(results)) %>% dplyr::filter(v < 0)
 }
 
 #' Extract upregulated genes from results
@@ -30,7 +27,7 @@ prepare_down_genes <- function(results) {
 #' @return data.frame
 #'
 prepare_up_genes <- function(results) {
-    prepare_results(results, length(results)) %>% filter(v > 0)
+    prepare_results(results, length(results)) %>% dplyr::filter(v > 0)
 }
 
 
@@ -40,22 +37,22 @@ prepare_up_genes <- function(results) {
 #'
 plot_top_genes <- function(results) {
 
-    properties_x <- axis_props(
+    properties_x <- ggvis::axis_props(
         axis=list(stroke=NULL), 
         ticks = list(stroke = NULL),
         labels=list(angle=-90, fontSize = 12, align='right'),
         title=list(fontSize=14, dx=-35)
     )
     
-    properties_y <- axis_props(
+    properties_y <- ggvis::axis_props(
         labels=list(fontSize=12), title=list(fontSize=14, dy=-35)
     )
     
     ggvis(results, ~g, ~v) %>% 
         ggvis::layer_bars(width = 0.75) %>%
-        scale_numeric('y', domain = c(min(results$v), max(results$v))) %>%
-        add_axis('y', grid=FALSE, title = 'Coefficient', properties = properties_y) %>%
-        add_axis('x', grid=FALSE, offset = 10, title = '', properties = properties_x)
+        ggvis::scale_numeric('y', domain = c(min(results$v), max(results$v))) %>%
+        ggvis::add_axis('y', grid=FALSE, title = 'Coefficient', properties = properties_y) %>%
+        ggvis::add_axis('x', grid=FALSE, offset = 10, title = '', properties = properties_x)
 }
 
 
@@ -67,7 +64,10 @@ plot_top_genes <- function(results) {
 #' @param nnull see GeoDE::chdirAnalysis
 #'
 chdir_analysis_wrapper <- function(datain, sampleclass, gamma, nnull) {
-    datain <- datain %>% group_by_(as.symbol(colnames(datain)[1])) %>% summarise_each(funs(mean))
+    datain <- datain %>%
+        dplyr::group_by_(as.symbol(colnames(datain)[1])) %>%
+        dplyr::summarise_each(dplyr::funs(mean))
+        
     png('/dev/null')
     chdir <- GeoDE::chdirAnalysis(
         # Group by gene label and compute mean

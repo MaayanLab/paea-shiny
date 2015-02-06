@@ -1,10 +1,3 @@
-library(dplyr)
-library(tidyr)
-library(httr)
-library(stringi)
-library(data.table)
-
-
 #' Download microtask dataset and 
 #'
 #' @param url character
@@ -26,19 +19,19 @@ download_data <- function(url = 'https://localhost/microtask.csv') {
 #' @return tbl_dt
 #'
 preprocess_data <- function(dt) {
-    tbl_dt(dt) %>% rename(
+    dplyr::tbl_dt(dt) %>% dplyr::rename(
         geo_accession=V1, control=V2, treatment=V3,
         gene=V4, perturbation=V5, species=V6, tissue_cell_line=V7,
         upregulated=V8, downregulated=V9, user=V10, datetime=V11, id=V12
     ) %>% 
     # Remove weird characters    
-    mutate(control = stri_replace_all_fixed(control, '&Acirc;&nbsp;', '')) %>% 
-    mutate(treatment = stri_replace_all_fixed(treatment, '&Acirc;&nbsp;', '')) %>%
+    dplyr::mutate(control = stringi::stri_replace_all_fixed(control, '&Acirc;&nbsp;', '')) %>% 
+    dplyr::mutate(treatment = stringi::stri_replace_all_fixed(treatment, '&Acirc;&nbsp;', '')) %>%
     # Remove [ACCN]
-    mutate(geo_accession = factor(
-        stri_trim_both(stri_replace_all_fixed(geo_accession, '[ACCN]', '')))) %>%
+    dplyr::mutate(geo_accession = factor(
+        stringi::stri_trim_both(stringi::stri_replace_all_fixed(geo_accession, '[ACCN]', '')))) %>%
     # Strip whitespaces
-    mutate(gene = factor(stri_trim_both(as.character(gene))))
+    dplyr::mutate(gene = factor(stringi::stri_trim_both(as.character(gene))))
 }
 
 
@@ -48,14 +41,14 @@ preprocess_data <- function(dt) {
 #' @return tbl_dt with 3 columns: id, group and sample
 #'
 extract_samples <- function(dt) {
-    dt <- dt %>% select(id, control, treatment) %>% 
-        gather('group', 'samples', control:treatment)
-    tbl_dt(as.data.table(do.call(rbind, mapply(
+    dt <- dt %>% dplyr::select(id, control, treatment) %>% 
+        tidyr::gather('group', 'samples', control:treatment)
+    dplyr::tbl_dt(as.data.table(do.call(rbind, mapply(
         cbind,
         dt$id,
         as.character(dt$group),
-        stri_split_fixed(dt$samples, ',')
-    )))) %>% rename(id=V1, group=V2, sample=V3)
+        stringi::stri_split_fixed(dt$samples, ',')
+    )))) %>% dplyr::rename(id=V1, group=V2, sample=V3)
 }
 
 
@@ -67,24 +60,24 @@ extract_samples <- function(dt) {
 extract_genes <- function(dt) {
     split_fields <- function(x) {
         as.data.frame(do.call(rbind, lapply(
-            stri_split_regex(x, ',|\\s+', omit_empty = TRUE),
+            stringi::stri_split_regex(x, ',|\\s+', omit_empty = TRUE),
             function(x) if(length(x) == 1) { c(x[1], "") } else x
         )))
     }
     
-    dt <- dt %>% select(id, upregulated, downregulated) %>%
-        gather('category', 'samples', upregulated:downregulated)
+    dt <- dt %>% dplyr::select(id, upregulated, downregulated) %>%
+        tidyr::gather('category', 'samples', upregulated:downregulated)
     
-    tbl_dt(as.data.table(do.call(rbind, mapply(
+    dplyr::tbl_dt(as.data.table(do.call(rbind, mapply(
         cbind,
         dt$id,
         as.character(dt$category),
-        stri_split_regex(dt$samples, '\n', omit_empty = TRUE)
+        stringi::stri_split_regex(dt$samples, '\n', omit_empty = TRUE)
     )))) %>%
-    rename(id=V1, category=V2) %>%
-    mutate(gene = stri_extract_first_regex(V3, '([^\t,]+)')) %>%
-    mutate(chdir = stri_extract_first_regex(V3, '(?<=\t|,)([0-9\\.]+)$')) %>%
-    select(id, category, gene, chdir)
+    dplyr::rename(id=V1, category=V2) %>%
+    dplyr::mutate(gene = stringi::stri_extract_first_regex(V3, '([^\t,]+)')) %>%
+    dplyr::mutate(chdir = stringi::stri_extract_first_regex(V3, '(?<=\t|,)([0-9\\.]+)$')) %>%
+    dplyr::select(id, category, gene, chdir)
 }
 
 
@@ -93,13 +86,13 @@ extract_genes <- function(dt) {
 #' @param dt tbl_dt as returned from preprocess_data
 #' @return tbl_dt with columns: id, geo_accession, gene, perturbation, species, tissue_cell_line
 extract_description <- function(dt) {
-    dt %>% select(id, geo_accession, gene, perturbation, species, tissue_cell_line)
+    dt %>% dplyr::select(id, geo_accession, gene, perturbation, species, tissue_cell_line)
 }
 
 
 #' Download dataset and extract relevant data
 #' 
-#' @param url 
+#' @param url
 #' @return list with description, genes and samples dt
 #'
 preprocess <- function(url='https://localhost/microtask.csv') {
@@ -118,8 +111,8 @@ preprocess <- function(url='https://localhost/microtask.csv') {
 #' @return list of the character vectors
 #'
 prepare_gene_sets <- function(genes) {
-    genes_grouped <- genes %>% group_by(id, category) %>%
-        summarise(genes=list(gene)) %>%
-        mutate(id_cat = stri_join(id, category, sep="_"))
+    genes_grouped <- genes %>% dplyr::group_by(id, category) %>%
+        dplyr::summarise(genes=list(gene)) %>%
+        dplyr::mutate(id_cat = stringi::stri_join(id, category, sep="_"))
     mapply(c, genes_grouped$id_cat, genes_grouped$genes)
 }

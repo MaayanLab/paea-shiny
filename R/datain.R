@@ -1,27 +1,22 @@
-library(ggvis)
-library(tidyr)
-library(dplyr)
-library(data.table)
-
 #' Create density plots for input data
 #' 
 #' @param datain data.table with genenames in first columns and samples in following
 #' @return ggvis
 #'
 plot_density <- function(datain) {
-    properties_y <- axis_props(labels=list(fontSize=12), title=list(fontSize=12, dy=-35))
-    properties_x <- axis_props(labels=list(fontSize=12), title=list(fontSize=12, dx=-35))
+    properties_y <- ggvis::axis_props(labels=list(fontSize=12), title=list(fontSize=12, dy=-35))
+    properties_x <- ggvis::axis_props(labels=list(fontSize=12), title=list(fontSize=12, dx=-35))
     # Rename first column to identifier
-    datain  %>% rename_(identifier = as.symbol(colnames(datain)[1])) %>%
+    datain  %>% dplyr::rename_(identifier = as.symbol(colnames(datain)[1])) %>%
     # Convert to long
-    gather(sample, value, -identifier) %>%
+    tidyr::gather(sample, value, -identifier) %>%
     # Ugly and slow but works for now    
     as.data.frame() %>%
     # Create plot 
-    ggvis(~value) %>% group_by(sample) %>%
-    layer_densities(stroke = ~sample, fill := NA) %>%
-    add_axis('y',  properties=properties_y) %>%
-    add_axis('x',  properties=properties_x)
+    ggvis::ggvis(~value) %>% ggvis::group_by(sample) %>%
+    ggvis::layer_densities(stroke = ~sample, fill := NA) %>%
+    ggvis::add_axis('y',  properties=properties_y) %>%
+    ggvis::add_axis('x',  properties=properties_x)
 }
 
 
@@ -42,11 +37,12 @@ datain_is_valid <- function(datain) {
         result$valid <- FALSE
         result$message <- 'not enough columns'
     } else {
+        datain_expr <- datain %>% dplyr::select_(-1)
         # Not pretty but should handle all flavours of data.frames 
-        if(any(lapply(datain %>% select_(-1), class) != 'numeric')) {
+        if(any(lapply(datain_expr, class) != 'numeric')) {
             result$valid <- FALSE
             result$message <- 'not numeric'
-        } else if(!all(datain %>% select_(-1) >= 0 | datain %>% select_(-1) %>% is.null())) {
+        } else if(!all(datain_expr >= 0 | datain_expr %>% is.null())) {
             result$valid <- FALSE
             result$message <- 'negative values'
         }
@@ -63,8 +59,8 @@ datain_is_valid <- function(datain) {
 datain_log2_transform <- function(datain) {
     adjust <- function(x) { x + 1e-21 }
     data.table(
-        datain %>% select_(1),
-        datain %>% select_(-1) %>% adjust() %>% log2()
+        datain %>% dplyr::select_(1),
+        datain %>% dplyr::select_(-1) %>% adjust() %>% log2()
     )
 }
 
@@ -79,13 +75,13 @@ datain_quantile_normalize <- function(datain, add_noise=TRUE) {
     
     setNames(
         data.table(
-            datain %>% select_(1),
-            datain %>% select_(-1) %>% as.matrix() %>%
+            datain %>% dplyr::select_(1),
+            datain %>% dplyr::select_(-1) %>% as.matrix() %>%
             preprocessCore::normalize.quantiles() %>% 
             # Ugly workaround for issue with GeoDE 
             # TODO Remove as soon as possible 
             as.data.frame() %>% 
-            mutate_each(funs(add_noise))
+            dplyr::mutate_each(funs(add_noise))
         ),
         colnames(datain)
     )

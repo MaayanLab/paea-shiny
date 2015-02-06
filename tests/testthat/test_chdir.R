@@ -33,7 +33,7 @@ testthat::test_that('Test prepare_down_genes and prepare_up_genes ', {
 
 testthat::test_that('Test chdir_analysis_wrapper', {
     set.seed(323)
-    datain <- data.frame(stri_rand_strings(100, 20), replicate(6, rlnorm(100)))
+    datain <- data.frame(stringi::stri_rand_strings(100, 20), replicate(6, rlnorm(100)))
     colnames(datain) <- c('genes', 'c1', 'c2', 'c3', 't1', 't2', 't3')
     sampleclass <- structure(c(1L, 1L, 1L, 2L, 2L, 2L), .Label = c("1", "2"), class = "factor")
     gammas <- list(1)
