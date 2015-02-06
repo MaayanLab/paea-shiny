@@ -10,7 +10,7 @@ prepare_paea_results <- function(paea_pvalues, data_description) {
     )) %>% 
         tidyr::separate(set, into=c('id', 'category'), sep='_') %>% 
         dplyr::mutate(id=as.numeric(id)) %>%
-        dplyr::dplyrleft_join(data_description, by='id') %>%
+        dplyr::left_join(data_description, by='id') %>%
         dplyr::select(id, geo_accession,  gene, perturbation, species, category, neg_log_pval)
 }
 
