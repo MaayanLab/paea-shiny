@@ -8,13 +8,13 @@ paea_analysis_wrapper(chdirresults, gmtfile, gammas = c(1),
   casesensitive = FALSE)
 }
 \arguments{
+\item{chdirresults}{see GeoDE::chdirAnalysis}
+
+\item{gmtfile}{see GeoDE::chdirAnalysis}
+
 \item{gammas}{see GeoDE::chdirAnalysis}
 
 \item{casesensitive}{see GeoDE::chdirAnalysis}
-
-\item{chdirprops}{see GeoDE::chdirAnalysis}
-
-\item{gmt}{see GeoDE::chdirAnalysis}
 }
 \description{
 PAEAAnalysis wrapper. Redirects plots to /dev/null

@@ -8,6 +8,8 @@ datain_quantile_normalize(datain, add_noise = TRUE)
 }
 \arguments{
 \item{datain}{data.frame}
+
+\item{add_noise}{logical should we add random noise after quantile normalization}
 }
 \value{
 data.frame where columns 2:ncol are quantile normalized

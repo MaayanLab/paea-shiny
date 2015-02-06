@@ -16,8 +16,8 @@ prepare_paea_results <- function(paea_pvalues, data_description) {
 
 #' PAEAAnalysis wrapper. Redirects plots to /dev/null 
 #'
-#' @param chdirprops see GeoDE::chdirAnalysis
-#' @param gmt see GeoDE::chdirAnalysis
+#' @param chdirresults see GeoDE::chdirAnalysis
+#' @param gmtfile see GeoDE::chdirAnalysis
 #' @param gammas see GeoDE::chdirAnalysis
 #' @param casesensitive see GeoDE::chdirAnalysis
 #'

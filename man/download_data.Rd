@@ -7,7 +7,7 @@
 download_data(url = "https://localhost/microtask.csv")
 }
 \arguments{
-\item{url}{character}
+\item{url}{character localization of the input file}
 }
 \value{
 data.frame

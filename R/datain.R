@@ -68,6 +68,7 @@ datain_log2_transform <- function(datain) {
 #' quantile normalize expression data
 #'
 #' @param datain data.frame
+#' @param add_noise logical should we add random noise after quantile normalization
 #' @return data.frame where columns 2:ncol are quantile normalized
 #'
 datain_quantile_normalize <- function(datain, add_noise=TRUE) {

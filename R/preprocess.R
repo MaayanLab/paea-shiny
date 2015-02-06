@@ -1,6 +1,6 @@
 #' Download microtask dataset and 
 #'
-#' @param url character
+#' @param url character localization of the input file
 #' @return data.frame
 #'
 download_data <- function(url = 'https://localhost/microtask.csv') {
@@ -92,7 +92,7 @@ extract_description <- function(dt) {
 
 #' Download dataset and extract relevant data
 #' 
-#' @param url
+#' @param url character localization of the input file
 #' @return list with description, genes and samples dt
 #'
 preprocess <- function(url='https://localhost/microtask.csv') {
