@@ -4,16 +4,16 @@
 \alias{chdir_analysis_wrapper}
 \title{chdirAnalysis wrapper. Redirects plots to /dev/null and handles data aggregation}
 \usage{
-chdir_analysis_wrapper(datain, sampleclass, gamma, nnull)
+chdir_analysis_wrapper(datain, sampleclass, gammas, nnull)
 }
 \arguments{
 \item{datain}{see GeoDE::chdirAnalysis}
 
 \item{sampleclass}{see GeoDE::chdirAnalysis}
 
-\item{nnull}{see GeoDE::chdirAnalysis}
-
 \item{gammas}{see GeoDE::chdirAnalysis}
+
+\item{nnull}{see GeoDE::chdirAnalysis}
 }
 \description{
 chdirAnalysis wrapper. Redirects plots to /dev/null and handles data aggregation
