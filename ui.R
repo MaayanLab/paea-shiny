@@ -6,7 +6,7 @@ library(ggvis)
 #'
 ggvis_bug_message <- paste(
     'If you see this message but the plot is invisible please try to resize it',
-    'using small grey triangle at the bottom. Unfortunately it seems to be s a known bug',
+    'using small grey triangle in the bottom right corner. Unfortunately it seems to be a known bug',
     'in ggvis/shiny so we\'ll have to wait for a fix.'
 )
 
