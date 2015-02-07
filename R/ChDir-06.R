@@ -390,7 +390,11 @@ PAEA<-function(chdir,gmtline,casesensitive=FALSE, lookuptable)
   #gvec <- as.matrix(lapply(keepgenes, function(x) if (x==TRUE) 1 else 0))
   
   #gpos <-which(toupper(genenames)%in%toupper(gmtline))
-  gpos <-  sort(unlist(lapply(toupper(gmtline),  function(x) { lookuptable[[x]] })))
+  gpos <- {
+  	gpos <- unlist(lapply(toupper(gmtline),  function(x) { lookuptable[[x]] }))
+  	if(!is.null(gpos)) { sort(gpos) } else { numeric(0) }
+  }
+  	
 
   nset <-length(gmtline)
 
