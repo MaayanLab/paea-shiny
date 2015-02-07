@@ -404,7 +404,7 @@ PAEA<-function(chdir,gmtline,casesensitive=FALSE)
   
   if((length(gpos)>0)&(m>1)&(m<n))
   {
-  gsa <- as.matrix(sparseMatrix(gpos, c(1:length(gpos)), dims=c(ngenes,length(gpos)),x=1))
+  gsa <- sparseMatrix(gpos, c(1:length(gpos)), dims=c(ngenes,length(gpos)), x=1)
   
   #   Calculate the principal angle
   
