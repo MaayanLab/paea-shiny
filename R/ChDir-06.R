@@ -305,6 +305,9 @@ PAEAAnalysis <- function(chdirresults,gmtfile,gammas=c(1.0),casesensitive=FALSE,
   gmtlines <- lapply(gmtfile, function(x) x[-1])
   
 #  print("processed gmt")
+
+  lookup_table <- buildLookupTable(chdirresults[[1]])
+  
   
   # Calculate the PEAE results for each gmt line
   if(showprogress){
@@ -312,13 +315,13 @@ PAEAAnalysis <- function(chdirresults,gmtfile,gammas=c(1.0),casesensitive=FALSE,
     PAEAresults <-mapply(function(x,count) 
       {
       setTxtProgressBar(pb, count)
-      PAEA(chdirresults[[1]],x,casesensitive=casesensitive)
+      PAEA(chdirresults[[1]],x,casesensitive=casesensitive, lookuptable=lookup_table)
     },gmtlines,c(1:length(gmtlines)),SIMPLIFY=FALSE)    
     close(pb)
     
   }else{
    
-    PAEAresults <-lapply(gmtlines, function(x) PAEA(chdirresults[[1]],x,casesensitive=casesensitive))
+    PAEAresults <-lapply(gmtlines, function(x) PAEA(chdirresults[[1]],x,casesensitive=casesensitive, lookuptable=lookup_table))
     
   }
   
@@ -373,7 +376,7 @@ PAEAAnalysis <- function(chdirresults,gmtfile,gammas=c(1.0),casesensitive=FALSE,
 # 1) The principal angle
 # 2) The p value
 #####################################
-PAEA<-function(chdir,gmtline,casesensitive=FALSE)
+PAEA<-function(chdir,gmtline,casesensitive=FALSE, lookuptable)
 {
   genenames<-rownames(chdir[[1]])
   
@@ -386,8 +389,9 @@ PAEA<-function(chdir,gmtline,casesensitive=FALSE)
   # A matrix with a 1 in rows corresponding to genes in the gmt line
   #gvec <- as.matrix(lapply(keepgenes, function(x) if (x==TRUE) 1 else 0))
   
-  gpos <-which(toupper(genenames)%in%toupper(gmtline))
- 
+  #gpos <-which(toupper(genenames)%in%toupper(gmtline))
+  gpos <-  sort(unlist(lapply(toupper(gmtline),  function(x) { lookuptable[[x]] })))
+
   nset <-length(gmtline)
 
   n <-ngenes
@@ -410,7 +414,7 @@ PAEA<-function(chdir,gmtline,casesensitive=FALSE)
   
   #  prod <- lapply(chdir, function(x) t(x)%*%gsa)
   
-#  print("calculating pa")
+  #  print("calculating pa")
   
   principalangle <- lapply(chdir, function(x) svd((t(x)/sqrt(sum(x^2)))%*%gsa, nu=0, nv=0))
   
@@ -442,4 +446,27 @@ PAEA<-function(chdir,gmtline,casesensitive=FALSE)
   }
   
   
+}
+
+
+#####################################
+# Helper
+# Input:
+# 1) A characteristic direction
+# Output
+# 1) Environment
+#####################################
+buildLookupTable <- function(chdir) {
+	genenames <- toupper(rownames(chdir[[1]]))
+	env <- new.env()
+	for (i in 1:length(genenames)) {
+		gn <- genenames[i]
+		if(!is.null(env[[gn]])) {
+			v <- c(i, env[[gn]])
+		} else {
+			v <- i
+		}
+		assign(gn, v, envir = env)
+	}
+	env
 }
