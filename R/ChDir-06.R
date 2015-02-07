@@ -380,7 +380,7 @@ PAEA<-function(chdir,gmtline,casesensitive=FALSE)
 #  print("in PAEA")
 
   
-  keepgenes <-is.element(toupper(genenames), toupper(gmtline))
+  # keepgenes <-is.element(toupper(genenames), toupper(gmtline))
   ngenes <-length(genenames)
   
   # A matrix with a 1 in rows corresponding to genes in the gmt line
