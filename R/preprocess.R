@@ -137,11 +137,13 @@ choose_unique_submissions <- function(samples) {
     
     control_samples <- combined_samples %>% 
         dplyr::filter(group == 'control') %>% 
-        dplyr::select(id, samples) %>% rename(samples_control = samples)
+        dplyr::select(id, samples) %>%
+        dplyr::rename(samples_control = samples)
     
     treatment_samples <- combined_samples %>% 
         dplyr::filter(group == 'treatment') %>% 
-        dplyr::select(id, samples) %>% rename(samples_treatment = samples)
+        dplyr::select(id, samples) %>%
+        dplyr::rename(samples_treatment = samples)
     
     stopifnot(identical(dim(treatment_samples), dim(control_samples )))
     
