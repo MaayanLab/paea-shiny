@@ -116,3 +116,22 @@ prepare_gene_sets <- function(genes) {
         dplyr::mutate(id_cat = stringi::stri_join(id, category, sep="_"))
     mapply(c, genes_grouped$id_cat, genes_grouped$genes)
 }
+
+
+#' Select ids of the unique submissions
+#'
+#' @param samples tbl_df as returned from preprocess$samples
+#' @return list of the unique ids
+#'
+choose_unique_submissions <- function(samples) {
+    combined_samples <- samples %>% group_by(id, group) %>% arrange(sample) %>% summarise(samples=paste(sample, collapse='\t'))
+    control_samples <- combined_samples %>% filter(group == 'control') %>% select(id, samples) %>% rename(samples_control = samples)
+    treatment_samples <- combined_samples %>% filter(group == 'treatment') %>% select(id, samples) %>% rename(samples_treatment = samples)
+    stopifnot(identical(dim(treatment_samples), dim(control_samples )))
+    
+    unique_samples <- full_join(control_samples, treatment_samples, by='id') %>% 
+        group_by(samples_control, samples_treatment) %>% 
+        summarise(id=id, nr = row_number()) %>%
+        filter(nr == 1) 
+    sort(unique_samples$id)
+}
