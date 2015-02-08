@@ -81,3 +81,12 @@ testthat::test_that('Test preprocess', {
 })
 
 
+testthat::test_that('Test choose_unique_submissions', {
+    samples <- data.frame(
+        id=rep(c(1, 2), 6),
+        group=rep(c('control', 'treatment'), each=6),
+        sample=c(rep(c('a', 'b', 'c'), each=2), rep(c('d', 'e', 'f'), each='2'))
+    )
+    testthat::expect_equal(nrow(choose_unique_submissions(samples)), 1)
+})
+

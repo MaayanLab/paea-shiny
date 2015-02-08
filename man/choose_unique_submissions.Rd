@@ -10,7 +10,7 @@ choose_unique_submissions(samples)
 \item{samples}{tbl_df as returned from preprocess$samples}
 }
 \value{
-list of the unique ids
+data.frame with column id
 }
 \description{
 Select ids of the unique submissions

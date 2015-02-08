@@ -127,7 +127,7 @@ prepare_gene_sets <- function(genes) {
 #' Select ids of the unique submissions
 #'
 #' @param samples tbl_df as returned from preprocess$samples
-#' @return list of the unique ids
+#' @return data.frame with column id
 #'
 choose_unique_submissions <- function(samples) {
     combined_samples <- samples %>% 
@@ -149,8 +149,7 @@ choose_unique_submissions <- function(samples) {
     
     unique_samples <- dplyr::full_join(control_samples, treatment_samples, by='id') %>% 
         dplyr::group_by(samples_control, samples_treatment) %>% 
-        dplyr::summarise(id=id, nr = row_number()) %>%
-        dplyr::filter(nr == 1) 
+        dplyr::filter(row_number() == 1)
     
-    sort(unique_samples$id)
+    unique_samples %>% dplyr::select(id)
 }
