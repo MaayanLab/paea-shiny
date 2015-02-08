@@ -38,7 +38,7 @@ shinyServer(function(input, output, session) {
     values$paea_running <- FALSE
     
     
-    #' Ugly hack to be able to clear upload widget
+    #' datain panel - ugly hack to be able to clear upload widget
     #' 
     output$datain_container <- renderUI({
         fileInput(
@@ -87,14 +87,14 @@ shinyServer(function(input, output, session) {
         }
     })
     
-    #' Input data preview
+    #' datain - input data preview
     #'
     output$contents <- renderDataTable({
         datain_preprocessed()
     })
     
     
-    #' control/treatment samples checboxes
+    #' datain panel - control/treatment samples checboxes
     #'
     output$sampleclass_container <- renderUI({
         if (datain_valid()) {
@@ -129,7 +129,8 @@ shinyServer(function(input, output, session) {
         }
     })
     
-    #' upload panel - status message
+    
+    #' datain  panel - status message
     #'
     output$upload_message <- renderText({
         if(is.null(datain())) {
