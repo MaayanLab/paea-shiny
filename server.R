@@ -34,6 +34,7 @@ shinyServer(function(input, output, session) {
     values$treatment_samples <- NULL
     values$last_error <- NULL
     # Required
+    values$chdir_running <- FALSE
     values$paea_running <- FALSE
     
     
@@ -156,7 +157,7 @@ shinyServer(function(input, output, session) {
     #'
     output$run_chdir_container <- renderUI({
         button <- actionButton(inputId = 'run_chdir', label = 'Run Characteristic Direction Analysis', icon = NULL)
-        if(!datain_valid() | length(values$control_samples) < 2 | length(values$treatment_samples) < 2) {
+        if(!datain_valid() | length(values$control_samples) < 2 | length(values$treatment_samples) < 2 | values$chdir_running) {
              button$attribs$disabled <- 'true'
              list(
                 button,
@@ -230,6 +231,7 @@ shinyServer(function(input, output, session) {
         
         set.seed(isolate(input$random_seed))
         
+        values$chdir_running <- TRUE
         values$chdir <- tryCatch(
             chdir_analysis_wrapper(datain, sampleclass, gamma, nnull),
             error = function(e) {
@@ -237,6 +239,7 @@ shinyServer(function(input, output, session) {
                 NULL
             }
         )
+        values$chdir_running <- FALSE
  
     })
     
