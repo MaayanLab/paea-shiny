@@ -48,7 +48,8 @@ extract_samples <- function(dt) {
         dt$id,
         as.character(dt$group),
         stringi::stri_split_fixed(dt$samples, ',')
-    )))) %>% dplyr::rename(id=V1, group=V2, sample=V3)
+    )))) %>% dplyr::rename(id=V1, group=V2, sample=V3) %>%
+        mutate(id=as.integer(id))
 }
 
 
