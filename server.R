@@ -416,7 +416,7 @@ shinyServer(function(input, output, session) {
         if(!(is.null(chdir))) {
             values$paea_running <- TRUE
             values$paea <- tryCatch(
-                paea_analysis_wrapper(
+                paea_analysis_dispatch(
                     chdirresults=chdir$chdirprops,
                     gmtfile=prepare_gene_sets(data$genes),
                     casesensitive=casesensitive
@@ -431,34 +431,53 @@ shinyServer(function(input, output, session) {
         }
     })
     
-    #' PAEA results
+    #' PAEA results up
     #' 
-    paea_results <- reactive({
-        if(!is.null(values$paea)) {
-            prepare_paea_results(values$paea$p_values, data$description)
+    paea_results_up <- reactive({
+        if(!is.null(values$paea$up)) {
+            prepare_paea_results(values$paea$up$p_values, data$description)
         }
     })
     
+    #' PAEA results down
+    #' 
+    paea_results_down <- reactive({
+        if(!is.null(values$paea$down)) {
+            prepare_paea_results(values$paea$down$p_values, data$description)
+        }
+    })
     
-    #' PAEA output
+    #' PAEA output up
     #'
-    output$pae_results <- renderDataTable({
-        paea_results()
+    output$pae_results_up <- renderDataTable({
+        if(!is.null(paea_results_up())) {
+            paea_results_up()
+        }
+    })
+    
+    #' PAEA output down
+    #'
+    output$pae_results_down <- renderDataTable({
+        if(!is.null(paea_results_down())) {
+            paea_results_down()
+        }
     })
     
     
     #' paea panel - download block
     #'
     output$paea_downloads_container <- renderUI({
-        button <- downloadButton('download_paea', 'Download PAEA results')
+        button_up <- downloadButton('download_paea_up', 'Download upregulated sets')
+        button_down <- downloadButton('download_paea_down', 'Download downregulated sets')
 
         if (is.null(values$paea)) {
             list(
-                {button$attribs$disabled <- 'true'; button},
+                {button_up$attribs$disabled <- 'true'; button_up},
+                {button_down$attribs$disabled <- 'true'; button_down},
                 helpText('No data available. Did you run PAEA analysis?')
             )
         } else {
-            button
+            list(button_up,  button_down)
         }
     })
     
@@ -468,11 +487,18 @@ shinyServer(function(input, output, session) {
     outputOptions(output, 'paea_downloads_container', suspendWhenHidden = FALSE)
     
     
-    #' paea panel - downloads handler
+    #' paea panel - downloads handler up
     #'
-    output$download_paea <- downloadHandler(
-        filename = 'paea.tsv',
-        content = paea_download_handler(paea_results())
+    output$download_paea_up <- downloadHandler(
+        filename = 'paea_up.tsv',
+        content = paea_download_handler(paea_results_up())
+    )
+    
+    #' paea panel - downloads handler down
+    #'
+    output$download_paea_down <- downloadHandler(
+        filename = 'pae_down.tsv',
+        content = paea_download_handler(paea_results_down())
     )
     
     #' paea panel - status message
