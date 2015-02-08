@@ -150,7 +150,7 @@ paea_tab <- tabPanel(
         )),
         
         column(12,
-            h3('PAEA results'),
+            h3('PAEA results', id='pae_results'),
             tabsetPanel(
                 tabPanel(
                     "Enriched upregulated sets",

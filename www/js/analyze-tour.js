@@ -161,7 +161,7 @@ function initTour() {
         at: 'top left'
     },  {
         content: [
-            '<p>... and will be available for download/p>'
+            '<p>... and will be available for download</p>'
         ].join(''),
         highlightTarget: true,
         nextButton: true,
