@@ -12,16 +12,7 @@ last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mti
 
 options(shiny.maxRequestSize=120*1024^2) 
 
-data <- if(file.exists('data/microtask.csv')) {
-        dt <- nasbMicrotaskViewerHelpers::preprocess_data(read.csv('data/microtask.csv', header = FALSE))
-        list(
-            description = nasbMicrotaskViewerHelpers::extract_description(dt),
-            genes = nasbMicrotaskViewerHelpers::extract_genes(dt),
-            samples = nasbMicrotaskViewerHelpers::extract_samples(dt)
-        )
-    } else {
-        nasbMicrotaskViewerHelpers::preprocess('http://localhost/microtask.1.24.2015.csv')
-}
+data <- nasbMicrotaskViewerHelpers::preprocess(config$data_path)
 
 shinyServer(function(input, output, session) {
     
