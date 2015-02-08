@@ -1,22 +1,20 @@
 testthat::test_that('Test preprocess_data', {
-    data(example_data)
-    testthat::expect_equal(dim(preprocess_data(example_data)), dim(example_data))
+    testthat::expect_equal(dim(preprocess_data(example_microtask_data)), dim(example_microtask_data))
     testthat::expect_equal(
-        preprocess_data(example_data)$geo_accession,
-        factor(unlist(stringi::stri_replace_all_fixed(stringi::stri_trim_both(example_data$V1), '[ACCN]', '')))
+        preprocess_data(example_microtask_data)$geo_accession,
+        factor(unlist(stringi::stri_replace_all_fixed(stringi::stri_trim_both(example_microtask_data$V1), '[ACCN]', '')))
     )
-    testthat::expect_equal(preprocess_data(example_data)$id, example_data$V12)
-    testthat::expect_false(any(grepl('&Acirc;&nbsp;', preprocess_data(example_data)$control)))
+    testthat::expect_equal(preprocess_data(example_microtask_data)$id, example_microtask_data$V12)
+    testthat::expect_false(any(grepl('&Acirc;&nbsp;', preprocess_data(example_microtask_data)$control)))
 })
 
 
 testthat::test_that('Test extract_samples', {
-    data(example_data)
-    example_data <- preprocess_data(example_data)
-    samples_table <- extract_samples(example_data)
+    example_microtask_data <- preprocess_data(example_microtask_data)
+    samples_table <- extract_samples(example_microtask_data)
     
-    control <- unlist(stringi::stri_split_fixed(example_data$control, ',', omit_empty = TRUE))
-    treatment <- unlist(stringi::stri_split_fixed(example_data$treatment, ',', omit_empty = TRUE))
+    control <- unlist(stringi::stri_split_fixed(example_microtask_data$control, ',', omit_empty = TRUE))
+    treatment <- unlist(stringi::stri_split_fixed(example_microtask_data$treatment, ',', omit_empty = TRUE))
     
     testthat::expect_equal(as.character(samples_table$sample), c(control, treatment))
     testthat::expect_equal(
@@ -31,13 +29,12 @@ testthat::test_that('Test extract_samples', {
 
 
 testthat::test_that('Test extract_genes', {
-    data(example_data)
-    example_data <- preprocess_data(example_data)
-    genes_table <- extract_genes(example_data)
-    upregulated <- unlist(stringi::stri_split_fixed(example_data$upregulated, '\n'))
-    downregulated <- unlist(stringi::stri_split_fixed(example_data$downregulated, '\n'))
+    example_microtask_data <- preprocess_data(example_microtask_data)
+    genes_table <- extract_genes(example_microtask_data)
+    upregulated <- unlist(stringi::stri_split_fixed(example_microtask_data$upregulated, '\n'))
+    downregulated <- unlist(stringi::stri_split_fixed(example_microtask_data$downregulated, '\n'))
     
-    testthat::expect_equal(length(unique(genes_table$id)), length(example_data$id))
+    testthat::expect_equal(length(unique(genes_table$id)), length(example_microtask_data$id))
     testthat::expect_equal(dim(dplyr::filter(genes_table, id == 24, category == 'upregulated'))[1], 140)
     testthat::expect_equal(nrow(dplyr::filter(genes_table, category == 'upregulated')), length(upregulated))
     testthat::expect_equal(nrow(dplyr::filter(genes_table, category == 'downregulated')), length(downregulated))
@@ -45,19 +42,17 @@ testthat::test_that('Test extract_genes', {
 
 
 testthat::test_that('Test extract_description', {
-    data(example_data)
-    example_data <- preprocess_data(example_data)
-    testthat::expect_equal(nrow(extract_description(example_data)), nrow(example_data))
-    testthat::expect_equal(extract_description(example_data)$gene, example_data$gene)
-    testthat::expect_equal(extract_description(example_data)$id, example_data$id)
-    testthat::expect_equal(extract_description(example_data)$geo_accession, example_data$geo_accession)
+    example_microtask_data <- preprocess_data(example_microtask_data)
+    testthat::expect_equal(nrow(extract_description(example_microtask_data)), nrow(example_microtask_data))
+    testthat::expect_equal(extract_description(example_microtask_data)$gene, example_microtask_data$gene)
+    testthat::expect_equal(extract_description(example_microtask_data)$id, example_microtask_data$id)
+    testthat::expect_equal(extract_description(example_microtask_data)$geo_accession, example_microtask_data$geo_accession)
 })
 
 
 testthat::test_that('Test prepare_gene_sets ', {
-    data(example_data)
-    example_data <- preprocess_data(example_data)
-    genes_table <- extract_genes(example_data)
+    example_microtask_data <- preprocess_data(example_microtask_data)
+    genes_table <- extract_genes(example_microtask_data)
     gene_sets <- prepare_gene_sets(genes_table)
     
     testthat::expect_equal(

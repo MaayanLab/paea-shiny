@@ -16,6 +16,9 @@ paea_analysis_wrapper(chdirresults, gmtfile, gammas = c(1),
 
 \item{casesensitive}{see GeoDE::chdirAnalysis}
 }
+\value{
+paea results
+}
 \description{
 PAEAAnalysis wrapper. Redirects plots to /dev/null
 }
