@@ -4,11 +4,16 @@
 #' @return data.frame
 #'
 download_data <- function(url = 'https://localhost/microtask.csv') {
-    r <- httr::GET(url)
-    if (r$status_code != 200) stop()
-    con <- textConnection(httr::content(r, as="text"))
-    df <- read.csv(con, header=FALSE)
-    close(con)
+    df <- if(stringi::stri_startswith_fixed(url, 'http')) {
+        r <- httr::GET(url)
+        if (r$status_code != 200) stop()
+        con <- textConnection(httr::content(r, as="text"))
+        df <- read.csv(con, header=FALSE)
+        close(con)
+        df
+    } else {
+        read.csv(url, header=FALSE)
+    }
     as.data.table(df)
 }
 
