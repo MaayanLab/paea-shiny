@@ -4,7 +4,7 @@
 \alias{preprocess}
 \title{Download dataset and extract relevant data}
 \usage{
-preprocess(url = "https://localhost/microtask.csv")
+preprocess(url = "https://localhost/microtask.csv", drop_duplicates = TRUE)
 }
 \arguments{
 \item{url}{character localization of the input file}

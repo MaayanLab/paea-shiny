@@ -81,6 +81,7 @@ extract_genes <- function(dt) {
         stringi::stri_split_regex(dt$samples, '\n', omit_empty = TRUE)
     )))) %>%
     dplyr::rename(id=V1, category=V2) %>%
+    dplyr::mutate(id=as.numeric(id)) %>%
     dplyr::mutate(gene = stringi::stri_extract_first_regex(V3, '([^\t,]+)')) %>%
     dplyr::mutate(chdir = stringi::stri_extract_first_regex(V3, '(?<=\t|,)([0-9\\.]+)$')) %>%
     dplyr::select(id, category, gene, chdir)
@@ -99,14 +100,25 @@ extract_description <- function(dt) {
 #' Download dataset and extract relevant data
 #' 
 #' @param url character localization of the input file
+#' @param drop_duplicates remove duplicated entries
 #' @return list with description, genes and samples dt
 #'
-preprocess <- function(url='https://localhost/microtask.csv') {
+preprocess <- function(url='https://localhost/microtask.csv', drop_duplicates=TRUE) {
     dt <- preprocess_data(download_data(url))
+    description <- extract_description(dt)
+    genes <- extract_genes(dt)
+    samples <- extract_samples(dt)
+    if (drop_duplicates) {
+        unique_submissions <- choose_unique_submissions(samples)
+        description <- unique_submissions %>% dplyr::left_join(description, by='id')
+        genes <- unique_submissions %>% dplyr::left_join(genes, by='id')
+        samples <- unique_submissions %>% dplyr::left_join(samples, by='id')
+    }
+    
     list(
-        description = extract_description(dt),
-        genes = extract_genes(dt),
-        samples = extract_samples(dt)
+        description = description,
+        genes = genes,
+        samples = samples    
     )
 }
 
@@ -149,7 +161,8 @@ choose_unique_submissions <- function(samples) {
     
     unique_samples <- dplyr::full_join(control_samples, treatment_samples, by='id') %>% 
         dplyr::group_by(samples_control, samples_treatment) %>% 
-        dplyr::filter(row_number() == 1)
+        dplyr::filter(row_number() == 1) %>%
+        dplyr::summarise(id)
     
     unique_samples %>% dplyr::select(id)
 }
