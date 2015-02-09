@@ -8,6 +8,8 @@ preprocess(url = "https://localhost/microtask.csv", drop_duplicates = TRUE)
 }
 \arguments{
 \item{url}{character localization of the input file}
+
+\item{drop_duplicates}{remove duplicated entries}
 }
 \value{
 list with description, genes and samples dt

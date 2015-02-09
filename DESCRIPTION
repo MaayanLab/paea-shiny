@@ -1,7 +1,7 @@
 Package: nasbMicrotaskViewerHelpers
 Type: Package
 Title: Helpers
-Version: 1.0
+Version: 1.01
 Date: 2015-01-27
 Author: Maciej Szymkiewicz
 Maintainer: Maciej Szymkiewicz <matthew.szymkiewicz@gmail.com>
