@@ -12,7 +12,7 @@ last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mti
 
 options(shiny.maxRequestSize=120*1024^2) 
 
-data <- nasbMicrotaskViewerHelpers::preprocess(config$data_path)
+data <- nasbMicrotaskViewerHelpers::preprocess(config$data_path, config$drop_duplicates)
 
 shinyServer(function(input, output, session) {
     
