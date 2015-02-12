@@ -162,7 +162,7 @@ choose_unique_submissions <- function(samples) {
     unique_samples <- dplyr::full_join(control_samples, treatment_samples, by='id') %>% 
         dplyr::group_by(samples_control, samples_treatment) %>% 
         dplyr::filter(row_number() == 1) %>%
-        dplyr::summarise(id)
+        dplyr::summarise(id) %>% dplyr::select(id)
     
-    unique_samples %>% dplyr::select(id)
+    data.table(id=unique_samples$id)
 }
