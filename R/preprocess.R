@@ -52,7 +52,7 @@ extract_samples <- function(dt) {
         cbind,
         dt$id,
         as.character(dt$group),
-        stringi::stri_split_regex(dt$samples, '[\\.,;\\s*]+', omit_empty = TRUE)
+        stringi::stri_split_regex(dt$samples, '[\\.,;\\s]+', omit_empty = TRUE)
     )))) %>% dplyr::rename(id=V1, group=V2, sample=V3) %>%
         dplyr::mutate(id=as.integer(id))
 }
