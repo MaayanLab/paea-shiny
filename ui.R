@@ -1,5 +1,6 @@
 library(shiny)
 library(ggvis)
+library(markdown)
 
 #' Disappearing plot help 
 #' https://groups.google.com/forum/#!topic/ggvis/kQQsdn1RYaE
@@ -184,6 +185,7 @@ analyze_panel <- tabPanel(
 about_panel <- tabPanel(
     title = 'About',
     fluidRow(column(12,
+        includeMarkdown('about.md'),
         tags$dl(
             tags$dt('Last update:'),
             tags$dd(textOutput('last_modified'))
