@@ -31,6 +31,20 @@ paea_analysis_wrapper <- function(chdirresults, gmtfile, gammas = c(1), casesens
 }
 
 
+#' Split chdir vector into negative and postive (plus zero) subvectors
+#' 
+#' @param chdirresults see GeoDE::chdirAnalysis
+#' @return list with up and down fields
+#'
+split_chdirresults <- function(chdirresults) {
+    # Split chdir results into up and down
+    chdirresults_mask <- chdirresults[[1]][[1]][, 1] < 0
+    chdirresults_up <-  list(list(chdirresults[[1]][[1]][!chdirresults_mask, , drop=FALSE]))
+    chdirresults_down <- list(list(chdirresults[[1]][[1]][chdirresults_mask, , drop=FALSE]))
+    list(up=chdirresults_up, down=chdirresults_down)
+}
+
+
 #' PAEAAnalysis dispatch function. Should handle separating chdirresults into up and down
 #' and in future some filtering steps
 #' 
