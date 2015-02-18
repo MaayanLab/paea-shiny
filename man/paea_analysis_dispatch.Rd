@@ -20,7 +20,7 @@ paea_analysis_dispatch(chdirresults, gmtfile, gammas = c(1),
 \item{strategy}{character one of {'split_both', ...}}
 }
 \value{
-list with up and down fields
+list with paea results
 }
 \description{
 PAEAAnalysis dispatch function. Should handle separating chdirresults into up and down
