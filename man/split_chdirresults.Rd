@@ -7,7 +7,7 @@
 split_chdirresults(chdirresults)
 }
 \arguments{
-\item{chdirresults}{see GeoDE::chdirAnalysis}
+\item{chdirresults}{see GeoDE::PAEAAnalysis}
 }
 \value{
 list with up and down fields

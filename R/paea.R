@@ -50,17 +50,15 @@ split_chdirresults <- function(chdirresults) {
 }
 
 
-#' PAEAAnalysis dispatch function. Should handle separating chdirresults into up and down
-#' and in future some filtering steps
-#' 
-#' @param chdirresults see GeoDE::PAEAAnalysis 
-#' @param gmtfile see GeoDE::PAEAAnalysis 
-#' @param gammas see GeoDE::PAEAAnalysis 
-#' @param casesensitive see GeoDE::PAEAAnalysis 
-#' @param strategy character one of {'split_both', ...}
+#' Split query and background into up and down and run PAEA on respective parts
+#'
+#' @param chdirresults see GeoDE::chdirAnalysis
+#' @param gmtfile see GeoDE::chdirAnalysis
+#' @param gammas see GeoDE::chdirAnalysis
+#' @param casesensitive see GeoDE::chdirAnalysis
 #' @return list with up and down fields
 #'
-paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='split_both'){
+paea_analysis_dispatch_split_both <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE) {
     # Split chdir results into up and down
     chdirresults_splitted <- split_chdirresults(chdirresults)
     
@@ -73,4 +71,25 @@ paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesen
         up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_up,  gammas, casesensitive), 
         down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_down,  gammas, casesensitive)
     )
+}
+
+
+#' PAEAAnalysis dispatch function. Should handle separating chdirresults into up and down
+#' and in future some filtering steps
+#' 
+#' @param chdirresults see GeoDE::PAEAAnalysis 
+#' @param gmtfile see GeoDE::PAEAAnalysis 
+#' @param gammas see GeoDE::PAEAAnalysis 
+#' @param casesensitive see GeoDE::PAEAAnalysis 
+#' @param strategy character one of {'split_both', ...}
+#' @return list with up and down fields
+#'
+paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='split_both'){
+    stopifnot(strategy %in%  c('split_both'))
+    
+    strategies <- list(
+        split_both = paea_analysis_dispatch_split_both
+    )
+    
+    strategies[[strategy]](chdirresults, gmtfile, gammas, casesensitive)
 }
