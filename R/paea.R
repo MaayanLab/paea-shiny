@@ -24,10 +24,15 @@ prepare_paea_results <- function(paea_pvalues, data_description) {
 #'
 
 paea_analysis_wrapper <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
-    png('/dev/null')
-    paea <- GeoDE::PAEAAnalysis(chdirresults, gmtfile, gammas, casesensitive, showprogress=TRUE)
-    dev.off()
-    paea
+    if(length(gmtfile) > 0 & length(chdirresults) > 0) {
+        png('/dev/null')
+        paea <- GeoDE::PAEAAnalysis(chdirresults, gmtfile, gammas, casesensitive, showprogress=TRUE)
+        dev.off()
+        paea
+    } else {
+        warning('Cannot run paea with on empty input.')
+        NULL
+    }
 }
 
 
@@ -64,11 +69,7 @@ paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesen
     gmtfile_down <- gmtfile[gmtfile_mask]
     
     list(
-        up =  if(length(gmtfile_up) > 0 & length(chdirresults_splitted$up) > 0) {
-            paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_up,  gammas, casesensitive)
-        },
-        down =  if(length(gmtfile_down) > 0 & length(chdirresults_splitted$down) > 0) {
-            paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_down,  gammas, casesensitive)
-        }
+        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_up,  gammas, casesensitive), 
+        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_down,  gammas, casesensitive)
     )
 }
