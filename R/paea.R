@@ -56,9 +56,7 @@ split_chdirresults <- function(chdirresults) {
 #'
 paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
     # Split chdir results into up and down
-    chdirresults_mask <- chdirresults[[1]][[1]][, 1] < 0
-    chdirresults_up <-  list(list(chdirresults[[1]][[1]][!chdirresults_mask, , drop=FALSE]))
-    chdirresults_down <- list(list(chdirresults[[1]][[1]][chdirresults_mask, , drop=FALSE]))
+    chdirresults_splitted <- split_chdirresults(chdirresults)
     
     # Split gmt file into up and down
     gmtfile_mask <- unlist(lapply(gmtfile, function(x) { stringi::stri_endswith_fixed(x[1], '_downregulated') }))
@@ -66,11 +64,11 @@ paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesen
     gmtfile_down <- gmtfile[gmtfile_mask]
     
     list(
-        up =  if(length(gmtfile_up) > 0 & length(chdirresults_up) > 0) {
-            paea_analysis_wrapper(chdirresults_up, gmtfile_up,  gammas, casesensitive)
+        up =  if(length(gmtfile_up) > 0 & length(chdirresults_splitted$up) > 0) {
+            paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_up,  gammas, casesensitive)
         },
-        down =  if(length(gmtfile_down) > 0 & length(chdirresults_down) > 0) {
-            paea_analysis_wrapper(chdirresults_down, gmtfile_down,  gammas, casesensitive)
+        down =  if(length(gmtfile_down) > 0 & length(chdirresults_splitted$down) > 0) {
+            paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_down,  gammas, casesensitive)
         }
     )
 }
