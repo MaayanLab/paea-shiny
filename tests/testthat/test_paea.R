@@ -36,6 +36,7 @@ testthat::test_that('Test paea_analysis_dispatch_split_both', {
     testthat::expect_true(
         is.list(paea)
     )
+    testthat::expect_equal(names(paea), c('up', 'down'))
 })
 
 
@@ -44,6 +45,7 @@ testthat::test_that('Test paea_analysis_dispatch_split_query', {
     testthat::expect_true(
         is.list(paea)
     )
+    testthat::expect_equal(names(paea), c('up', 'down'))
 })
 
 
@@ -52,6 +54,7 @@ testthat::test_that('Test paea_analysis_dispatch_split_both_and_reverse', {
     testthat::expect_true(
         is.list(paea)
     )
+    testthat::expect_equal(names(paea), c('up', 'down'))
 })
 
 
