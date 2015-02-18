@@ -19,14 +19,38 @@ testthat::test_that('Test paea_analysis_wrapper', {
 
 
 testthat::test_that('Test paea_analysis_dispatch', {
-    expect_equal(
+    testthat::expect_equal(
         paea_analysis_dispatch(example_chdirresults, example_gmtfile)$down,
         GeoDE::PAEAAnalysis(example_chdirresults_down, example_gmtfile_down)
     )
     
-    expect_equal(
+    testthat::expect_equal(
         paea_analysis_dispatch(example_chdirresults, example_gmtfile)$up,
         GeoDE::PAEAAnalysis(example_chdirresults_up, example_gmtfile_up)
+    )
+})
+
+
+testthat::test_that('Test paea_analysis_dispatch_split_both', {
+    paea <- paea_analysis_dispatch_split_both(example_chdirresults, example_gmtfile)
+    testthat::expect_true(
+        is.list(paea)
+    )
+})
+
+
+testthat::test_that('Test paea_analysis_dispatch_split_query', {
+    paea <- paea_analysis_dispatch_split_query(example_chdirresults, example_gmtfile)
+    testthat::expect_true(
+        is.list(paea)
+    )
+})
+
+
+testthat::test_that('Test paea_analysis_dispatch_split_both_and_reverse', {
+    paea <- paea_analysis_dispatch_split_both_and_reverse(example_chdirresults, example_gmtfile)
+    testthat::expect_true(
+        is.list(paea)
     )
 })
 
