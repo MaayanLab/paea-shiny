@@ -102,6 +102,26 @@ paea_analysis_dispatch_split_query <- function(chdirresults, gmtfile, gammas = c
 }
 
 
+#' Split query and background into up and down and run PAEA on oposite parts
+#'
+#' @param chdirresults see GeoDE::chdirAnalysis
+#' @param gmtfile see GeoDE::chdirAnalysis
+#' @param gammas see GeoDE::chdirAnalysis
+#' @param casesensitive see GeoDE::chdirAnalysis
+#' @return list with up (up query vs down background)and down (down query vs up background)
+#'
+paea_analysis_dispatch_split_both_and_reverse <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
+    chdirresults_splitted <- split_chdirresults(chdirresults)
+    
+    gmtfile_splitted <- split_gmtfile(gmtfile)
+    
+    list(
+        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_splitted$down,  gammas, casesensitive), 
+        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_splitted$up,  gammas, casesensitive)
+    )
+}
+
+
 #' PAEAAnalysis dispatch function. Should handle separating chdirresults into up and down
 #' and in future some filtering steps
 #' 
@@ -114,8 +134,9 @@ paea_analysis_dispatch_split_query <- function(chdirresults, gmtfile, gammas = c
 #'
 paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='split_both'){    
     strategies <- list(
-        split_both = paea_analysis_dispatch_split_both,
-        split_query = paea_analysis_dispatch_split_query
+        split_both=paea_analysis_dispatch_split_both,
+        split_query=paea_analysis_dispatch_split_query,
+        split_both_and_reverse=paea_analysis_dispatch_split_both_and_reverse
     )
     stopifnot(strategy %in%  names(strategies))
     strategies[[strategy]](chdirresults, gmtfile, gammas, casesensitive)
