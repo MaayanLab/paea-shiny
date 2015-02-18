@@ -16,10 +16,10 @@ prepare_paea_results <- function(paea_pvalues, data_description) {
 
 #' PAEAAnalysis wrapper. Redirects plots to /dev/null 
 #'
-#' @param chdirresults see GeoDE::chdirAnalysis
-#' @param gmtfile see GeoDE::chdirAnalysis
-#' @param gammas see GeoDE::chdirAnalysis
-#' @param casesensitive see GeoDE::chdirAnalysis
+#' @param chdirresults see GeoDE::PAEAAnalysis 
+#' @param gmtfile see GeoDE::PAEAAnalysis 
+#' @param gammas see GeoDE::PAEAAnalysis 
+#' @param casesensitive see GeoDE::PAEAAnalysis 
 #' @return paea results
 #'
 
@@ -38,7 +38,7 @@ paea_analysis_wrapper <- function(chdirresults, gmtfile, gammas = c(1), casesens
 
 #' Split chdir vector into negative and postive (plus zero) subvectors
 #' 
-#' @param chdirresults see GeoDE::chdirAnalysis
+#' @param chdirresults see GeoDE::PAEAAnalysis 
 #' @return list with up and down fields
 #'
 split_chdirresults <- function(chdirresults) {
@@ -53,13 +53,14 @@ split_chdirresults <- function(chdirresults) {
 #' PAEAAnalysis dispatch function. Should handle separating chdirresults into up and down
 #' and in future some filtering steps
 #' 
-#' @param chdirresults see GeoDE::chdirAnalysis
-#' @param gmtfile see GeoDE::chdirAnalysis
-#' @param gammas see GeoDE::chdirAnalysis
-#' @param casesensitive see GeoDE::chdirAnalysis
+#' @param chdirresults see GeoDE::PAEAAnalysis 
+#' @param gmtfile see GeoDE::PAEAAnalysis 
+#' @param gammas see GeoDE::PAEAAnalysis 
+#' @param casesensitive see GeoDE::PAEAAnalysis 
+#' @param strategy character one of {'split_both', ...}
 #' @return list with up and down fields
 #'
-paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
+paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='split_both'){
     # Split chdir results into up and down
     chdirresults_splitted <- split_chdirresults(chdirresults)
     
