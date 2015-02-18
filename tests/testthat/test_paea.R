@@ -40,3 +40,14 @@ testthat::test_that('Test split_chdirresults ', {
         nrow(example_chdirresults[[1]][[1]]) 
     )
 })
+
+
+testthat::test_that('Test split_gmtfile', {
+    gmtfile_splitted <- split_gmtfile(example_gmtfile)
+    testthat::expect_true(is.list(gmtfile_splitted))
+    testthat::expect_equal(names(gmtfile_splitted), c('up', 'down'))
+    testthat::expect_equal(
+        length(gmtfile_splitted$up) + length(gmtfile_splitted$down),
+        length(example_gmtfile)
+    )
+})
