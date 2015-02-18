@@ -50,6 +50,19 @@ split_chdirresults <- function(chdirresults) {
 }
 
 
+#' Split gmt file into up and down based on _downregulated suffix
+#' 
+#' @param gmtfile see GeoDE::chdirAnalysis
+#' @return list with up and down sets 
+#' 
+split_gmtfile <- function(gmtfile) {
+    gmtfile_mask <- unlist(lapply(gmtfile, function(x) { stringi::stri_endswith_fixed(x[1], '_downregulated') }))
+    gmtfile_up <- gmtfile[!gmtfile_mask]
+    gmtfile_down <- gmtfile[gmtfile_mask]
+    list(up=gmtfile_up, down=gmtfile_down)
+}
+
+
 #' Split query and background into up and down and run PAEA on respective parts
 #'
 #' @param chdirresults see GeoDE::chdirAnalysis
@@ -62,14 +75,11 @@ paea_analysis_dispatch_split_both <- function(chdirresults, gmtfile, gammas = c(
     # Split chdir results into up and down
     chdirresults_splitted <- split_chdirresults(chdirresults)
     
-    # Split gmt file into up and down
-    gmtfile_mask <- unlist(lapply(gmtfile, function(x) { stringi::stri_endswith_fixed(x[1], '_downregulated') }))
-    gmtfile_up <- gmtfile[!gmtfile_mask]
-    gmtfile_down <- gmtfile[gmtfile_mask]
+    gmtfile_splitted <- split_gmtfile(gmtfile)
     
     list(
-        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_up,  gammas, casesensitive), 
-        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_down,  gammas, casesensitive)
+        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_splitted$up,  gammas, casesensitive), 
+        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_splitted$down,  gammas, casesensitive)
     )
 }
 
@@ -84,12 +94,10 @@ paea_analysis_dispatch_split_both <- function(chdirresults, gmtfile, gammas = c(
 #' @param strategy character one of {'split_both', ...}
 #' @return list with up and down fields
 #'
-paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='split_both'){
-    stopifnot(strategy %in%  c('split_both'))
-    
+paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='split_both'){    
     strategies <- list(
         split_both = paea_analysis_dispatch_split_both
     )
-    
+    stopifnot(strategy %in%  names(strategies))
     strategies[[strategy]](chdirresults, gmtfile, gammas, casesensitive)
 }
