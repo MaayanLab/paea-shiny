@@ -64,8 +64,10 @@ plot_top_genes <- function(results) {
 #' @param nnull see GeoDE::chdirAnalysis
 #'
 chdir_analysis_wrapper <- function(datain, sampleclass, gammas, nnull) {
+    datain <- datain %>% dplyr::rename_(gene = as.symbol(colnames(datain)[1]))
+
     datain <- datain %>%
-        dplyr::group_by_(as.symbol(colnames(datain)[1])) %>%
+        dplyr::group_by(gene) %>%
         dplyr::summarise_each(dplyr::funs(mean))
         
     png('/dev/null')
