@@ -56,6 +56,21 @@ plot_top_genes <- function(results) {
 }
 
 
+#' Preprocess input to chdirAnalysis
+#'
+#' @param datain see GeoDE::chdirAnalysis
+#' @param gene_filter icu regex
+#' @return data.frame
+#'
+preprocess_chdir_input <- function(datain, gene_filter=NULL) {
+    datain <- datain %>% dplyr::rename_(gene = as.symbol(colnames(datain)[1]))
+    
+    datain %>%
+        dplyr::group_by(gene) %>%
+        dplyr::summarise_each(dplyr::funs(mean))
+}
+
+
 #' chdirAnalysis wrapper. Redirects plots to /dev/null and handles data aggregation
 #'
 #' @param datain see GeoDE::chdirAnalysis
@@ -64,12 +79,7 @@ plot_top_genes <- function(results) {
 #' @param nnull see GeoDE::chdirAnalysis
 #'
 chdir_analysis_wrapper <- function(datain, sampleclass, gammas, nnull) {
-    datain <- datain %>% dplyr::rename_(gene = as.symbol(colnames(datain)[1]))
 
-    datain <- datain %>%
-        dplyr::group_by(gene) %>%
-        dplyr::summarise_each(dplyr::funs(mean))
-        
     png('/dev/null')
     chdir <- GeoDE::chdirAnalysis(
         # Group by gene label and compute mean

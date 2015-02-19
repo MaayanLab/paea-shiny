@@ -34,7 +34,9 @@ testthat::test_that('Test prepare_down_genes and prepare_up_genes ', {
 testthat::test_that('Test chdir_analysis_wrapper', {
     set.seed(323)
     datain <- data.frame(stringi::stri_rand_strings(100, 20), replicate(6, rlnorm(100)))
-    colnames(datain) <- c('genes', 'c1', 'c2', 'c3', 't1', 't2', 't3')
+    colnames(datain) <- c('gene', 'c1', 'c2', 'c3', 't1', 't2', 't3')
+    datain <- datain %>% dplyr::arrange(gene)
+    
     sampleclass <- structure(c(1L, 1L, 1L, 2L, 2L, 2L), .Label = c("1", "2"), class = "factor")
     gammas <- list(1)
 
@@ -43,7 +45,7 @@ testthat::test_that('Test chdir_analysis_wrapper', {
             set.seed(323)
             png('/dev/null')
             chdir <- GeoDE::chdirAnalysis(
-                datain[order(datain$genes), ],
+                datain,
                 sampleclass, gammas, CalculateSig=TRUE, nnull=5
             )
             dev.off()
@@ -55,6 +57,17 @@ testthat::test_that('Test chdir_analysis_wrapper', {
         }
     )
     
+})
+
+
+testthat::test_that('Test preprocess_chdir_input', {
+    datain <- data.frame(x=c('a', 'a', 'b'), y=c(0, 1, 2))
+    preprocessed_datain <- preprocess_chdir_input(datain)
+    
+    testthat::expect_true(is.data.frame(preprocessed_datain))
+    testthat::expect_equal(dim(preprocessed_datain), c(2, 2))
+    testthat::expect_equal(colnames(preprocessed_datain), c('gene', 'y'))
+    testthat::expect_equal(preprocessed_datain$y, c(0.5, 2))
 })
 
 
