@@ -1,1 +1,1 @@
-This application is based on the [GeoDE library](http://cran.r-project.org/web/packages/GeoDE/index.html) and data submitted by the participants of the [single gene perturbations crowdsourcing microtask](http://www.maayanlab.net/crowdsourcing/microtask.php),
+This application is based on the [GeoDE library](http://cran.r-project.org/web/packages/GeoDE/index.html) and data submitted by the participants of the [single gene perturbations crowdsourcing microtask](http://www.maayanlab.net/crowdsourcing/microtask.php).
