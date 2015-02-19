@@ -414,7 +414,8 @@ shinyServer(function(input, output, session) {
                 paea_analysis_dispatch(
                     chdirresults=chdir$chdirprops,
                     gmtfile=prepare_gene_sets(data$genes),
-                    casesensitive=casesensitive
+                    casesensitive=casesensitive,
+                    strategy=input$paea_strategy
                 ),
                 error = function(e) {
                     print(e)

@@ -143,6 +143,11 @@ paea_tab <- tabPanel(
             h3('PAEA parameters', id='paea_parameters'),
             checkboxInput('paea_casesensitive', 'Case Sensitive', FALSE),
             helpText('Check if you want gene lables comparisons to be case sensitive. Not recommended.'),
+            radioButtons('paea_strategy', 'Strategy:', c(
+                'Split query and background'='split_both',
+                'Split only query'='split_query',
+                'Split both and search oposite'='split_both_and_reverse'
+            )),
             uiOutput('run_paea_container')
         )),
         column(6, wellPanel(
