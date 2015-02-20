@@ -36,7 +36,8 @@ upload_tab <- tabPanel(
         column(4, wellPanel(
             h3('Preprocessing', id='datain_preprocessing'),
             checkboxInput(inputId='log2_transform', label='log2 transform' , value = FALSE),
-            checkboxInput(inputId='quantile_normalize', label='Quantile normalize', value = FALSE)
+            checkboxInput(inputId='quantile_normalize', label='Quantile normalize', value = FALSE),
+            checkboxInput(inputId='enable_id_filter', label='Enable id filter', value = TRUE)
         )), 
         column(12, 
             h3('Input preview', id='datain_preview_header'),
