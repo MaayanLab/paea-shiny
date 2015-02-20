@@ -2,9 +2,9 @@ testthat::test_that('Test preprocess_data', {
     testthat::expect_equal(dim(preprocess_data(example_microtask_data)), dim(example_microtask_data))
     testthat::expect_equal(
         preprocess_data(example_microtask_data)$geo_accession,
-        factor(unlist(stringi::stri_replace_all_fixed(stringi::stri_trim_both(example_microtask_data$V1), '[ACCN]', '')))
+        factor(unlist(stringi::stri_replace_all_fixed(stringi::stri_trim_both(example_microtask_data$geo_id), '[ACCN]', '')))
     )
-    testthat::expect_equal(preprocess_data(example_microtask_data)$id, example_microtask_data$V12)
+    testthat::expect_equal(preprocess_data(example_microtask_data)$id, example_microtask_data$id)
     testthat::expect_false(any(grepl('&Acirc;&nbsp;', preprocess_data(example_microtask_data)$control)))
 })
 

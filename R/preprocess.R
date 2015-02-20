@@ -8,11 +8,11 @@ download_data <- function(url = 'https://localhost/microtask.csv') {
         r <- httr::GET(url)
         if (r$status_code != 200) stop()
         con <- textConnection(httr::content(r, as="text"))
-        df <- read.csv(con, header=FALSE)
+        df <- read.csv(con, header)
         close(con)
         df
     } else {
-        read.csv(url, header=FALSE)
+        read.csv(url)
     }
     as.data.table(df)
 }
@@ -25,9 +25,9 @@ download_data <- function(url = 'https://localhost/microtask.csv') {
 #'
 preprocess_data <- function(dt) {
     dplyr::tbl_dt(dt) %>% dplyr::rename(
-        geo_accession=V1, control=V2, treatment=V3,
-        gene=V4, perturbation=V5, species=V6, tissue_cell_line=V7,
-        upregulated=V8, downregulated=V9, user=V10, datetime=V11, id=V12
+        geo_accession=geo_id, control=ctrl_ids, treatment=pert_ids,
+        gene=gene, perturbation=pert_type, species=organism, tissue_cell_line=cell_type,
+        upregulated=up_genes, downregulated=dn_genes, user=curator, datetime=time, id=id
     ) %>% 
     # Remove weird characters    
     dplyr::mutate(control = stringi::stri_replace_all_fixed(control, '&Acirc;&nbsp;', '')) %>% 
