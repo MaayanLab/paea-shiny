@@ -391,7 +391,7 @@ PAEA<-function(chdir,gmtline,casesensitive=FALSE, lookuptable)
   
   #gpos <-which(toupper(genenames)%in%toupper(gmtline))
   gpos <- {
-  	gpos <- unlist(lapply(toupper(gmtline),  function(x) { lookuptable[[x]] }))
+  	gpos <- unique(unlist(lapply(toupper(gmtline),  function(x) { lookuptable[[x]] })))
   	if(!is.null(gpos)) { sort(gpos) } else { numeric(0) }
   }
   	
