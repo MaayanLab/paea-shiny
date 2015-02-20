@@ -6,5 +6,5 @@ config <- list(
     # Maximum fraction of genes to keep
     max_fgenes_tokeep = 1,
     drop_duplicates = TRUE,
-    id_filter = 'control|chr[0-9]+:[0-9]+-[0-9]+'
+    id_filter = 'control|chr([0-9]+|[xy]):[0-9]+-[0-9]+'
 )
