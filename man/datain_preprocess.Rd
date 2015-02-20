@@ -5,7 +5,7 @@
 \title{Apply preprocesing steps to expression data}
 \usage{
 datain_preprocess(datain, log2_transform = FALSE,
-  quantile_normalize = FALSE)
+  quantile_normalize = FALSE, id_filter = NULL)
 }
 \arguments{
 \item{datain}{data.frame}

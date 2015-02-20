@@ -68,9 +68,6 @@ testthat::test_that('Test preprocess_chdir_input', {
     testthat::expect_equal(dim(preprocessed_datain), c(2, 2))
     testthat::expect_equal(colnames(preprocessed_datain), c('IDENTIFIER', 'y'))
     testthat::expect_equal(preprocessed_datain$y, c(0.5, 2))
-    
-    preprocessed_datain <- preprocess_chdir_input(datain, id_filter='^b')
-    testthat::expect_equal(dim(preprocessed_datain), c(1, 2))
 })
 
 

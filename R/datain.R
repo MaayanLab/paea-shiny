@@ -89,6 +89,25 @@ datain_quantile_normalize <- function(datain, add_noise=TRUE) {
 }
 
 
+#' Filter datain
+#'
+#' @param datain data.frame 
+#' @param id_filter icu regex or NULL
+#' @return data.table
+#'
+datain_filter <- function(datain, id_filter=NULL) {
+    opts_regex <- stringi::stri_opts_regex(case_insensitive=TRUE)
+    
+    if(!is.null(id_filter))  {
+        datain %>%
+            dplyr::rename_(IDENTIFIER=as.symbol(colnames(datain)[1])) %>%
+            dplyr::filter(!stringi::stri_detect_regex(IDENTIFIER, id_filter, opts_regex=opts_regex))
+    } else {
+        datain
+    }
+}
+
+
 #' Apply preprocesing steps to expression data
 #'
 #' @param datain data.frame 
@@ -96,11 +115,11 @@ datain_quantile_normalize <- function(datain, add_noise=TRUE) {
 #' @param quantile_normalize logical
 #' @return data.table
 #'
-datain_preprocess <- function(datain, log2_transform=FALSE, quantile_normalize=FALSE) {
+datain_preprocess <- function(datain, log2_transform=FALSE, quantile_normalize=FALSE, id_filter=NULL) {
     log2_f <- if(log2_transform) { datain_log2_transform } else { identity }
     quant_norm_f <- if(quantile_normalize) { datain_quantile_normalize } else { identity }
     
-    datain %>% log2_f() %>% quant_norm_f() %>% na.omit()
+    datain %>% datain_filter(id_filter=id_filter) %>% log2_f() %>% quant_norm_f() %>% na.omit()
 }
 
 

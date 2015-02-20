@@ -4,12 +4,10 @@
 \alias{preprocess_chdir_input}
 \title{Preprocess input to chdirAnalysis}
 \usage{
-preprocess_chdir_input(datain, id_filter = NULL)
+preprocess_chdir_input(datain)
 }
 \arguments{
 \item{datain}{see GeoDE::chdirAnalysis}
-
-\item{id_filter}{icu regex or NULL}
 }
 \value{
 data.frame
