@@ -305,6 +305,11 @@ PAEAAnalysis <- function(chdirresults,gmtfile,gammas=c(1.0),casesensitive=FALSE,
   gmtlines <- lapply(gmtfile, function(x) x[-1])
   
 #  print("processed gmt")
+  if(!casesensitive) {
+  	gmtlines <- lapply(gmtlines, toupper)
+    rownames(chdirresults[[1]][[1]]) <- toupper(rownames(chdirresults[[1]][[1]]))
+  }
+
 
   lookup_table <- buildLookupTable(chdirresults[[1]])
   
@@ -391,7 +396,7 @@ PAEA<-function(chdir,gmtline,casesensitive=FALSE, lookuptable)
   
   #gpos <-which(toupper(genenames)%in%toupper(gmtline))
   gpos <- {
-  	gpos <- unique(unlist(lapply(toupper(gmtline),  function(x) { lookuptable[[x]] })))
+  	gpos <- unique(unlist(lapply(gmtline,  function(x) { lookuptable[[x]] })))
   	if(!is.null(gpos)) { sort(gpos) } else { numeric(0) }
   }
   	
