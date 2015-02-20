@@ -68,10 +68,15 @@ shinyServer(function(input, output, session) {
     #'
     datain_preprocessed <- reactive({
         if(datain_valid()) {
+            id_filter <- if(input$enable_id_filter) {
+                config$id_filter
+            } else { NULL }
+            
             datain_preprocess(
                 datain=datain(),
                 log2_transform=input$log2_transform,
-                quantile_normalize=input$quantile_normalize
+                quantile_normalize=input$quantile_normalize,
+                id_filter=id_filter
             )
         } else {
             datain()
