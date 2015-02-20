@@ -113,6 +113,7 @@ datain_filter <- function(datain, id_filter=NULL) {
 #' @param datain data.frame 
 #' @param log2_transform logical
 #' @param quantile_normalize logical
+#' @param id_filter icu regex or NULL
 #' @return data.table
 #'
 datain_preprocess <- function(datain, log2_transform=FALSE, quantile_normalize=FALSE, id_filter=NULL) {

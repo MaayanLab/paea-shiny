@@ -13,6 +13,8 @@ datain_preprocess(datain, log2_transform = FALSE,
 \item{log2_transform}{logical}
 
 \item{quantile_normalize}{logical}
+
+\item{id_filter}{icu regex or NULL}
 }
 \value{
 data.table
