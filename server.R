@@ -219,13 +219,14 @@ shinyServer(function(input, output, session) {
         datain <- isolate(datain_preprocessed())
         nnull <- min(as.integer(isolate(input$chdir_nnull)), 1000)
         gamma <- isolate(input$chdir_gamma)
+        
         sampleclass <- factor(ifelse(colnames(datain)[-1] %in% isolate(input$sampleclass), '1', '2'))
         
         set.seed(isolate(input$random_seed))
         
         values$chdir_running <- TRUE
         values$chdir <- tryCatch(
-            chdir_analysis_wrapper(datain, sampleclass, gamma, nnull),
+            chdir_analysis_wrapper(preprocess_chdir_input(datain), sampleclass, gamma, nnull),
             error = function(e) {
                 values$last_error <- e
                 NULL
