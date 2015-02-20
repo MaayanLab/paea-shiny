@@ -59,11 +59,17 @@ plot_top_genes <- function(results) {
 #' Preprocess input to chdirAnalysis
 #'
 #' @param datain see GeoDE::chdirAnalysis
-#' @param gene_filter icu regex
+#' @param gene_filter icu regex or NULL
 #' @return data.frame
 #'
 preprocess_chdir_input <- function(datain, gene_filter=NULL) {
     datain <- datain %>% dplyr::rename_(gene = as.symbol(colnames(datain)[1]))
+    opts_regex <- stringi::stri_opts_regex(case_insensitive=TRUE)
+    
+    if(!is.null(gene_filter))  {
+        datain <- datain %>% 
+            dplyr::filter(!stringi::stri_detect_regex(gene, gene_filter, opts_regex=opts_regex))
+    } 
     
     datain %>%
         dplyr::group_by(gene) %>%

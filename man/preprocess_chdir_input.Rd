@@ -9,7 +9,7 @@ preprocess_chdir_input(datain, gene_filter = NULL)
 \arguments{
 \item{datain}{see GeoDE::chdirAnalysis}
 
-\item{gene_filter}{icu regex}
+\item{gene_filter}{icu regex or NULL}
 }
 \value{
 data.frame
