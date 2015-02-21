@@ -12,7 +12,7 @@ last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mti
 
 options(shiny.maxRequestSize=120*1024^2) 
 
-data <- nasbMicrotaskViewerHelpers::preprocess(config$data_path, config$drop_duplicates)
+gene_perturbations <- nasbMicrotaskViewerHelpers::preprocess(config$data_path, config$drop_duplicates)
 
 shinyServer(function(input, output, session) {
     
@@ -419,7 +419,7 @@ shinyServer(function(input, output, session) {
             values$paea <- tryCatch(
                 paea_analysis_dispatch(
                     chdirresults=chdir$chdirprops,
-                    gmtfile=prepare_gene_sets(data$genes),
+                    gmtfile=prepare_gene_sets(gene_perturbations$genes),
                     casesensitive=casesensitive,
                     strategy=input$paea_strategy
                 ),
@@ -437,7 +437,7 @@ shinyServer(function(input, output, session) {
     #' 
     paea_results_up <- reactive({
         if(!is.null(values$paea$up)) {
-            prepare_paea_results(values$paea$up$p_values, data$description)
+            prepare_paea_results(values$paea$up$p_values, gene_perturbations$description)
         }
     })
     
@@ -445,7 +445,7 @@ shinyServer(function(input, output, session) {
     #' 
     paea_results_down <- reactive({
         if(!is.null(values$paea$down)) {
-            prepare_paea_results(values$paea$down$p_values, data$description)
+            prepare_paea_results(values$paea$down$p_values, gene_perturbations$description)
         }
     })
     
