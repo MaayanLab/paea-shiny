@@ -25,13 +25,12 @@ download_data <- function(url = 'https://localhost/microtask.csv') {
 #'
 preprocess_data <- function(dt) {
     dplyr::tbl_dt(dt) %>% dplyr::rename(
-        control=ctrl_ids, treatment=pert_ids,
         gene=gene, perturbation=pert_type, species=organism, tissue_cell_line=cell_type,
         upregulated=up_genes, downregulated=dn_genes, user=curator, datetime=time, id=id
     ) %>% 
     # Remove weird characters    
-    dplyr::mutate(control = stringi::stri_replace_all_fixed(control, '&Acirc;&nbsp;', '')) %>% 
-    dplyr::mutate(treatment = stringi::stri_replace_all_fixed(treatment, '&Acirc;&nbsp;', '')) %>%
+    dplyr::mutate(ctrl_ids = stringi::stri_replace_all_fixed(ctrl_ids, '&Acirc;&nbsp;', '')) %>% 
+    dplyr::mutate(pert_ids = stringi::stri_replace_all_fixed(pert_ids, '&Acirc;&nbsp;', '')) %>%
     # Remove [ACCN]
     dplyr::mutate(geo_id = factor(
         stringi::stri_trim_both(stringi::stri_replace_all_fixed(geo_id, '[ACCN]', '')))) %>%
@@ -46,8 +45,8 @@ preprocess_data <- function(dt) {
 #' @return tbl_dt with 3 columns: id, group and sample
 #'
 extract_samples <- function(dt) {
-    dt <- dt %>% dplyr::select(id, control, treatment) %>% 
-        tidyr::gather('group', 'samples', control:treatment)
+    dt <- dt %>% dplyr::select(id, ctrl_ids, pert_ids) %>% 
+        tidyr::gather('group', 'samples', ctrl_ids:pert_ids)
     dplyr::tbl_dt(as.data.table(do.call(rbind, mapply(
         cbind,
         dt$id,

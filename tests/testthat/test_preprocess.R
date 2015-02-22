@@ -5,7 +5,7 @@ testthat::test_that('Test preprocess_data', {
         factor(unlist(stringi::stri_replace_all_fixed(stringi::stri_trim_both(example_microtask_data$geo_id), '[ACCN]', '')))
     )
     testthat::expect_equal(preprocess_data(example_microtask_data)$id, example_microtask_data$id)
-    testthat::expect_false(any(grepl('&Acirc;&nbsp;', preprocess_data(example_microtask_data)$control)))
+    testthat::expect_false(any(grepl('&Acirc;&nbsp;', preprocess_data(example_microtask_data)$ctrl_ids)))
 })
 
 
@@ -13,16 +13,16 @@ testthat::test_that('Test extract_samples', {
     example_microtask_data <- preprocess_data(example_microtask_data)
     samples_table <- extract_samples(example_microtask_data)
     
-    control <- unlist(stringi::stri_split_fixed(example_microtask_data$control, ',', omit_empty = TRUE))
-    treatment <- unlist(stringi::stri_split_fixed(example_microtask_data$treatment, ',', omit_empty = TRUE))
+    control <- unlist(stringi::stri_split_fixed(example_microtask_data$ctrl_ids, ',', omit_empty = TRUE))
+    treatment <- unlist(stringi::stri_split_fixed(example_microtask_data$pert_ids, ',', omit_empty = TRUE))
     
     testthat::expect_equal(as.character(samples_table$sample), c(control, treatment))
     testthat::expect_equal(
-        as.character(dplyr::filter(samples_table, id == 24 & group == 'control')$sample),
+        as.character(dplyr::filter(samples_table, id == 24 & group == 'ctrl_ids')$sample),
         c('GSM463015', 'GSM463016', 'GSM463017', 'GSM463018')
     )
     testthat::expect_equal(
-        as.character(dplyr::filter(samples_table, id == 35 & group == 'treatment')$sample),
+        as.character(dplyr::filter(samples_table, id == 35 & group == 'pert_ids')$sample),
         c('GSM1133119', 'GSM1133120', 'GSM1133121', 'GSM1133122', 'GSM1133123')
     )  
 })
