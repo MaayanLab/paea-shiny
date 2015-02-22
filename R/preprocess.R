@@ -24,6 +24,8 @@ download_data <- function(url = 'https://localhost/microtask.csv') {
 #' @return tbl_dt
 #'
 preprocess_data <- function(dt) {
+    trim_both <- stringi::stri_trim_both
+    
     dplyr::tbl_dt(dt) %>% dplyr::rename(
         upregulated=up_genes, downregulated=dn_genes
     ) %>% 
@@ -34,7 +36,8 @@ preprocess_data <- function(dt) {
     dplyr::mutate(geo_id = factor(
         stringi::stri_trim_both(stringi::stri_replace_all_fixed(geo_id, '[ACCN]', '')))) %>%
     # Strip whitespaces
-    dplyr::mutate(gene = factor(stringi::stri_trim_both(as.character(gene))))
+    dplyr::mutate_each(dplyr::funs(trim_both), -id) %>%
+        dplyr::mutate_each(dplyr::funs(factor), geo_id)
 }
 
 
