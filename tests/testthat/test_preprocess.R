@@ -1,7 +1,7 @@
 testthat::test_that('Test preprocess_data', {
     testthat::expect_equal(dim(preprocess_data(example_microtask_data)), dim(example_microtask_data))
     testthat::expect_equal(
-        preprocess_data(example_microtask_data)$geo_accession,
+        preprocess_data(example_microtask_data)$geo_id,
         factor(unlist(stringi::stri_replace_all_fixed(stringi::stri_trim_both(example_microtask_data$geo_id), '[ACCN]', '')))
     )
     testthat::expect_equal(preprocess_data(example_microtask_data)$id, example_microtask_data$id)
@@ -46,7 +46,7 @@ testthat::test_that('Test extract_description', {
     testthat::expect_equal(nrow(extract_description(example_microtask_data)), nrow(example_microtask_data))
     testthat::expect_equal(extract_description(example_microtask_data)$gene, example_microtask_data$gene)
     testthat::expect_equal(extract_description(example_microtask_data)$id, example_microtask_data$id)
-    testthat::expect_equal(extract_description(example_microtask_data)$geo_accession, example_microtask_data$geo_accession)
+    testthat::expect_equal(extract_description(example_microtask_data)$geo_id, example_microtask_data$geo_id)
 })
 
 

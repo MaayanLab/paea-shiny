@@ -25,7 +25,7 @@ download_data <- function(url = 'https://localhost/microtask.csv') {
 #'
 preprocess_data <- function(dt) {
     dplyr::tbl_dt(dt) %>% dplyr::rename(
-        geo_accession=geo_id, control=ctrl_ids, treatment=pert_ids,
+        control=ctrl_ids, treatment=pert_ids,
         gene=gene, perturbation=pert_type, species=organism, tissue_cell_line=cell_type,
         upregulated=up_genes, downregulated=dn_genes, user=curator, datetime=time, id=id
     ) %>% 
@@ -33,8 +33,8 @@ preprocess_data <- function(dt) {
     dplyr::mutate(control = stringi::stri_replace_all_fixed(control, '&Acirc;&nbsp;', '')) %>% 
     dplyr::mutate(treatment = stringi::stri_replace_all_fixed(treatment, '&Acirc;&nbsp;', '')) %>%
     # Remove [ACCN]
-    dplyr::mutate(geo_accession = factor(
-        stringi::stri_trim_both(stringi::stri_replace_all_fixed(geo_accession, '[ACCN]', '')))) %>%
+    dplyr::mutate(geo_id = factor(
+        stringi::stri_trim_both(stringi::stri_replace_all_fixed(geo_id, '[ACCN]', '')))) %>%
     # Strip whitespaces
     dplyr::mutate(gene = factor(stringi::stri_trim_both(as.character(gene))))
 }
@@ -91,9 +91,9 @@ extract_genes <- function(dt) {
 #' Extract general information about the dataset
 #' 
 #' @param dt tbl_dt as returned from preprocess_data
-#' @return tbl_dt with columns: id, geo_accession, gene, perturbation, species, tissue_cell_line
+#' @return tbl_dt with columns: id, geo_id, gene, perturbation, species, tissue_cell_line
 extract_description <- function(dt) {
-    dt %>% dplyr::select(id, geo_accession, gene, perturbation, species, tissue_cell_line)
+    dt %>% dplyr::select(id, geo_id, gene, perturbation, species, tissue_cell_line)
 }
 
 
