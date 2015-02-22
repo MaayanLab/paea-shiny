@@ -25,7 +25,7 @@ download_data <- function(url = 'https://localhost/microtask.csv') {
 #'
 preprocess_data <- function(dt) {
     dplyr::tbl_dt(dt) %>% dplyr::rename(
-        upregulated=up_genes, downregulated=dn_genes, user=curator, datetime=time, id=id
+        upregulated=up_genes, downregulated=dn_genes, datetime=time, id=id
     ) %>% 
     # Remove weird characters    
     dplyr::mutate(ctrl_ids = stringi::stri_replace_all_fixed(ctrl_ids, '&Acirc;&nbsp;', '')) %>% 
