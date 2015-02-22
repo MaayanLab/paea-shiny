@@ -92,9 +92,10 @@ extract_genes <- function(dt) {
 #' Extract general information about the dataset
 #' 
 #' @param dt tbl_dt as returned from preprocess_data
-#' @return tbl_dt with columns: id, geo_id, gene, pert_type, organism, cell_type
+#' @return tbl_dt with columns: geo_id, (gene, pert_type | disease_name, disease_id | drug_name, drug_id ),
+#'     organism, cell_type, id
 extract_description <- function(dt) {
-    dt %>% dplyr::select(id, geo_id, gene, pert_type, organism, cell_type)
+    dt %>% dplyr::select(-ctrl_ids, -pert_ids, -upregulated, -downregulated, -curator, -time)
 }
 
 
