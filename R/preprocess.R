@@ -25,7 +25,6 @@ download_data <- function(url = 'https://localhost/microtask.csv') {
 #'
 preprocess_data <- function(dt) {
     dplyr::tbl_dt(dt) %>% dplyr::rename(
-        tissue_cell_line=cell_type,
         upregulated=up_genes, downregulated=dn_genes, user=curator, datetime=time, id=id
     ) %>% 
     # Remove weird characters    
@@ -90,9 +89,9 @@ extract_genes <- function(dt) {
 #' Extract general information about the dataset
 #' 
 #' @param dt tbl_dt as returned from preprocess_data
-#' @return tbl_dt with columns: id, geo_id, gene, pert_type, organism, tissue_cell_line
+#' @return tbl_dt with columns: id, geo_id, gene, pert_type, organism, cell_type
 extract_description <- function(dt) {
-    dt %>% dplyr::select(id, geo_id, gene, pert_type, organism, tissue_cell_line)
+    dt %>% dplyr::select(id, geo_id, gene, pert_type, organism, cell_type)
 }
 
 

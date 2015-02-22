@@ -10,7 +10,7 @@ extract_description(dt)
 \item{dt}{tbl_dt as returned from preprocess_data}
 }
 \value{
-tbl_dt with columns: id, geo_id, gene, pert_type, organism, tissue_cell_line
+tbl_dt with columns: id, geo_id, gene, pert_type, organism, cell_type
 }
 \description{
 Extract general information about the dataset
