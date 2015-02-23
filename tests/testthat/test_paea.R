@@ -5,7 +5,7 @@ testthat::test_that('Test prepare_paea_results', {
     description <- extract_description(preprocess_data(example_microtask_data))
     testthat::expect_equal(
         nrow(prepare_paea_results(paea$p_values, description)),
-        length(paea$p_values)
+        length(which(paea$p_values <= 0.05))
     )
 })
 

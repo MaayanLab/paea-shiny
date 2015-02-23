@@ -1,13 +1,16 @@
 #' Join PAEA results with data description
 #' @param paea_pvalues pvalues taken from PAEAAnalysis results
 #' @param data_description tbl_df as returned from extract_description
+#' @param pvalue_threshold default: 0.05
 #' @return tbl_df 
 #'
-prepare_paea_results <- function(paea_pvalues, data_description) {
+prepare_paea_results <- function(paea_pvalues, data_description, pvalue_threshold=0.05) {
     dplyr::tbl_df(data.frame(
         set=colnames(paea_pvalues),
-        neg_log10_pval=as.vector(-log10(paea_pvalues))
+        pvalue=as.vector(paea_pvalues)
     )) %>% 
+        dplyr::filter(pvalue <= pvalue_threshold) %>%
+        dplyr::mutate(neg_log_pval = -log10(pvalue)) %>%
         tidyr::separate(set, into=c('id', 'category'), sep='_') %>% 
         dplyr::mutate(id=as.numeric(id)) %>%
         dplyr::left_join(data_description, by='id') %>%
