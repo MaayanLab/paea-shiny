@@ -149,6 +149,7 @@ paea_tab <- tabPanel(
                 'Split only query'='split_query',
                 'Split both and search oposite'='split_both_and_reverse'
             )),
+            uiOutput('background_dataset_container'),
             uiOutput('run_paea_container')
         )),
         column(6, wellPanel(

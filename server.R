@@ -402,6 +402,19 @@ shinyServer(function(input, output, session) {
     #'
     outputOptions(output, 'run_paea_container', suspendWhenHidden = FALSE)
     
+    
+    #' Choose background dataset
+    #'
+    output$background_dataset_container <- renderUI({
+        datasets <- names(perturbations_data)
+        radioButtons(
+            'background_dataset', 'Background',
+            setNames(datasets, datasets)
+        )
+    })
+
+    
+    
     #' chdir panel - status message
     #'
     output$chdir_message <- renderText({
@@ -417,13 +430,14 @@ shinyServer(function(input, output, session) {
         if(is.null(input$run_paea)) { return() } else if(input$run_paea == 0) { return() }
         chdir <- isolate(values$chdir)
         casesensitive <- isolate(input$paea_casesensitive)
+        background_dataset <- isolate(input$background_dataset)
 
         if(!(is.null(chdir))) {
             values$paea_running <- TRUE
             values$paea <- tryCatch(
                 paea_analysis_dispatch(
                     chdirresults=chdir$chdirprops,
-                    gmtfile=prepare_gene_sets(perturbations_data$genes$genes),
+                    gmtfile=prepare_gene_sets(perturbations_data[[background_dataset]]$genes),
                     casesensitive=casesensitive,
                     strategy=input$paea_strategy
                 ),
@@ -441,7 +455,8 @@ shinyServer(function(input, output, session) {
     #' 
     paea_results_up <- reactive({
         if(!is.null(values$paea$up)) {
-            prepare_paea_results(values$paea$up$p_values, perturbations_data$genes$description)
+            background_dataset <- isolate(input$background_dataset)
+            prepare_paea_results(values$paea$up$p_values, perturbations_data[[background_dataset]]$description)
         }
     })
     
@@ -449,7 +464,8 @@ shinyServer(function(input, output, session) {
     #' 
     paea_results_down <- reactive({
         if(!is.null(values$paea$down)) {
-            prepare_paea_results(values$paea$down$p_values, perturbations_data$genes$description)
+            background_dataset <- isolate(input$background_dataset)
+            prepare_paea_results(values$paea$down$p_values, perturbations_data[[background_dataset]]$description)
         }
     })
     
