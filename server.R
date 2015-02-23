@@ -15,7 +15,7 @@ options(shiny.maxRequestSize=120*1024^2)
 perturbations_data <- list(
     genes = nasbMicrotaskViewerHelpers::preprocess(config$genes_data_path, config$drop_duplicates),
     drugs = nasbMicrotaskViewerHelpers::preprocess(config$drugs_data_path, config$drop_duplicates),
-    disease = nasbMicrotaskViewerHelpers::preprocess(config$disease_data_path, config$drop_duplicates)
+    diseases = nasbMicrotaskViewerHelpers::preprocess(config$diseases_data_path, config$drop_duplicates)
 )
 
 shinyServer(function(input, output, session) {
