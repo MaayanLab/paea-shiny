@@ -10,11 +10,11 @@ prepare_paea_results <- function(paea_pvalues, data_description, pvalue_threshol
         pvalue=as.vector(paea_pvalues)
     )) %>% 
         dplyr::filter(pvalue <= pvalue_threshold) %>%
-        dplyr::mutate(neg_log_pval = -log10(pvalue)) %>%
+        dplyr::mutate(neg_log10_pval = -log10(pvalue)) %>%
         tidyr::separate(set, into=c('id', 'category'), sep='_') %>% 
         dplyr::mutate(id=as.numeric(id)) %>%
         dplyr::left_join(data_description, by='id') %>%
-        dplyr::select(id, category, geo_id:cell_type, neg_log_pval)
+        dplyr::select(id, category, geo_id:cell_type, neg_log10_pval)
 }
 
 #' PAEAAnalysis wrapper. Redirects plots to /dev/null 
