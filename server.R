@@ -415,7 +415,7 @@ shinyServer(function(input, output, session) {
         datasets <- names(perturbations_data)
         radioButtons(
             'background_dataset', 'Background',
-            setNames(datasets, datasets)
+            setNames(datasets, stringi::stri_trans_totitle(datasets))
         )
     })
 
