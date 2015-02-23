@@ -55,10 +55,16 @@ shinyServer(function(input, output, session) {
         values$paea <- NULL
         
         if (is.null(inFile)) return(NULL)
-        # Not optimal but read.csv is easier to handle
-        as.data.table(read.csv(
-            inFile$datapath, sep = input$sep
-        ))
+        
+        tryCatch(
+            as.data.table(read.csv(
+                inFile$datapath, sep = input$sep
+            )),
+            error = function(e) {
+                values$last_error <- e
+                NULL
+            }
+        )
     })
     
     
