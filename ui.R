@@ -147,7 +147,7 @@ paea_tab <- tabPanel(
             radioButtons('paea_strategy', 'Strategy:', c(
                 'Split query and background'='split_both',
                 'Split only query'='split_query',
-                'Split both and search oposite'='split_both_and_reverse'
+                'Split both and search opposite'='split_both_and_reverse'
             )),
             uiOutput('background_dataset_container'),
             uiOutput('run_paea_container')
