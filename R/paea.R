@@ -105,7 +105,7 @@ paea_analysis_dispatch_split_query <- function(chdirresults, gmtfile, gammas = c
 }
 
 
-#' Split query and background into up and down and run PAEA on oposite parts
+#' Split query and background into up and down and run PAEA on  opposite parts
 #'
 #' @param chdirresults see GeoDE::chdirAnalysis
 #' @param gmtfile see GeoDE::chdirAnalysis

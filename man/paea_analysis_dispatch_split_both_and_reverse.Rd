@@ -2,7 +2,7 @@
 % Please edit documentation in R/paea.R
 \name{paea_analysis_dispatch_split_both_and_reverse}
 \alias{paea_analysis_dispatch_split_both_and_reverse}
-\title{Split query and background into up and down and run PAEA on oposite parts}
+\title{Split query and background into up and down and run PAEA on  opposite parts}
 \usage{
 paea_analysis_dispatch_split_both_and_reverse(chdirresults, gmtfile,
   gammas = c(1), casesensitive = FALSE)
@@ -20,6 +20,6 @@ paea_analysis_dispatch_split_both_and_reverse(chdirresults, gmtfile,
 list with up (up query vs down background)and down (down query vs up background)
 }
 \description{
-Split query and background into up and down and run PAEA on oposite parts
+Split query and background into up and down and run PAEA on  opposite parts
 }
 
