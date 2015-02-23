@@ -6,7 +6,7 @@
 prepare_paea_results <- function(paea_pvalues, data_description) {
     dplyr::tbl_df(data.frame(
         set=colnames(paea_pvalues),
-        neg_log_pval=as.vector(-log(paea_pvalues))
+        neg_log10_pval=as.vector(-log10(paea_pvalues))
     )) %>% 
         tidyr::separate(set, into=c('id', 'category'), sep='_') %>% 
         dplyr::mutate(id=as.numeric(id)) %>%
