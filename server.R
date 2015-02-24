@@ -501,17 +501,17 @@ shinyServer(function(input, output, session) {
     #' paea panel - download block
     #'
     output$paea_downloads_container <- renderUI({
-        button_up <- downloadButton('download_paea_up', 'Download upregulated sets')
         button_down <- downloadButton('download_paea_down', 'Download downregulated sets')
+        button_up <- downloadButton('download_paea_up', 'Download upregulated sets')
 
         if (is.null(values$paea)) {
             list(
-                {button_up$attribs$disabled <- 'true'; button_up},
                 {button_down$attribs$disabled <- 'true'; button_down},
+                {button_up$attribs$disabled <- 'true'; button_up},
                 helpText('No data available. Did you run PAEA analysis?')
             )
         } else {
-            list(button_up,  button_down)
+            list(button_down, button_up)
         }
     })
     
