@@ -167,12 +167,12 @@ paea_tab <- tabPanel(
             h3('PAEA results', id='pae_results'),
             tabsetPanel(
                 tabPanel(
-                    "Enriched downregulated sets",
+                    'Enriched sets for downregulated genes',
                     p(textOutput('paea_message')),
                     column(12, dataTableOutput('pae_results_down'))
                 ),
                 tabPanel(
-                    "Enriched upregulated sets",
+                    'Enriched sets for upregulated genes',
                     column(12, dataTableOutput('pae_results_up'))
                 )
             )

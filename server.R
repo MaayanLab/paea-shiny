@@ -501,8 +501,8 @@ shinyServer(function(input, output, session) {
     #' paea panel - download block
     #'
     output$paea_downloads_container <- renderUI({
-        button_down <- downloadButton('download_paea_down', 'Download downregulated sets')
-        button_up <- downloadButton('download_paea_up', 'Download upregulated sets')
+        button_down <- downloadButton('download_paea_down', 'Download results for downregulated genes')
+        button_up <- downloadButton('download_paea_up', 'Download results for upregulated genes')
 
         if (is.null(values$paea)) {
             list(
