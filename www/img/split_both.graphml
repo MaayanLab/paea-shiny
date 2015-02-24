@@ -170,7 +170,7 @@
     <node id="n9">
       <data key="d6">
         <y:ShapeNode>
-          <y:Geometry height="30.0" width="172.03320312500006" x="394.6822079613095" y="185.0"/>
+          <y:Geometry height="30.0" width="172.033203125" x="394.6822079613095" y="185.0"/>
           <y:Fill color="#FF6600" transparent="false"/>
           <y:BorderStyle color="#000000" type="line" width="1.0"/>
           <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="17.96875" modelName="custom" textColor="#000000" visible="true" width="162.033203125" x="5.0" y="6.015625">Enriched upregulated sets<y:LabelModel>
