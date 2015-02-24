@@ -418,8 +418,14 @@ shinyServer(function(input, output, session) {
             setNames(datasets, stringi::stri_trans_totitle(datasets))
         )
     })
-
     
+    #'
+    #'
+    output$paea_strategy_chart <- renderImage(
+        list(src=file.path('www/img', paste(input$paea_strategy, 'png', sep='.')), contentType='image/png'),
+        deleteFile=FALSE
+    )
+
     
     #' chdir panel - status message
     #'

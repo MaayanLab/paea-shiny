@@ -140,19 +140,24 @@ paea_tab <- tabPanel(
     'Principle Angle Enrichment Analysis',
     fluidRow(
         column(12, p('')),
-        column(6, wellPanel(
+        column(4, wellPanel(
             h3('PAEA parameters', id='paea_parameters'),
             checkboxInput('paea_casesensitive', 'Case Sensitive', FALSE),
             helpText('Check if you want gene lables comparisons to be case sensitive. Not recommended.'),
+            uiOutput('background_dataset_container'),
+            uiOutput('run_paea_container')
+        )),
+        
+        column(4, wellPanel(
             radioButtons('paea_strategy', 'Strategy:', c(
                 'Split query and background'='split_both',
                 'Split only query'='split_query',
                 'Split both and search opposite'='split_both_and_reverse'
             )),
-            uiOutput('background_dataset_container'),
-            uiOutput('run_paea_container')
+            imageOutput('paea_strategy_chart',  width = '100%', height='100%')
         )),
-        column(6, wellPanel(
+        
+        column(4, wellPanel(
             h3('Downloads', id='paea_downloads'),
             uiOutput('paea_downloads_container')
         )),
