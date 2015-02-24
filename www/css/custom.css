@@ -5,3 +5,9 @@
 .shiny-datatable-output {
     margin-top: 1%;
 }
+
+#paea_strategy_chart img {
+    max-width: 100%;
+    height: auto;
+    width: auto\9; /* ie8 */
+}
