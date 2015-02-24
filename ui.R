@@ -149,6 +149,7 @@ paea_tab <- tabPanel(
         )),
         
         column(4, wellPanel(
+            h3('Workflow', id='workflow'),
             radioButtons('paea_strategy', 'Strategy:', c(
                 'Split query and background'='split_both',
                 'Split only query'='split_query',
