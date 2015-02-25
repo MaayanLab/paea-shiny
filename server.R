@@ -447,7 +447,6 @@ shinyServer(function(input, output, session) {
         )
     })
     
-    
     #' paea panel - workflow flowchart
     #'
     output$paea_strategy_chart <- renderImage(
