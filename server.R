@@ -385,6 +385,33 @@ shinyServer(function(input, output, session) {
         }
     })
     
+        
+    #' chdir panel - status message
+    #'
+    output$chdir_message <- renderText({
+        if(is.null(values$chdir)) {
+            'results not available...'
+        }
+    })
+    
+    
+    #' chdir panel - Enrichr submit form
+    #'
+    output$enrichr_form <- renderUI({
+        button <-shiny::tags$button('Analyze with Enrichr', class='btn btn-default')
+        chdir_diff_genes <- list(up=chdir_up_genes, down=chdir_down_genes)
+        value <- if(is.null(values$chdir)) { '' } else {
+            chdir_diff_genes[[input$enrichr_subset]]() %>% prepare_enrichr_input() 
+        }
+        
+        shiny::tags$form(
+            target='_blank', method='post', enctype='multipart/form-data',
+            action='http://amp.pharm.mssm.edu/Enrichr/enrich',
+            shiny::tags$input(name='list', type='hidden', value=value),
+            if(is.null(values$chdir)) { button$attribs$disabled <- 'true'; button } else { button }
+        )
+    })
+    
     
     #' paea panel - run button
     #'
@@ -404,6 +431,7 @@ shinyServer(function(input, output, session) {
         }
     })
     
+    
     #' See coment for run_chdir_container
     #'
     outputOptions(output, 'run_paea_container', suspendWhenHidden = FALSE)
@@ -419,21 +447,13 @@ shinyServer(function(input, output, session) {
         )
     })
     
+    
     #'
     #'
     output$paea_strategy_chart <- renderImage(
         list(src=file.path('www/img', paste(input$paea_strategy, 'png', sep='.')), contentType='image/png'),
         deleteFile=FALSE
     )
-
-    
-    #' chdir panel - status message
-    #'
-    output$chdir_message <- renderText({
-        if(is.null(values$chdir)) {
-            'results not available...'
-        }
-    })
 
         
     #' Run Principle Angle Enrichment Analysis
@@ -542,5 +562,5 @@ shinyServer(function(input, output, session) {
             'results not available...'
         }
     })
-
+    
 })

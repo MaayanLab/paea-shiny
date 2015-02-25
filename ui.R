@@ -96,18 +96,24 @@ chdir_tab <- tabPanel(
             uiOutput('run_chdir_container')
         )),
         
-        column(4, wellPanel(
-            h3('Downloads', id='chdir_downloads'),
-            uiOutput('ngenes_tokeep_contatiner'),
-            tags$dl(
-                tags$dt('#{significant upregulated genes}:'),
-                tags$dd(textOutput('n_sig_up_genes')),
-                tags$dt('#{significant downregulated genes}:'),
-                tags$dd(textOutput('n_sig_down_genes'))
+        column(4,
+            wellPanel(
+                h3('Downloads', id='chdir_downloads'),
+                uiOutput('ngenes_tokeep_contatiner'),
+                tags$dl(
+                    tags$dt('#{significant upregulated genes}:'),
+                    tags$dd(textOutput('n_sig_up_genes')),
+                    tags$dt('#{significant downregulated genes}:'),
+                    tags$dd(textOutput('n_sig_down_genes'))
+                ),
+                uiOutput('chdir_downloads_container')
             ),
-            uiOutput('chdir_downloads_container')
-        )),
-       
+            wellPanel(
+                h3('Analyze with Enrichr'),
+                radioButtons('enrichr_subset', 'Subset', c('Upregulated'='up', 'Downregulated'='down')),
+                uiOutput('enrichr_form')
+            )
+        ),
         column(12,
             h3('CHDIR results', id='chdir_results_header'),
             tabsetPanel(
