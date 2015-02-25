@@ -110,6 +110,7 @@ chdir_tab <- tabPanel(
             ),
             wellPanel(
                 h3('Analyze with Enrichr'),
+                radioButtons('enrichr_subset', 'Subset', c('Upregulated'='up', 'Downregulated'='down')),
                 uiOutput('enrichr_form')
             )
         ),

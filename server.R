@@ -399,11 +399,15 @@ shinyServer(function(input, output, session) {
     #'
     output$enrichr_form <- renderUI({
         button <-shiny::tags$button('Analyze with Enrichr', class='btn btn-default')
+        chdir_diff_genes <- list(up=chdir_up_genes, down=chdir_down_genes)
+        value <- if(is.null(values$chdir)) { '' } else {
+            chdir_diff_genes[[input$enrichr_subset]]() %>% prepare_enrichr_input() 
+        }
         
         shiny::tags$form(
             target='_blank', method='post', enctype='multipart/form-data',
             action='http://amp.pharm.mssm.edu/Enrichr/enrich',
-            shiny::tags$input(name='list', type='hidden', value=''),
+            shiny::tags$input(name='list', type='hidden', value=value),
             if(is.null(values$chdir)) { button$attribs$disabled <- 'true'; button } else { button }
         )
     })
