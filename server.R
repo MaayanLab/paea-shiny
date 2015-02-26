@@ -502,7 +502,7 @@ shinyServer(function(input, output, session) {
     
     #' PAEA output up
     #'
-    output$pae_results_up <- renderDataTable({
+    output$paea_results_up <- renderDataTable({
         if(!is.null(paea_results_up())) {
             paea_results_up()
         }
@@ -510,7 +510,7 @@ shinyServer(function(input, output, session) {
     
     #' PAEA output down
     #'
-    output$pae_results_down <- renderDataTable({
+    output$paea_results_down <- renderDataTable({
         if(!is.null(paea_results_down())) {
             paea_results_down()
         }
