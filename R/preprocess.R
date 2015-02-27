@@ -95,7 +95,7 @@ extract_genes <- function(dt) {
 #' @return tbl_dt with columns: geo_id, (gene, pert_type | disease_name, disease_id | drug_name, drug_id ),
 #'     organism, cell_type, id
 extract_description <- function(dt) {
-    dt %>% dplyr::select(-ctrl_ids, -pert_ids, -upregulated, -downregulated, -curator, -time)
+    dt %>% dplyr::select(-ctrl_ids, -pert_ids, -upregulated, -downregulated, -time)
 }
 
 
