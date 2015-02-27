@@ -4,7 +4,7 @@
 #' @return data.frame with curator and n
 #'
 submissions_per_user <- function(dataset) {
-    dataset$description %>% group_by(curator) %>% summarise(n=n())
+    dataset$description %>% dplyr::group_by(curator) %>% dplyr::summarise(n=n())
 }
 
 #' Count number of submissions per cell type
@@ -13,7 +13,7 @@ submissions_per_user <- function(dataset) {
 #' @return data.frame with cell_type and n
 #'
 submissions_per_cell_type <- function(dataset) {
-    dataset$description %>% group_by(cell_type) %>% summarise(n=n())
+    dataset$description %>% dplyr::group_by(cell_type) %>% dplyr::summarise(n=n())
 }
 
 
@@ -23,7 +23,7 @@ submissions_per_cell_type <- function(dataset) {
 #' @return data.frame with organism and n
 #'
 submissions_per_organism <- function(dataset) {
-    dataset$description %>% group_by(organism) %>% summarise(n=n())
+    dataset$description %>% dplyr::group_by(organism) %>% dplyr::summarise(n=n())
 }
 
 
@@ -33,5 +33,5 @@ submissions_per_organism <- function(dataset) {
 #' @return data.frame with gene and n
 #'
 genes_coverage <- function(dataset) {
-     dataset$genes %>% group_by(gene) %>% summarise(n=n())   
+     dataset$genes %>% dplyr::group_by(gene) %>% dplyr::summarise(n=n())   
 }
