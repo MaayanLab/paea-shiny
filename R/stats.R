@@ -25,3 +25,13 @@ submissions_per_cell_type <- function(dataset) {
 submissions_per_organism <- function(dataset) {
     dataset$description %>% group_by(organism) %>% summarise(n=n())
 }
+
+
+#' Count number of sets covering given gene
+#' 
+#' @param list of dataframes as returned from preprocess
+#' @return data.frame with gene and n
+#'
+genes_coverage <- function(dataset) {
+     dataset$genes %>% group_by(gene) %>% summarise(n=n())   
+}
