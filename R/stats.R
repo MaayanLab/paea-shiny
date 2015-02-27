@@ -6,3 +6,12 @@
 submissions_per_user <- function(dataset) {
     dataset$description %>% group_by(curator) %>% summarise(n=n())
 }
+
+#' Count number of submissions per cell type
+#' 
+#' @param list of dataframes as returned from preprocess
+#' @return data.frame with cell_type and n
+#'
+submissions_per_cell_type <- function(dataset) {
+    dataset$description %>% group_by(cell_type) %>% summarise(n=n())
+}
