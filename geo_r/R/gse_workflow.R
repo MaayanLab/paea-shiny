@@ -5,10 +5,11 @@
 #' @param outputdir place to store output files
 #' @param control vector of sample ids
 #' @param treatment vector of sample ids
+#' @param description dataset description
 #' @param dryrun logical should we run process_eset
 #' @return vector of output files
 #'
-process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, treatment=NULL, dryrun=FALSE) {    
+process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, treatment=NULL, description=NULL, dryrun=FALSE) {    
     destdir <- if(is.null(destdir)) { tempdir() } else { destdir }
     outputdir <- if(is.null(outputdir)) { tempdir() } else { outputdir }
     
@@ -24,7 +25,7 @@ process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, trea
     
     if(!dryrun) {
         # Process esets
-        expr <- lapply(gse, process_eset)
+        expr <- lapply(gse, process_eset, geo_id=geo_id, control=control, treatment=treatment)
     
         #Write results
         mapply(function(e, f) saveRDS(e, f), expr, output_names)
@@ -38,9 +39,10 @@ process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, trea
 #' @param eset Biobase::ExpressionSet
 #' @param control vector of sample ids
 #' @param treatment vector of sample ids
+#' @param description dataset description
 #' @return data.table
 #'
-process_eset <- function(eset, control=NULL, treatment=NULL) {
+process_eset <- function(eset, geo_id=NULL, control=NULL, treatment=NULL, description=NULL) {
     exprs <- Biobase::exprs(eset) %>%
         as.data.table() %>%
         dplyr::tbl_dt() %>%
@@ -56,7 +58,7 @@ process_eset <- function(eset, control=NULL, treatment=NULL) {
         dplyr::select(ID_REF, IDENTIFIER, starts_with('GSM')) %>% 
         dplyr::filter(IDENTIFIER != '')
     
-    attributes(combined)$gse_data <- list(control=control, treatment=treatment)
+    attributes(combined)$gse_data <- list(geo_id=geo_id, control=control, treatment=treatment, description=description)
     
     combined 
 }

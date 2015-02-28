@@ -5,7 +5,7 @@
 \title{Download GSE file with annotations and extract expression data}
 \usage{
 process_gse(geo_id, destdir = NULL, outputdir = NULL, control = NULL,
-  treatment = NULL, dryrun = FALSE)
+  treatment = NULL, description = NULL, dryrun = FALSE)
 }
 \arguments{
 \item{geo_id}{character}
@@ -17,6 +17,8 @@ process_gse(geo_id, destdir = NULL, outputdir = NULL, control = NULL,
 \item{control}{vector of sample ids}
 
 \item{treatment}{vector of sample ids}
+
+\item{description}{dataset description}
 
 \item{dryrun}{logical should we run process_eset}
 }

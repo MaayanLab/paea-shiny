@@ -4,7 +4,8 @@
 \alias{process_eset}
 \title{Process eset}
 \usage{
-process_eset(eset, control = NULL, treatment = NULL)
+process_eset(eset, geo_id = NULL, control = NULL, treatment = NULL,
+  description = NULL)
 }
 \arguments{
 \item{eset}{Biobase::ExpressionSet}
@@ -12,6 +13,8 @@ process_eset(eset, control = NULL, treatment = NULL)
 \item{control}{vector of sample ids}
 
 \item{treatment}{vector of sample ids}
+
+\item{description}{dataset description}
 }
 \value{
 data.table
