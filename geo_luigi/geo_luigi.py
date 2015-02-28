@@ -2,6 +2,7 @@
 
 import csv
 import luigi
+import logging
 import rpy2.robjects.packages as rpackages
 workflows = rpackages.importr('geoWorkflows')
 
@@ -22,14 +23,17 @@ class GetGEO(luigi.Task):
     description = luigi.Parameter()
     
     def output(self):
-        return [luigi.LocalTarget(_) for _ in workflows.process_gse(
+        try:
+            return [luigi.LocalTarget(_) for _ in workflows.process_gse(
                 geo_id=self.geo_id,
                 destdir=self.destdir,
                 outputdir=self.outputdir,
                 control=list(self.control),
                 treatment=list(self.treatment),
                 description=self.description
-        )]
+            )]
+        except Exception as e:
+            logging.exception('{0}'.format(self.geo_id))
 
     def run(self):
         self.output()
