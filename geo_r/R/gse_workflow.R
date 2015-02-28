@@ -25,7 +25,11 @@ process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, trea
     
     if(!dryrun) {
         # Process esets
-        expr <- lapply(gse, process_eset, geo_id=geo_id, control=control, treatment=treatment)
+        expr <- lapply(
+            gse, process_eset, geo_id=geo_id,
+            control=control, treatment=treatment,
+            description=description
+        )
     
         #Write results
         mapply(function(e, f) saveRDS(e, f), expr, output_names)
