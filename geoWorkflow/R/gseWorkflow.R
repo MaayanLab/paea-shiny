@@ -7,7 +7,14 @@
 #' @param treatment vector of sample ids
 #' @return vector of output files
 #'
-process_gse <- function(geo_id, destdir, outputdir, control=NULL, treatment=NULL) {
+process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, treatment=NULL) {    
+    destdir <- if(is.null(destdir)) { tempdir() } else { destdir }
+    outputdir <- if(is.null(outputdir)) { tempdir() } else { outputdir }
+    
+    stopifnot(length(destdir) == 1)
+    stopifnot(length(outputdir) == 1)
+    
+    
     # Download / load GSE file
     gse <- GEOquery::getGEO(GEO=geo_id, destdir=destdir, AnnotGPL=TRUE, getGPL=TRUE)
     

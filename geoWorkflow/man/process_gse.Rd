@@ -4,7 +4,8 @@
 \alias{process_gse}
 \title{Download GSE file with annotations and extract expression data}
 \usage{
-process_gse(geo_id, destdir, outputdir, control = NULL, treatment = NULL)
+process_gse(geo_id, destdir = NULL, outputdir = NULL, control = NULL,
+  treatment = NULL)
 }
 \arguments{
 \item{geo_id}{character}
