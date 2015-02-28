@@ -1,4 +1,6 @@
 import csv
+# -*- coding: utf-8 -*-
+
 import luigi
 import rpy2.robjects.packages as rpackages
 workflows = rpackages.importr('geoWorkflows')
