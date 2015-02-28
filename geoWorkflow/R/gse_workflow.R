@@ -5,9 +5,10 @@
 #' @param outputdir place to store output files
 #' @param control vector of sample ids
 #' @param treatment vector of sample ids
+#' @param dryrun logical should we run process_eset
 #' @return vector of output files
 #'
-process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, treatment=NULL) {    
+process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, treatment=NULL, dryrun=FALSE) {    
     destdir <- if(is.null(destdir)) { tempdir() } else { destdir }
     outputdir <- if(is.null(outputdir)) { tempdir() } else { outputdir }
     
@@ -21,11 +22,14 @@ process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, trea
     # Extract esets names
     output_names <- file.path(outputdir, paste(names(gse), 'rds', sep='.'))
     
-    # Process esets
-    expr <- lapply(gse, process_eset)
+    if(!dryrun) {
+        # Process esets
+        expr <- lapply(gse, process_eset)
     
-    #Write results
-    mapply(function(e, f) saveRDS(e, f), expr, output_names)
+        #Write results
+        mapply(function(e, f) saveRDS(e, f), expr, output_names)
+    }
+    
     output_names 
 }
 
