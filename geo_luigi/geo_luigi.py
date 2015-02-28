@@ -6,7 +6,13 @@ import rpy2.robjects.packages as rpackages
 workflows = rpackages.importr('geoWorkflows')
 
 class GetGEO(luigi.Task):
-    '''Download GEO file 
+    '''Download GEO file and extract annotated expression data
+    :param geo_id
+    :param destdir directory to store soft files
+    :param outputdir directory to store output
+    :param control list of control ids
+    :param treatment list of treatment/perturbation ids
+    :param description string with dataset description
     '''
     geo_id = luigi.Parameter()
     destdir = luigi.Parameter()
@@ -30,6 +36,11 @@ class GetGEO(luigi.Task):
 
 
 class AllDiseases(luigi.Task):
+    '''
+    :param input_path path to the input file
+    :param destdir  directory to store soft files
+    :param outputdir directory to store output
+    '''
     input_path = luigi.Parameter()
     destdir = luigi.Parameter()
     outputdir = luigi.Parameter() 
