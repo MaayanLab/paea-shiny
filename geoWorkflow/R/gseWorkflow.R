@@ -32,18 +32,18 @@ process_gse <- function(geo_id, destdir, outputdir, control=NULL, treatment=NULL
 process_eset <- function(eset, control=NULL, treatment=NULL) {
     exprs <- Biobase::exprs(eset) %>%
         as.data.table() %>%
-        tbl_dt() %>%
-        mutate(ID_REF=rownames(Biobase::exprs(eset)))
+        dplyr::tbl_dt() %>%
+        dplyr::mutate(ID_REF=rownames(Biobase::exprs(eset)))
     
     annot <- Biobase::fData(eset) %>%
         as.data.table() %>%
-        tbl_dt() %>%
-        select(ID_REF=ID, IDENTIFIER=`Gene symbol`)
+        dplyr::tbl_dt() %>%
+        dplyr::select(ID_REF=ID, IDENTIFIER=`Gene symbol`)
     
     combined <- exprs %>% 
-        left_join(annot, by='ID_REF') %>% 
-        select(ID_REF, IDENTIFIER, starts_with('GSM')) %>% 
-        filter(IDENTIFIER != '')
+        dplyr::left_join(annot, by='ID_REF') %>% 
+        dplyr::select(ID_REF, IDENTIFIER, starts_with('GSM')) %>% 
+        dplyr::filter(IDENTIFIER != '')
     
     attributes(combined)$gse_data <- list(control=control, treatment=treatment)
     
