@@ -157,9 +157,14 @@ paea_tab <- tabPanel(
         column(4, wellPanel(
             h3('Workflow', id='workflow'),
             radioButtons('paea_strategy', 'Strategy:', c(
-                'Split query and background'='split_both',
-                'Split only query'='split_query',
-                'Split both and search opposite'='split_both_and_reverse'
+                'in↑ ∩ lib↑' = 'up_up',
+                'in↓ ∩ lib↓' = 'down_down',
+                'in↑ ∩ lib↓' = 'up_down',
+                'in↓ ∩ lib↑' = 'down_up', 
+                'in↑ ∩ lib↑ + in↓ ∩ lib↓' = 'up_up+down_down',
+                'in↑ ∩ lib↓ + in↓ ∩ lib↑' = 'up_down+down_up',
+                'in↑ ∩ lib↑ + in↓ ∩ lib↓ - in↑ ∩ lib↓ - in↓ ∩ lib↑' = 'up_up+down_down-up_down-down-up',
+                'in↑ ∩ lib↓ + in↓ ∩ lib↑ - in↑ ∩ lib↑ - in↓ ∩ lib↓' = 'up_down+down_up-up_up+down_down'
             )),
             imageOutput('paea_strategy_chart',  width = '100%', height='100%')
         )),
