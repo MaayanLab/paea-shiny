@@ -163,7 +163,7 @@ paea_tab <- tabPanel(
                 'in↓ ∩ lib↑' = 'down_up', 
                 'in↑ ∩ lib↑ + in↓ ∩ lib↓' = 'up_up+down_down',
                 'in↑ ∩ lib↓ + in↓ ∩ lib↑' = 'up_down+down_up',
-                'in↑ ∩ lib↑ + in↓ ∩ lib↓ - in↑ ∩ lib↓ - in↓ ∩ lib↑' = 'up_up+down_down-up_down-down-up',
+                'in↑ ∩ lib↑ + in↓ ∩ lib↓ - in↑ ∩ lib↓ - in↓ ∩ lib↑' = 'up_up+down_down-up_down-down_up',
                 'in↑ ∩ lib↓ + in↓ ∩ lib↑ - in↑ ∩ lib↑ - in↓ ∩ lib↓' = 'up_down+down_up-up_up+down_down'
             )),
             imageOutput('paea_strategy_chart',  width = '100%', height='100%')
