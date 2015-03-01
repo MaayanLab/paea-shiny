@@ -87,16 +87,16 @@ paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesen
     #'
     chdirresults_splitted <- split_chdirresults(chdirresults)
     gmtfile_splitted <- split_gmtfile(gmtfile)
-
-
-
+    
+    
+    
     lapply(stringi::stri_split_fixed(tasks, '_'), function(task) {
-            stopifnot(length(task) == 2)
-            paea_analysis_wrapper(
-                chdirresults=chdirresults_splitted[[task[1]]],
-                gmtfile=gmtfile_splitted[[task[2]]],
-                gammas=gammas,
-                casesensitive=casesensitive
-            )
+        stopifnot(length(task) == 2)
+        paea_analysis_wrapper(
+            chdirresults=chdirresults_splitted[[task[1]]],
+            gmtfile=gmtfile_splitted[[task[2]]],
+            gammas=gammas,
+            casesensitive=casesensitive
+        )
     }) %>% setNames(tasks)
 }
