@@ -6,7 +6,7 @@
 and in future some filtering steps}
 \usage{
 paea_analysis_dispatch(chdirresults, gmtfile, gammas = c(1),
-  casesensitive = FALSE, strategy = "split_both")
+  casesensitive = FALSE, strategy = "up_up+down_down")
 }
 \arguments{
 \item{chdirresults}{see GeoDE::PAEAAnalysis}

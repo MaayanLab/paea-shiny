@@ -66,65 +66,6 @@ split_gmtfile <- function(gmtfile) {
 }
 
 
-#' Split query and background into up and down and run PAEA on respective parts
-#'
-#' @param chdirresults see GeoDE::chdirAnalysis
-#' @param gmtfile see GeoDE::chdirAnalysis
-#' @param gammas see GeoDE::chdirAnalysis
-#' @param casesensitive see GeoDE::chdirAnalysis
-#' @return list with up and down fields
-#'
-paea_analysis_dispatch_split_both <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
-    # Split chdir results into up and down
-    chdirresults_splitted <- split_chdirresults(chdirresults)
-    
-    gmtfile_splitted <- split_gmtfile(gmtfile)
-    
-    list(
-        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_splitted$up,  gammas, casesensitive), 
-        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_splitted$down,  gammas, casesensitive)
-    )
-}
-
-
-#' Split query into up and down and run PAEA for each part with full background
-#'
-#' @param chdirresults see GeoDE::chdirAnalysis
-#' @param gmtfile see GeoDE::chdirAnalysis
-#' @param gammas see GeoDE::chdirAnalysis
-#' @param casesensitive see GeoDE::chdirAnalysis
-#' @return list with up and down fields
-#'
-paea_analysis_dispatch_split_query <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
-    chdirresults_splitted <- split_chdirresults(chdirresults)
-    
-    list(
-        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile,  gammas, casesensitive), 
-        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile,  gammas, casesensitive)
-    )
-}
-
-
-#' Split query and background into up and down and run PAEA on  opposite parts
-#'
-#' @param chdirresults see GeoDE::chdirAnalysis
-#' @param gmtfile see GeoDE::chdirAnalysis
-#' @param gammas see GeoDE::chdirAnalysis
-#' @param casesensitive see GeoDE::chdirAnalysis
-#' @return list with up (up query vs down background)and down (down query vs up background)
-#'
-paea_analysis_dispatch_split_both_and_reverse <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
-    chdirresults_splitted <- split_chdirresults(chdirresults)
-    
-    gmtfile_splitted <- split_gmtfile(gmtfile)
-    
-    list(
-        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_splitted$down,  gammas, casesensitive), 
-        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_splitted$up,  gammas, casesensitive)
-    )
-}
-
-
 #' PAEAAnalysis dispatch function. Should handle separating chdirresults into up and down
 #' and in future some filtering steps
 #' 
@@ -135,12 +76,27 @@ paea_analysis_dispatch_split_both_and_reverse <- function(chdirresults, gmtfile,
 #' @param strategy character one of {'split_both', ...}
 #' @return list with paea results
 #'
-paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='split_both'){    
-    strategies <- list(
-        split_both=paea_analysis_dispatch_split_both,
-        split_query=paea_analysis_dispatch_split_query,
-        split_both_and_reverse=paea_analysis_dispatch_split_both_and_reverse
-    )
-    stopifnot(strategy %in%  names(strategies))
-    strategies[[strategy]](chdirresults, gmtfile, gammas, casesensitive)
+paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='up_up+down_down'){    
+    
+    #' Split strategy string into individual components.
+    #' Each component represents single paea run.
+    #' 
+    tasks <- unlist(stringi::stri_split_regex(strategy, '[+-]'))
+    
+    #' Preprocess query and background
+    #'
+    chdirresults_splitted <- split_chdirresults(chdirresults)
+    gmtfile_splitted <- split_gmtfile(gmtfile)
+
+
+
+    lapply(stringi::stri_split_fixed(tasks, '_'), function(task) {
+            stopifnot(length(task) == 2)
+            paea_analysis_wrapper(
+                chdirresults=chdirresults_splitted[[task[1]]],
+                gmtfile=gmtfile_splitted[[task[2]]],
+                gammas=gammas,
+                casesensitive=casesensitive
+            )
+    }) %>% setNames(tasks)
 }
