@@ -462,19 +462,27 @@ shinyServer(function(input, output, session) {
         chdir <- isolate(values$chdir)
         casesensitive <- isolate(input$paea_casesensitive)
         background_dataset <- isolate(input$background_dataset)
+        strategy <- isolate(input$paea_strategy)
         
         if(!(is.null(chdir))) {
             values$paea_running <- TRUE
+            values$paea_params <- list(
+                strategy=strategy,
+                background_dataset=background_dataset,
+                casesensitive=casesensitive
+            )    
             
             values$paea <- tryCatch(
                 withProgress(message = '', value = 0, {
+                     
                     paea_analysis_dispatch(
                         chdirresults=chdir$chdirprops,
                         gmtfile=prepare_gene_sets(perturbations_data[[background_dataset]]$genes),
                         casesensitive=casesensitive,
-                        strategy=input$paea_strategy,
+                        strategy=strategy,
                         with_progress=TRUE
                     )
+
                 }),
                 error = function(e) {
                     print(e)
