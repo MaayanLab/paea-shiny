@@ -6,7 +6,8 @@
 and in future some filtering steps}
 \usage{
 paea_analysis_dispatch(chdirresults, gmtfile, gammas = c(1),
-  casesensitive = FALSE, strategy = "up_up+down_down")
+  casesensitive = FALSE, strategy = "up_up+down_down",
+  with_progress = FALSE)
 }
 \arguments{
 \item{chdirresults}{see GeoDE::PAEAAnalysis}
@@ -17,7 +18,9 @@ paea_analysis_dispatch(chdirresults, gmtfile, gammas = c(1),
 
 \item{casesensitive}{see GeoDE::PAEAAnalysis}
 
-\item{strategy}{character one of {'split_both', ...}}
+\item{strategy}{character}
+
+\item{with_progress}{boolean increment shiny progress bar}
 }
 \value{
 list with paea results

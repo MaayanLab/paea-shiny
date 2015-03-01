@@ -73,10 +73,13 @@ split_gmtfile <- function(gmtfile) {
 #' @param gmtfile see GeoDE::PAEAAnalysis 
 #' @param gammas see GeoDE::PAEAAnalysis 
 #' @param casesensitive see GeoDE::PAEAAnalysis 
-#' @param strategy character one of {'split_both', ...}
+#' @param strategy character 
+#' @param with_progress boolean increment shiny progress bar
 #' @return list with paea results
 #'
-paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='up_up+down_down'){    
+paea_analysis_dispatch <- function(
+        chdirresults, gmtfile, gammas = c(1),
+        casesensitive = FALSE, strategy='up_up+down_down', with_progress=FALSE){    
     
     #' Split strategy string into individual components.
     #' Each component represents single paea run.
@@ -88,15 +91,26 @@ paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesen
     chdirresults_splitted <- split_chdirresults(chdirresults)
     gmtfile_splitted <- split_gmtfile(gmtfile)
     
-    
-    
+    #' Run paea
+    #'
     lapply(stringi::stri_split_fixed(tasks, '_'), function(task) {
         stopifnot(length(task) == 2)
+        
+        #' Increment progress bar
+        #'
+        if(with_progress) {
+            try(
+                shiny::incProgress(1 / length(tasks), detail = paste(task, collapse = '_')),
+                silent=TRUE
+            )
+        }
+        
         paea_analysis_wrapper(
             chdirresults=chdirresults_splitted[[task[1]]],
             gmtfile=gmtfile_splitted[[task[2]]],
             gammas=gammas,
             casesensitive=casesensitive
         )
+        
     }) %>% setNames(tasks)
 }
