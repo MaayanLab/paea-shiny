@@ -465,19 +465,22 @@ shinyServer(function(input, output, session) {
 
         if(!(is.null(chdir))) {
             values$paea_running <- TRUE
-            values$paea <- tryCatch(
-                paea_analysis_dispatch(
-                    chdirresults=chdir$chdirprops,
-                    gmtfile=prepare_gene_sets(perturbations_data[[background_dataset]]$genes),
-                    casesensitive=casesensitive,
-                    strategy=input$paea_strategy
-                ),
-                error = function(e) {
-                    print(e)
-                    values$last_error <- e
-                    NULL
-                }
-            )
+            withProgress(message = '', value = 0, {
+                values$paea <- tryCatch(
+                    paea_analysis_dispatch(
+                        chdirresults=chdir$chdirprops,
+                        gmtfile=prepare_gene_sets(perturbations_data[[background_dataset]]$genes),
+                        casesensitive=casesensitive,
+                        strategy=input$paea_strategy,
+                        with_progress=TRUE
+                    ),
+                    error = function(e) {
+                        print(e)
+                        values$last_error <- e
+                        NULL
+                    }
+                )
+            })
             values$paea_running <- FALSE
         }
     })
@@ -553,6 +556,7 @@ shinyServer(function(input, output, session) {
         filename = 'pae_down.tsv',
         content = paea_download_handler(paea_results_down())
     )
+    
     
     #' paea panel - status message
     #'
