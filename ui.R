@@ -150,7 +150,7 @@ paea_strategy_radio <- radioButtons('paea_strategy', 'Strategy:', c(
     'in↑ ∩ lib↑ + in↓ ∩ lib↓' = 'up_up+down_down',
     'in↑ ∩ lib↓ + in↓ ∩ lib↑' = 'up_down+down_up',
     'in↑ ∩ lib↑ + in↓ ∩ lib↓ - in↑ ∩ lib↓ - in↓ ∩ lib↑' = 'up_up+down_down-up_down-down_up',
-    'in↑ ∩ lib↓ + in↓ ∩ lib↑ - in↑ ∩ lib↑ - in↓ ∩ lib↓' = 'up_down+down_up-up_up+down_down'
+    'in↑ ∩ lib↓ + in↓ ∩ lib↑ - in↑ ∩ lib↑ - in↓ ∩ lib↓' = 'up_down+down_up-up_up-down_down'
 ))
 
 
