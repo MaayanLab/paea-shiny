@@ -462,12 +462,10 @@ shinyServer(function(input, output, session) {
         chdir <- isolate(values$chdir)
         casesensitive <- isolate(input$paea_casesensitive)
         background_dataset <- isolate(input$background_dataset)
-        strategy <- isolate(input$paea_strategy)
         
         if(!(is.null(chdir))) {
             values$paea_running <- TRUE
             values$paea_params <- list(
-                strategy=strategy,
                 background_dataset=background_dataset,
                 casesensitive=casesensitive
             )    
@@ -479,7 +477,6 @@ shinyServer(function(input, output, session) {
                         chdirresults=chdir$chdirprops,
                         gmtfile=prepare_gene_sets(perturbations_data[[background_dataset]]$genes),
                         casesensitive=casesensitive,
-                        strategy=strategy,
                         with_progress=TRUE
                     )
 
@@ -494,37 +491,26 @@ shinyServer(function(input, output, session) {
         }
     })
     
-    #' PAEA results up
+    
+    #' PAEA results
     #' 
-    paea_results_up <- reactive({
-        if(!is.null(values$paea$up)) {
+    paea_results <- reactive({
+        if(!is.null(values$paea)) {
             background_dataset <- isolate(input$background_dataset)
-            prepare_paea_results(values$paea$up$p_values, perturbations_data[[background_dataset]]$description)
+            description <- perturbations_data[[background_dataset]]$description
+            strategy <- input$paea_strategy
+            
+            prepare_paea_results(values$paea[[strategy]]$p_values, description)
         }
     })
     
-    #' PAEA results down
-    #' 
-    paea_results_down <- reactive({
-        if(!is.null(values$paea$down)) {
-            background_dataset <- isolate(input$background_dataset)
-            prepare_paea_results(values$paea$down$p_values, perturbations_data[[background_dataset]]$description)
-        }
-    })
     
-    #' PAEA output up
+    
+    #' PAEA output
     #'
-    output$paea_results_up <- renderDataTable({
-        if(!is.null(paea_results_up())) {
-            paea_results_up()
-        }
-    })
-    
-    #' PAEA output down
-    #'
-    output$paea_results_down <- renderDataTable({
-        if(!is.null(paea_results_down())) {
-            paea_results_down()
+    output$paea_results_table <- renderDataTable({
+        if(!is.null(paea_results())) {
+            paea_results()
         }
     })
     
@@ -532,17 +518,15 @@ shinyServer(function(input, output, session) {
     #' paea panel - download block
     #'
     output$paea_downloads_container <- renderUI({
-        button_down <- downloadButton('download_paea_down', 'Download results for downregulated genes')
-        button_up <- downloadButton('download_paea_up', 'Download results for upregulated genes')
-
+        button <- downloadButton('download_paea', 'Download current subset')
+        
         if (is.null(values$paea)) {
             list(
-                {button_down$attribs$disabled <- 'true'; button_down},
-                {button_up$attribs$disabled <- 'true'; button_up},
+                {button$attribs$disabled <- 'true'; button},
                 helpText('No data available. Did you run PAEA analysis?')
             )
         } else {
-            list(button_down, button_up)
+            list(button)
         }
     })
     
@@ -552,18 +536,11 @@ shinyServer(function(input, output, session) {
     outputOptions(output, 'paea_downloads_container', suspendWhenHidden = FALSE)
     
     
-    #' paea panel - downloads handler up
+    #' paea panel - downloads handler
     #'
-    output$download_paea_up <- downloadHandler(
-        filename = 'paea_up.tsv',
-        content = paea_download_handler(paea_results_up())
-    )
-    
-    #' paea panel - downloads handler down
-    #'
-    output$download_paea_down <- downloadHandler(
-        filename = 'pae_down.tsv',
-        content = paea_download_handler(paea_results_down())
+    output$download_paea <- downloadHandler(
+        filename = 'paea_results.tsv',
+        content = paea_download_handler(paea_results())
     )
     
     
