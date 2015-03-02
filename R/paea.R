@@ -1,20 +1,28 @@
+#' Take PAEA results and return data.frame with
+#' gene set information and pvalue
+#'
+#' @param paea_results GeoDE::PAEAAnalysis output
+#'
+paea_to_df <- function(paea_results) {
+    dplyr::tbl_df(data.frame(
+        set=colnames(paea_results$p_value),
+        pvalue=as.vector(paea_results$p_value)
+    )) %>%
+    tidyr::separate(set, into=c('id', 'category'), sep='_')
+}
+
+
 #' Join PAEA results with data description
-#' @param paea_pvalues pvalues taken from PAEAAnalysis results
+#' @param paea data frame as returned from paea_to_df
 #' @param data_description tbl_df as returned from extract_description
 #' @param pvalue_threshold default: 0.05
 #' @return tbl_df 
 #'
-prepare_paea_results <- function(paea_pvalues, data_description, pvalue_threshold=0.05) {
-    dplyr::tbl_df(data.frame(
-        set=colnames(paea_pvalues),
-        pvalue=as.vector(paea_pvalues)
-    )) %>% 
-        dplyr::filter(pvalue <= pvalue_threshold) %>%
-        dplyr::mutate(neg_log10_pval = -log10(pvalue)) %>%
-        tidyr::separate(set, into=c('id', 'category'), sep='_') %>% 
+prepare_paea_results <- function(paea, data_description, pvalue_threshold=0.05) {
+    paea %>%
         dplyr::mutate(id=as.numeric(id)) %>%
         dplyr::left_join(data_description, by='id') %>%
-        dplyr::select(id, category, geo_id:cell_type, neg_log10_pval)
+        dplyr::select(id, starts_with('category'), geo_id:cell_type, starts_with('pvalue'))
 }
 
 #' PAEAAnalysis wrapper. Redirects plots to /dev/null 
@@ -91,6 +99,7 @@ paea_analysis_dispatch <- function(
     chdirresults_splitted <- split_chdirresults(chdirresults)
     gmtfile_splitted <- split_gmtfile(gmtfile)
     
+    
     #' Run paea
     #'
     lapply(stringi::stri_split_fixed(tasks, '_'), function(task) {
@@ -113,4 +122,33 @@ paea_analysis_dispatch <- function(
         )
         
     }) %>% setNames(tasks)
+}
+
+
+#'
+#'
+combine_results <- function(paea_results, strategy){
+    
+    #' Rename pvalue
+    #'
+    for(name in names(paea_results)) {
+        paea_results[[name]] <- paea_results[[name]] %>% 
+            dplyr::select(id, pvalue) %>%
+            setNames(c('id', paste('pvalue', name, sep='_')))
+    }
+    
+    #' We need by argument and this cannot be 
+    #' passed directly to Reduce 
+    #'
+    join_pair <- function(x, y) {
+        x %>% dplyr::left_join(y, by='id')
+    }
+    
+    #' Extract parts of the workflow
+    #'
+    parts <- unlist(stringi::stri_extract_all_regex(
+        strategy, '(up|down)_(up|down)'
+    ))
+    
+    Reduce(join_pair, paea_results[parts])
 }
