@@ -87,7 +87,7 @@ split_gmtfile <- function(gmtfile) {
 #'
 paea_analysis_dispatch <- function(
         chdirresults, gmtfile, gammas = c(1),
-        casesensitive = FALSE, strategy='up_up+down_down', with_progress=FALSE){    
+        casesensitive = FALSE, strategy='up_up+down_down+up_down+down_up', with_progress=FALSE){    
     
     #' Split strategy string into individual components.
     #' Each component represents single paea run.
@@ -128,6 +128,7 @@ paea_analysis_dispatch <- function(
 #'
 #'
 combine_results <- function(paea_results, strategy){
+
     
     #' Rename pvalue
     #'
