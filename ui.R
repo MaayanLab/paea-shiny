@@ -140,54 +140,73 @@ chdir_tab <- tabPanel(
 )
 
 
+#' Principle Angle Enrichment Analysis startegy input
+#'
+paea_strategy_radio <- radioButtons('paea_strategy', 'Strategy:', c(
+    'in↑ ∩ lib↑' = 'up_up',
+    'in↓ ∩ lib↓' = 'down_down',
+    'in↑ ∩ lib↓' = 'up_down',
+    'in↓ ∩ lib↑' = 'down_up', 
+    'in↑ ∩ lib↑ + in↓ ∩ lib↓' = 'up_up+down_down',
+    'in↑ ∩ lib↓ + in↓ ∩ lib↑' = 'up_down+down_up',
+    'in↑ ∩ lib↑ + in↓ ∩ lib↓ - in↑ ∩ lib↓ - in↓ ∩ lib↑' = 'up_up+down_down-up_down-down_up',
+    'in↑ ∩ lib↓ + in↓ ∩ lib↑ - in↑ ∩ lib↑ - in↓ ∩ lib↓' = 'up_down+down_up-up_up+down_down'
+))
+
+
+#' paea tab - input parameters
+#'
+paea_input_parameters <-column(12, wellPanel(
+    h3('PAEA parameters', id='paea_parameters'),
+    checkboxInput('paea_casesensitive', 'Case Sensitive', FALSE),
+    helpText('Check if you want gene lables comparisons to be case sensitive. Not recommended.'),
+    uiOutput('background_dataset_container'),
+    uiOutput('run_paea_container')
+))
+
+
+#' paea tab - output
+#'
+paea_output <- column(
+    width=12,
+    h3('PAEA results', id='pae_results'),
+    
+    tabsetPanel(
+        tabPanel('Summary', column(12, p(textOutput('paea_message')))),
+        tabPanel(
+            'Enriched sets',
+            
+            column(
+                width=12,
+                p(),
+                column(
+                    width=6,
+                    wellPanel(
+                        paea_strategy_radio,
+                        imageOutput('paea_strategy_chart',  width = '100%', height='100%')
+                    )
+                ),
+                column(
+                    width=6,
+                    wellPanel(
+                        h3('Downloads', id='paea_downloads'),
+                        uiOutput('paea_downloads_container')
+                    )
+                )),
+            dataTableOutput('paea_results_table')
+        )
+    )
+)
+
+
 #' Principle Angle Enrichment Analysis ouput tab
 #'
 paea_tab <- tabPanel(
     'Principle Angle Enrichment Analysis',
     fluidRow(
         column(12, p('')),
-        column(4, wellPanel(
-            h3('PAEA parameters', id='paea_parameters'),
-            checkboxInput('paea_casesensitive', 'Case Sensitive', FALSE),
-            helpText('Check if you want gene lables comparisons to be case sensitive. Not recommended.'),
-            uiOutput('background_dataset_container'),
-            uiOutput('run_paea_container')
-        )),
-        
-        column(4, wellPanel(
-            h3('Workflow', id='workflow'),
-            radioButtons('paea_strategy', 'Strategy:', c(
-                'in↑ ∩ lib↑' = 'up_up',
-                'in↓ ∩ lib↓' = 'down_down',
-                'in↑ ∩ lib↓' = 'up_down',
-                'in↓ ∩ lib↑' = 'down_up', 
-                'in↑ ∩ lib↑ + in↓ ∩ lib↓' = 'up_up+down_down',
-                'in↑ ∩ lib↓ + in↓ ∩ lib↑' = 'up_down+down_up',
-                'in↑ ∩ lib↑ + in↓ ∩ lib↓ - in↑ ∩ lib↓ - in↓ ∩ lib↑' = 'up_up+down_down-up_down-down_up',
-                'in↑ ∩ lib↓ + in↓ ∩ lib↑ - in↑ ∩ lib↑ - in↓ ∩ lib↓' = 'up_down+down_up-up_up+down_down'
-            )),
-            imageOutput('paea_strategy_chart',  width = '100%', height='100%')
-        )),
-        
-        column(4, wellPanel(
-            h3('Downloads', id='paea_downloads'),
-            uiOutput('paea_downloads_container')
-        )),
-        
-        column(12,
-            h3('PAEA results', id='pae_results'),
-            tabsetPanel(
-                tabPanel(
-                    'Enriched sets for downregulated genes',
-                    p(textOutput('paea_message')),
-                    column(12, dataTableOutput('paea_results_down'))
-                ),
-                tabPanel(
-                    'Enriched sets for upregulated genes',
-                    column(12, dataTableOutput('paea_results_up'))
-                )
-            )
-        )
+        paea_input_parameters,
+        paea_output
     )
 )
 
