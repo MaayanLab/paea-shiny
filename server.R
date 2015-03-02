@@ -473,12 +473,12 @@ shinyServer(function(input, output, session) {
             values$paea <- tryCatch(
                 withProgress(message = '', value = 0, {
                      
-                    paea_analysis_dispatch(
+                    lapply(paea_analysis_dispatch(
                         chdirresults=chdir$chdirprops,
                         gmtfile=prepare_gene_sets(perturbations_data[[background_dataset]]$genes),
                         casesensitive=casesensitive,
                         with_progress=TRUE
-                    )
+                    ), paea_to_df)
 
                 }),
                 error = function(e) {
@@ -498,12 +498,11 @@ shinyServer(function(input, output, session) {
         if(!is.null(values$paea)) {
             background_dataset <- isolate(input$background_dataset)
             description <- perturbations_data[[background_dataset]]$description
-            strategy <- input$paea_strategy
             
-            prepare_paea_results(values$paea[[strategy]]$p_values, description)
+            prepare_paea_results(combine_results(values$paea, input$paea_strategy), description)
+
         }
     })
-    
     
     
     #' PAEA output
