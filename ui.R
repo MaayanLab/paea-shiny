@@ -18,47 +18,78 @@ seperator_input <- radioButtons(
     c(Comma=',', Semicolon=';', Tab='\t'),
 )
 
+
+datain_input_choice <- column(3, wellPanel(
+    radioButtons(
+        'datain_type', 'Input type',
+        c(Upload='upload', Disease='disease'),
+        inline=TRUE
+    )
+))
+
+
+datain_upload <- column(3, wellPanel(
+    h3('Expression data'),
+    uiOutput('datain_container'),
+    seperator_input        
+))
+
+datain_sampleclass <- column(3, wellPanel(
+    h3('Control samples', id='control_samples'),
+    uiOutput('sampleclass_container')
+))
+
+datain_preprocessing <- column(3, wellPanel(
+    h3('Preprocessing', id='datain_preprocessing'),
+    checkboxInput(inputId='log2_transform', label='log2 transform' , value = FALSE),
+    checkboxInput(inputId='quantile_normalize', label='Quantile normalize', value = FALSE),
+    checkboxInput(inputId='enable_id_filter', label='Enable id filter', value = TRUE)
+))
+
+disease_input <- column(width=6, wellPanel(
+))
+
+
+datain_preview <- column(
+    width=12, 
+    h3('Input preview', id='datain_preview_header'),
+    tabsetPanel(
+        id='datain_preview',
+        tabPanel(
+            'Input data',
+            p(textOutput('upload_message')),
+            dataTableOutput('contents')
+        ),
+        tabPanel(
+            "Plots",
+            conditionalPanel(
+                condition = 'output.show_datain_results === true',
+                helpText(ggvis_bug_message),
+                ggvisOutput('datain_density_ggvis')
+            )
+        )
+    )
+)
+
+
 #' Dataset download 
 #'
 upload_tab <- tabPanel(
     'Upload dataset',
     fluidRow(
         column(12, p('')),
-        column(4, wellPanel(
-            h3('Expression data'),
-            uiOutput('datain_container'),
-            seperator_input        
-        )),
-        column(4, wellPanel(
-            h3('Control samples', id='control_samples'),
-            uiOutput('sampleclass_container')
-        )), 
-        column(4, wellPanel(
-            h3('Preprocessing', id='datain_preprocessing'),
-            checkboxInput(inputId='log2_transform', label='log2 transform' , value = FALSE),
-            checkboxInput(inputId='quantile_normalize', label='Quantile normalize', value = FALSE),
-            checkboxInput(inputId='enable_id_filter', label='Enable id filter', value = TRUE)
-        )), 
-        column(12, 
-            h3('Input preview', id='datain_preview_header'),
-           
-            tabsetPanel(
-                id='datain_preview',
-                tabPanel(
-                    'Input data',
-                    p(textOutput('upload_message')),
-                    dataTableOutput('contents')
-                ),
-                tabPanel(
-                    "Plots",
-                    conditionalPanel(
-                        condition = 'output.show_datain_results === true',
-                        helpText(ggvis_bug_message),
-                        ggvisOutput('datain_density_ggvis')
-                    )
-                )
-            )
-        )
+        datain_input_choice,
+        conditionalPanel(
+            'input.datain_type === "upload"',
+            datain_upload,
+            datain_sampleclass
+        ),
+        conditionalPanel(
+            'input.datain_type === "disease"',
+            disease_input
+        ),
+        datain_preprocessing,
+        datain_preview
     )
 )
 
@@ -143,14 +174,14 @@ chdir_tab <- tabPanel(
 #' Principle Angle Enrichment Analysis startegy input
 #'
 paea_strategy_radio <- radioButtons('paea_strategy', 'Strategy:', c(
-    'in↑ ∩ lib↑' = 'up_up',
-    'in↓ ∩ lib↓' = 'down_down',
-    'in↑ ∩ lib↓' = 'up_down',
-    'in↓ ∩ lib↑' = 'down_up', 
-    'in↑ ∩ lib↑ + in↓ ∩ lib↓' = 'up_up+down_down',
-    'in↑ ∩ lib↓ + in↓ ∩ lib↑' = 'up_down+down_up',
-    'in↑ ∩ lib↑ + in↓ ∩ lib↓ - in↑ ∩ lib↓ - in↓ ∩ lib↑' = 'up_up+down_down-up_down-down_up',
-    'in↑ ∩ lib↓ + in↓ ∩ lib↑ - in↑ ∩ lib↑ - in↓ ∩ lib↓' = 'up_down+down_up-up_up-down_down'
+    'in↑ ∩ lib↑' = '+up_up',
+    'in↓ ∩ lib↓' = '+down_down',
+    'in↑ ∩ lib↓' = '+up_down',
+    'in↓ ∩ lib↑' = '+down_up', 
+    'in↑ ∩ lib↑ + in↓ ∩ lib↓' = '+up_up+down_down',
+    'in↑ ∩ lib↓ + in↓ ∩ lib↑' = '+up_down+down_up',
+    'in↑ ∩ lib↑ + in↓ ∩ lib↓ - in↑ ∩ lib↓ - in↓ ∩ lib↑' = '+up_up+down_down-up_down-down_up',
+    'in↑ ∩ lib↓ + in↓ ∩ lib↑ - in↑ ∩ lib↑ - in↓ ∩ lib↓' = '+up_down+down_up-up_up-down_down'
 ))
 
 
