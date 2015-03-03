@@ -10,6 +10,9 @@ paea_to_df(paea_results)
 \arguments{
 \item{paea_results}{GeoDE::PAEAAnalysis output}
 }
+\value{
+tbl_df
+}
 \description{
 Take PAEA results and return data.frame with
 gene set information and pvalue

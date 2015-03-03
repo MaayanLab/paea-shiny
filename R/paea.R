@@ -2,6 +2,7 @@
 #' gene set information and pvalue
 #'
 #' @param paea_results GeoDE::PAEAAnalysis output
+#' @return tbl_df
 #'
 paea_to_df <- function(paea_results) {
     dplyr::tbl_df(data.frame(
@@ -123,12 +124,13 @@ paea_analysis_dispatch <- function(
     }) %>% setNames(tasks)
 }
 
-
+#' Take multiple paea results and join by gmt
 #'
+#' @param paea_results list of data.frames as returned from paea_analysis_dispatch
+#' @param strategy character 
+#' @return data.frame
 #'
 combine_results <- function(paea_results, strategy){
-
-    
     #' Rename pvalue
     #'
     for(name in names(paea_results)) {

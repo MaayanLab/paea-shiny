@@ -2,11 +2,19 @@
 % Please edit documentation in R/paea.R
 \name{combine_results}
 \alias{combine_results}
-\title{}
+\title{Take multiple paea results and join by gmt}
 \usage{
 combine_results(paea_results, strategy)
 }
-\description{
+\arguments{
+\item{paea_results}{list of data.frames as returned from paea_analysis_dispatch}
 
+\item{strategy}{character}
+}
+\value{
+data.frame
+}
+\description{
+Take multiple paea results and join by gmt
 }
 
