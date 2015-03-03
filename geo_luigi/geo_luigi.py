@@ -41,15 +41,22 @@ class GetGEO(luigi.Task):
 
     
     def run(self):
-        try:
-            expr_files = [_ for _ in self.process_gse()]
+        if len(self.control) > 1 and len(self.treatment) > 1:
+            try:
+                expr_files = [_ for _ in self.process_gse()]
+                with self.output().open('w') as fw:
+                    for expr_file in expr_files:
+                        print(expr_file, file=fw)
+
+
+            except Exception as e:
+                logging.exception('{0}'.format(self.geo_id))
+                with self.output().open('w') as fw:
+                    pass
+
+        else:
             with self.output().open('w') as fw:
-                for expr_file in expr_files:
-                    print(expr_file, file=fw)
-
-
-        except Exception as e:
-            logging.exception('{0}'.format(self.geo_id))
+                pass
 
 
 
@@ -72,16 +79,34 @@ class AllDiseases(luigi.Task):
         geo_id = row['geo_id']
         desc = '{0}\t{1}'.format(row['disease'], row['cell_type'])
 
-        if len(ctrl_ids) > 1 and len(pert_ids) > 1:
-            return GetGEO(geo_id, self.destdir, self.outputdir, ctrl_ids, pert_ids, desc)
+        return GetGEO(geo_id, self.destdir, self.outputdir, ctrl_ids, pert_ids, desc)
+
+
+    def output(self):
+        return luigi.LocalTarget(os.path.join(self.outputdir, 'meta.csv'))
+
+
+    def data_description(self):
+        with open(self.input_path) as fr:
+            reader = csv.DictReader(fr, delimiter='\t', fieldnames=self.fieldnames)
+            return [_ for _ in reader]
 
 
     def requires(self):
-        with open(self.input_path) as fr:
-            reader = csv.DictReader(fr, delimiter='\t', fieldnames=self.fieldnames)
-            rows = [_ for _ in reader]
+        return [self.process_row(row) for row in self.data_description()]
 
-        return [self.process_row(row) for row in rows]
+
+    def run(self):
+
+        with self.output().open('w') as fw:
+            writer = csv.writer(fw)
+            for inp in self.input():
+                with inp.open('r') as fr:
+                    lines = fr.readlines()
+                if len(lines) == 1:
+                    key = os.path.split(inp.path)[-1].split('.')[0]
+                    value = os.path.split(lines[0])[-1].strip()
+                    writer.writerow((key, value))
 
 
 if __name__ == '__main__':
