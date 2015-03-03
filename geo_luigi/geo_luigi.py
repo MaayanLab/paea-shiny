@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
 import csv
+import os
 import luigi
 import logging
 import rpy2.robjects.packages as rpackages
@@ -21,22 +23,34 @@ class GetGEO(luigi.Task):
     control = luigi.Parameter()
     treatment = luigi.Parameter()
     description = luigi.Parameter()
+
+
+    def process_gse(self):
+        return workflows.process_gse(
+            geo_id=self.geo_id,
+            destdir=self.destdir,
+            outputdir=self.outputdir,
+            control=list(self.control),
+            treatment=list(self.treatment),
+            description=self.description
+        )
+
     
     def output(self):
+        return luigi.LocalTarget(os.path.join(self.outputdir, '{0}.list'.format(self.geo_id)))
+
+    
+    def run(self):
         try:
-            return [luigi.LocalTarget(_) for _ in workflows.process_gse(
-                geo_id=self.geo_id,
-                destdir=self.destdir,
-                outputdir=self.outputdir,
-                control=list(self.control),
-                treatment=list(self.treatment),
-                description=self.description
-            )]
+            expr_files = [_ for _ in self.process_gse()]
+            with self.output().open('w') as fw:
+                for expr_file in expr_files:
+                    print(expr_file, file=fw)
+
+
         except Exception as e:
             logging.exception('{0}'.format(self.geo_id))
 
-    def run(self):
-        self.output()
 
 
 class AllDiseases(luigi.Task):
