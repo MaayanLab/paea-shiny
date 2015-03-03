@@ -6,7 +6,7 @@
 and in future some filtering steps}
 \usage{
 paea_analysis_dispatch(chdirresults, gmtfile, gammas = c(1),
-  casesensitive = FALSE, strategy = "up_up+down_down",
+  casesensitive = FALSE, strategy = "up_up+down_down+up_down+down_up",
   with_progress = FALSE)
 }
 \arguments{

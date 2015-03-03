@@ -4,8 +4,8 @@ testthat::test_that('Test prepare_paea_results', {
     paea <- GeoDE::PAEAAnalysis(example_chdirresults, example_gmtfile)
     description <- extract_description(preprocess_data(example_microtask_data))
     testthat::expect_equal(
-        nrow(prepare_paea_results(paea$p_values, description)),
-        length(which(paea$p_values <= 0.05))
+        nrow(prepare_paea_results(paea_to_df(paea), description)),
+        length(paea$p_values)
     )
 })
 

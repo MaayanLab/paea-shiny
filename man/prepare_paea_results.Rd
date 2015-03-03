@@ -4,14 +4,12 @@
 \alias{prepare_paea_results}
 \title{Join PAEA results with data description}
 \usage{
-prepare_paea_results(paea_pvalues, data_description, pvalue_threshold = 0.05)
+prepare_paea_results(paea, data_description)
 }
 \arguments{
-\item{paea_pvalues}{pvalues taken from PAEAAnalysis results}
+\item{paea}{data frame as returned from paea_to_df}
 
 \item{data_description}{tbl_df as returned from extract_description}
-
-\item{pvalue_threshold}{default: 0.05}
 }
 \value{
 tbl_df

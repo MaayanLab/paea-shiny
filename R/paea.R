@@ -15,10 +15,9 @@ paea_to_df <- function(paea_results) {
 #' Join PAEA results with data description
 #' @param paea data frame as returned from paea_to_df
 #' @param data_description tbl_df as returned from extract_description
-#' @param pvalue_threshold default: 0.05
 #' @return tbl_df 
 #'
-prepare_paea_results <- function(paea, data_description, pvalue_threshold=0.05) {
+prepare_paea_results <- function(paea, data_description) {
     paea %>%
         dplyr::mutate(id=as.numeric(id)) %>%
         dplyr::left_join(data_description, by='id') %>%
