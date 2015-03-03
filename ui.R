@@ -156,7 +156,7 @@ paea_strategy_radio <- radioButtons('paea_strategy', 'Strategy:', c(
 
 #' paea tab - input parameters
 #'
-paea_input_parameters <-column(12, wellPanel(
+paea_input_parameters <-column(6, wellPanel(
     h3('PAEA parameters', id='paea_parameters'),
     checkboxInput('paea_casesensitive', 'Case Sensitive', FALSE),
     helpText('Check if you want gene lables comparisons to be case sensitive. Not recommended.'),
@@ -164,6 +164,18 @@ paea_input_parameters <-column(12, wellPanel(
     uiOutput('run_paea_container')
 ))
 
+#' paea tab - downloads
+#'
+paea_downloads <- column(width=6, wellPanel(
+    h3('Downloads', id='paea_downloads'),
+    uiOutput('paea_downloads_container')
+))
+
+#' paea tab - paea summary
+#'
+paea_summary <- tabPanel(
+    'Summary', column(12, p(textOutput('paea_message')))
+)
 
 #' paea tab - output
 #'
@@ -172,27 +184,19 @@ paea_output <- column(
     h3('PAEA results', id='pae_results'),
     
     tabsetPanel(
-        tabPanel('Summary', column(12, p(textOutput('paea_message')))),
         tabPanel(
             'Enriched sets',
-            
             column(
                 width=12,
                 p(),
                 column(
-                    width=6,
+                    width=12,
                     wellPanel(
                         paea_strategy_radio,
                         imageOutput('paea_strategy_chart',  width = '100%', height='100%')
                     )
-                ),
-                column(
-                    width=6,
-                    wellPanel(
-                        h3('Downloads', id='paea_downloads'),
-                        uiOutput('paea_downloads_container')
-                    )
-                )),
+                )
+            ),
             dataTableOutput('paea_results_table')
         )
     )
@@ -206,6 +210,7 @@ paea_tab <- tabPanel(
     fluidRow(
         column(12, p('')),
         paea_input_parameters,
+        paea_downloads,
         paea_output
     )
 )
