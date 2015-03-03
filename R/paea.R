@@ -94,6 +94,15 @@ paea_analysis_dispatch <- function(
     #' 
     tasks <- unlist(stringi::stri_split_regex(strategy, '[+-]'))
     
+    #' Increment progress bar
+    #'
+    if(with_progress) {
+        try(
+            shiny::incProgress(1 / (length(tasks) + 2), detail = 'Init'),
+            silent=TRUE
+        )
+    }
+    
     #' Preprocess query and background
     #'
     chdirresults_splitted <- split_chdirresults(chdirresults)
@@ -105,52 +114,65 @@ paea_analysis_dispatch <- function(
     lapply(stringi::stri_split_fixed(tasks, '_'), function(task) {
         stopifnot(length(task) == 2)
         
-        #' Increment progress bar
-        #'
-        if(with_progress) {
-            try(
-                shiny::incProgress(1 / length(tasks), detail = paste(task, collapse = '_')),
-                silent=TRUE
-            )
-        }
-        
-        paea_analysis_wrapper(
+        paea <- paea_analysis_wrapper(
             chdirresults=chdirresults_splitted[[task[1]]],
             gmtfile=gmtfile_splitted[[task[2]]],
             gammas=gammas,
             casesensitive=casesensitive
         )
         
+        #' Increment progress bar
+        #'
+        if(with_progress) {
+            try(
+                shiny::incProgress(1 / (length(tasks) + 1), detail = paste(task, collapse = '_')),
+                silent=TRUE
+            )
+        }
+        
+        paea 
+        
     }) %>% setNames(tasks)
+    
+    
 }
 
 #' Take multiple paea results and join by gmt
 #'
 #' @param paea_results list of data.frames as returned from paea_analysis_dispatch
 #' @param strategy character 
+#' @param pvalue_threshold numeric
 #' @return data.frame
 #'
-combine_results <- function(paea_results, strategy){
-    #' Rename pvalue
-    #'
-    for(name in names(paea_results)) {
-        paea_results[[name]] <- paea_results[[name]] %>% 
+combine_results <- function(paea_results, strategy, pvalue_threshold=5e-2){
+ 
+    filters <- list(
+        '+' = function(x) dplyr::filter(x, pvalue < pvalue_threshold),
+        '-' = function(x) dplyr::filter(x, pvalue > pvalue_threshold)
+    )
+
+    process_part <- function(part) {
+        op <- stringi::stri_sub(part, to=1)
+        name <- stringi::stri_sub(part, from=2)
+        
+        paea_results[[name]] %>% 
             dplyr::select(id, pvalue) %>%
+            filters[[op]]() %>%
             setNames(c('id', paste('pvalue', name, sep='_')))
     }
-    
+
     #' We need by argument and this cannot be 
     #' passed directly to Reduce 
     #'
     join_pair <- function(x, y) {
-        x %>% dplyr::left_join(y, by='id')
+        x %>% dplyr::inner_join(y, by='id')
     }
     
     #' Extract parts of the workflow
     #'
     parts <- unlist(stringi::stri_extract_all_regex(
-        strategy, '(up|down)_(up|down)'
+        strategy, '[+-](up|down)_(up|down)'
     ))
     
-    Reduce(join_pair, paea_results[parts])
+    Reduce(join_pair, lapply(parts, process_part))
 }

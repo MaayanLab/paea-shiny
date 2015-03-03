@@ -4,12 +4,14 @@
 \alias{combine_results}
 \title{Take multiple paea results and join by gmt}
 \usage{
-combine_results(paea_results, strategy)
+combine_results(paea_results, strategy, pvalue_threshold = 0.05)
 }
 \arguments{
 \item{paea_results}{list of data.frames as returned from paea_analysis_dispatch}
 
 \item{strategy}{character}
+
+\item{pvalue_threshold}{numeric}
 }
 \value{
 data.frame
