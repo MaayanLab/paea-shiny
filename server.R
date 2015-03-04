@@ -37,6 +37,7 @@ shinyServer(function(input, output, session) {
     # Required
     values$chdir_running <- FALSE
     values$paea_running <- FALSE
+    values$manual_upload <- TRUE
     
     
     #' datain panel - ugly hack to be able to clear upload widget
@@ -64,11 +65,31 @@ shinyServer(function(input, output, session) {
         values$paea <- NULL
         
         if (is.null(inFile)) return(NULL)
-        
+        values$manual_upload <- TRUE
         values$datain <- tryCatch(
             as.data.table(read.csv(
                 inFile$datapath, sep = input$sep
             )),
+            error = function(e) {
+                values$last_error <- e
+                NULL
+            }
+        )
+    })
+    
+    
+    observe({
+        choice <- isolate(input$disease_sigs_choices)
+        if(input$fetch_disease_sig == 0) { return() }
+        if(is.null(choice)) { return() }
+        
+        tryCatch({
+                datain <- readRDS(file.path(config$sigs_path, choice))
+                values$control_samples <- unlist(attributes(datain)$gse_data$control)
+                values$treatment_samples <- unlist(attributes(datain)$gse_data$treatment)
+                values$datain <- datain  %>% select(-ID_REF)
+                values$manual_upload <- FALSE
+            },
             error = function(e) {
                 values$last_error <- e
                 NULL
@@ -140,14 +161,16 @@ shinyServer(function(input, output, session) {
     #' Update lists of control/treatment samples
     #'
     observe({
-        if(datain_valid()) {
-            datain <- datain()
-            samples_mask <- colnames(datain)[-1] %in%  input$sampleclass
-            values$control_samples <- colnames(datain)[-1][samples_mask]
-            values$treatment_samples <- colnames(datain)[-1][!samples_mask]
-        } else {
-            values$control_samples <- NULL
-            values$treatment_samples <- NULL
+        if(values$manual_upload) {
+            if(datain_valid()) {
+                datain <- datain()
+                samples_mask <- colnames(datain)[-1] %in%  input$sampleclass
+                values$control_samples <- colnames(datain)[-1][samples_mask]
+                values$treatment_samples <- colnames(datain)[-1][!samples_mask]
+            } else {
+                values$control_samples <- NULL
+                values$treatment_samples <- NULL
+            }
         }
     })
     
@@ -251,7 +274,7 @@ shinyServer(function(input, output, session) {
         nnull <- min(as.integer(isolate(input$chdir_nnull)), 1000)
         gamma <- isolate(input$chdir_gamma)
         
-        sampleclass <- factor(ifelse(colnames(datain)[-1] %in% isolate(input$sampleclass), '1', '2'))
+        sampleclass <- factor(ifelse(colnames(datain)[-1] %in% values$control_samples, '1', '2'))
         
         set.seed(isolate(input$random_seed))
         
