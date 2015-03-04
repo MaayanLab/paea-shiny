@@ -42,9 +42,6 @@ datain_is_valid <- function(datain) {
         if(any(lapply(datain_expr, class) != 'numeric')) {
             result$valid <- FALSE
             result$message <- 'not numeric'
-        } else if(!all(datain_expr >= 0 | datain_expr %>% is.null())) {
-            result$valid <- FALSE
-            result$message <- 'negative values'
         }
     }
     result
