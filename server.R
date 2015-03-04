@@ -143,7 +143,7 @@ shinyServer(function(input, output, session) {
     #' datain panel - control/treatment samples checboxes
     #'
     output$sampleclass_container <- renderUI({
-        if (datain_valid()) {
+        if (datain_valid() && values$manual_upload) {
             checkboxGroupInput(
                 'sampleclass',
                 'Choose control samples',
@@ -155,9 +155,11 @@ shinyServer(function(input, output, session) {
             helpText('No experimental data detected. Please check separator and/or uploaded file')
         } else if (ncol(datain()) < 5) {
             helpText('You need at least four samples to run Characteristic Direction Analysis')
+        } else if (!values$manual_upload) {
+            helpText('You can choose samples only for manually uploaded data sets.')
         } else {
             helpText('It looks like your dataset is invalid')
-        }
+        } 
     })
     
     
