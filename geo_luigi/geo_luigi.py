@@ -6,6 +6,9 @@ import os
 import luigi
 import logging
 import rpy2.robjects.packages as rpackages
+from StringIO import StringIO
+import pandas as pd
+
 workflows = rpackages.importr('geoWorkflows')
 
 class GetGEO(luigi.Task):
@@ -60,7 +63,7 @@ class GetGEO(luigi.Task):
 
 
 
-class AllDiseases(luigi.Task):
+class GetAndCombine(luigi.Task):
     '''
     :param input_path path to the input file
     :param destdir  directory to store soft files
@@ -69,8 +72,7 @@ class AllDiseases(luigi.Task):
     input_path = luigi.Parameter()
     destdir = luigi.Parameter()
     outputdir = luigi.Parameter() 
- 
-    fieldnames = ('geo_id', 'disease', 'ctrl_ids', 'pert_ids', 'platform', 'cell_type')
+    fieldnames = luigi.Parameter()
 
 
     def process_row(self, row):
@@ -107,6 +109,35 @@ class AllDiseases(luigi.Task):
                     key = os.path.split(inp.path)[-1].split('.')[0]
                     value = os.path.split(lines[0])[-1].strip()
                     writer.writerow((key, value))
+
+
+class RunAll(luigi.Task):
+    '''
+    :param input_path path to the input file
+    :param destdir  directory to store soft files
+    :param outputdir directory to store output
+    '''
+    input_path = luigi.Parameter()
+    destdir = luigi.Parameter()
+    outputdir = luigi.Parameter() 
+
+    fieldnames = ('geo_id', 'disease', 'ctrl_ids', 'pert_ids', 'platform', 'cell_type')
+
+    def requires(self):
+        return GetAndCombine(self.input_path, self.destdir, self.outputdir, self.fieldnames)
+
+
+    def output(self):
+        return luigi.LocalTarget(os.path.join(self.outputdir, 'combined.csv'))
+
+ 
+    def run(self):
+        left = pd.read_csv(StringIO(self.input().open('r').read()), header=None, names=('geo_id', 'file_name'))
+        right = pd.read_csv(self.input_path, delimiter='\t', header=None, names=self.fieldnames)
+        merged = pd.merge(left, right, on='geo_id', how='left')[['geo_id', 'disease', 'cell_type', 'file_name']]
+
+        with self.output().open('w') as fw:
+            print(merged.sort('disease').to_csv(index=False), file=fw)
 
 
 if __name__ == '__main__':
