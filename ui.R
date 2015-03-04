@@ -22,8 +22,7 @@ seperator_input <- radioButtons(
 datain_input_choice <- column(3, wellPanel(
     radioButtons(
         'datain_type', 'Input type',
-        c(Upload='upload', Disease='disease'),
-        inline=TRUE
+        c('Custom expression data'='upload', 'Disease signature'='disease')
     )
 ))
 
@@ -47,6 +46,7 @@ datain_preprocessing <- column(3, wellPanel(
 ))
 
 disease_input <- column(width=6, wellPanel(
+    selectizeInput('disease_sigs_choices', 'Choose disease signature', choices = NULL)
 ))
 
 

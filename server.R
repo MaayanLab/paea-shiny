@@ -18,6 +18,12 @@ perturbations_data <- lapply(
     drop_duplicates=config$drop_duplicates
 )
 
+disease_sigs <- fread('data/disease_signatures.csv')
+disease_sigs_choices <- setNames(
+    disease_sigs$file_name,
+    paste(disease_sigs$disease, disease_sigs$cell_type, disease_sigs$geo_id, sep = ' | ')
+)
+
 shinyServer(function(input, output, session) {
     
     output$last_modified <- renderText({ last_modified })
@@ -45,6 +51,11 @@ shinyServer(function(input, output, session) {
             )
         )
     })
+    
+    
+    #' datain panel - disease signature choice
+    #'
+    updateSelectizeInput(session, 'disease_sigs_choices', choices = disease_sigs_choices, server = TRUE)
     
     
     #' Read input data
