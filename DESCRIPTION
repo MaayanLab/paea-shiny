@@ -17,4 +17,5 @@ Imports: Rcpp (>= 0.11.4),
     dplyr,
     stringi,
     preprocessCore
-Suggests: testthat
+Suggests: testthat,
+    shiny

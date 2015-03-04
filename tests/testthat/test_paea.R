@@ -4,8 +4,8 @@ testthat::test_that('Test prepare_paea_results', {
     paea <- GeoDE::PAEAAnalysis(example_chdirresults, example_gmtfile)
     description <- extract_description(preprocess_data(example_microtask_data))
     testthat::expect_equal(
-        nrow(prepare_paea_results(paea$p_values, description)),
-        length(which(paea$p_values <= 0.05))
+        nrow(prepare_paea_results(paea_to_df(paea), description)),
+        length(paea$p_values)
     )
 })
 
@@ -20,41 +20,14 @@ testthat::test_that('Test paea_analysis_wrapper', {
 
 testthat::test_that('Test paea_analysis_dispatch', {
     testthat::expect_equal(
-        paea_analysis_dispatch(example_chdirresults, example_gmtfile)$down,
+        paea_analysis_dispatch(example_chdirresults, example_gmtfile)$down_down,
         GeoDE::PAEAAnalysis(example_chdirresults_down, example_gmtfile_down)
     )
     
     testthat::expect_equal(
-        paea_analysis_dispatch(example_chdirresults, example_gmtfile)$up,
+        paea_analysis_dispatch(example_chdirresults, example_gmtfile)$up_up,
         GeoDE::PAEAAnalysis(example_chdirresults_up, example_gmtfile_up)
     )
-})
-
-
-testthat::test_that('Test paea_analysis_dispatch_split_both', {
-    paea <- paea_analysis_dispatch_split_both(example_chdirresults, example_gmtfile)
-    testthat::expect_true(
-        is.list(paea)
-    )
-    testthat::expect_equal(names(paea), c('up', 'down'))
-})
-
-
-testthat::test_that('Test paea_analysis_dispatch_split_query', {
-    paea <- paea_analysis_dispatch_split_query(example_chdirresults, example_gmtfile)
-    testthat::expect_true(
-        is.list(paea)
-    )
-    testthat::expect_equal(names(paea), c('up', 'down'))
-})
-
-
-testthat::test_that('Test paea_analysis_dispatch_split_both_and_reverse', {
-    paea <- paea_analysis_dispatch_split_both_and_reverse(example_chdirresults, example_gmtfile)
-    testthat::expect_true(
-        is.list(paea)
-    )
-    testthat::expect_equal(names(paea), c('up', 'down'))
 })
 
 

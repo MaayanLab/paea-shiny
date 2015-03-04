@@ -1,20 +1,28 @@
+#' Take PAEA results and return data.frame with
+#' gene set information and pvalue
+#'
+#' @param paea_results GeoDE::PAEAAnalysis output
+#' @return tbl_df
+#'
+paea_to_df <- function(paea_results) {
+    dplyr::tbl_df(data.frame(
+        set=colnames(paea_results$p_value),
+        pvalue=as.vector(paea_results$p_value)
+    )) %>%
+    tidyr::separate(set, into=c('id', 'category'), sep='_')
+}
+
+
 #' Join PAEA results with data description
-#' @param paea_pvalues pvalues taken from PAEAAnalysis results
+#' @param paea data frame as returned from paea_to_df
 #' @param data_description tbl_df as returned from extract_description
-#' @param pvalue_threshold default: 0.05
 #' @return tbl_df 
 #'
-prepare_paea_results <- function(paea_pvalues, data_description, pvalue_threshold=0.05) {
-    dplyr::tbl_df(data.frame(
-        set=colnames(paea_pvalues),
-        pvalue=as.vector(paea_pvalues)
-    )) %>% 
-        dplyr::filter(pvalue <= pvalue_threshold) %>%
-        dplyr::mutate(neg_log10_pval = -log10(pvalue)) %>%
-        tidyr::separate(set, into=c('id', 'category'), sep='_') %>% 
+prepare_paea_results <- function(paea, data_description) {
+    paea %>%
         dplyr::mutate(id=as.numeric(id)) %>%
         dplyr::left_join(data_description, by='id') %>%
-        dplyr::select(id, category, geo_id:cell_type, neg_log10_pval)
+        dplyr::select(id, starts_with('category'), geo_id:cell_type, starts_with('pvalue'))
 }
 
 #' PAEAAnalysis wrapper. Redirects plots to /dev/null 
@@ -66,65 +74,6 @@ split_gmtfile <- function(gmtfile) {
 }
 
 
-#' Split query and background into up and down and run PAEA on respective parts
-#'
-#' @param chdirresults see GeoDE::chdirAnalysis
-#' @param gmtfile see GeoDE::chdirAnalysis
-#' @param gammas see GeoDE::chdirAnalysis
-#' @param casesensitive see GeoDE::chdirAnalysis
-#' @return list with up and down fields
-#'
-paea_analysis_dispatch_split_both <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
-    # Split chdir results into up and down
-    chdirresults_splitted <- split_chdirresults(chdirresults)
-    
-    gmtfile_splitted <- split_gmtfile(gmtfile)
-    
-    list(
-        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_splitted$up,  gammas, casesensitive), 
-        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_splitted$down,  gammas, casesensitive)
-    )
-}
-
-
-#' Split query into up and down and run PAEA for each part with full background
-#'
-#' @param chdirresults see GeoDE::chdirAnalysis
-#' @param gmtfile see GeoDE::chdirAnalysis
-#' @param gammas see GeoDE::chdirAnalysis
-#' @param casesensitive see GeoDE::chdirAnalysis
-#' @return list with up and down fields
-#'
-paea_analysis_dispatch_split_query <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
-    chdirresults_splitted <- split_chdirresults(chdirresults)
-    
-    list(
-        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile,  gammas, casesensitive), 
-        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile,  gammas, casesensitive)
-    )
-}
-
-
-#' Split query and background into up and down and run PAEA on  opposite parts
-#'
-#' @param chdirresults see GeoDE::chdirAnalysis
-#' @param gmtfile see GeoDE::chdirAnalysis
-#' @param gammas see GeoDE::chdirAnalysis
-#' @param casesensitive see GeoDE::chdirAnalysis
-#' @return list with up (up query vs down background)and down (down query vs up background)
-#'
-paea_analysis_dispatch_split_both_and_reverse <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
-    chdirresults_splitted <- split_chdirresults(chdirresults)
-    
-    gmtfile_splitted <- split_gmtfile(gmtfile)
-    
-    list(
-        up = paea_analysis_wrapper(chdirresults_splitted$up, gmtfile_splitted$down,  gammas, casesensitive), 
-        down = paea_analysis_wrapper(chdirresults_splitted$down, gmtfile_splitted$up,  gammas, casesensitive)
-    )
-}
-
-
 #' PAEAAnalysis dispatch function. Should handle separating chdirresults into up and down
 #' and in future some filtering steps
 #' 
@@ -132,15 +81,98 @@ paea_analysis_dispatch_split_both_and_reverse <- function(chdirresults, gmtfile,
 #' @param gmtfile see GeoDE::PAEAAnalysis 
 #' @param gammas see GeoDE::PAEAAnalysis 
 #' @param casesensitive see GeoDE::PAEAAnalysis 
-#' @param strategy character one of {'split_both', ...}
+#' @param strategy character 
+#' @param with_progress boolean increment shiny progress bar
 #' @return list with paea results
 #'
-paea_analysis_dispatch <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE, strategy='split_both'){    
-    strategies <- list(
-        split_both=paea_analysis_dispatch_split_both,
-        split_query=paea_analysis_dispatch_split_query,
-        split_both_and_reverse=paea_analysis_dispatch_split_both_and_reverse
+paea_analysis_dispatch <- function(
+        chdirresults, gmtfile, gammas = c(1),
+        casesensitive = FALSE, strategy='up_up+down_down+up_down+down_up', with_progress=FALSE){    
+    
+    #' Split strategy string into individual components.
+    #' Each component represents single paea run.
+    #' 
+    tasks <- unlist(stringi::stri_split_regex(strategy, '[+-]'))
+    
+    #' Increment progress bar
+    #'
+    if(with_progress) {
+        try(
+            shiny::incProgress(1 / (length(tasks) + 2), detail = 'Init'),
+            silent=TRUE
+        )
+    }
+    
+    #' Preprocess query and background
+    #'
+    chdirresults_splitted <- split_chdirresults(chdirresults)
+    gmtfile_splitted <- split_gmtfile(gmtfile)
+    
+    
+    #' Run paea
+    #'
+    lapply(stringi::stri_split_fixed(tasks, '_'), function(task) {
+        stopifnot(length(task) == 2)
+        
+        paea <- paea_analysis_wrapper(
+            chdirresults=chdirresults_splitted[[task[1]]],
+            gmtfile=gmtfile_splitted[[task[2]]],
+            gammas=gammas,
+            casesensitive=casesensitive
+        )
+        
+        #' Increment progress bar
+        #'
+        if(with_progress) {
+            try(
+                shiny::incProgress(1 / (length(tasks) + 1), detail = paste(task, collapse = '_')),
+                silent=TRUE
+            )
+        }
+        
+        paea 
+        
+    }) %>% setNames(tasks)
+    
+    
+}
+
+#' Take multiple paea results and join by gmt
+#'
+#' @param paea_results list of data.frames as returned from paea_analysis_dispatch
+#' @param strategy character 
+#' @param pvalue_threshold numeric
+#' @return data.frame
+#'
+combine_results <- function(paea_results, strategy, pvalue_threshold=5e-2){
+ 
+    filters <- list(
+        '+' = function(x) dplyr::filter(x, pvalue < pvalue_threshold),
+        '-' = function(x) dplyr::filter(x, pvalue > pvalue_threshold)
     )
-    stopifnot(strategy %in%  names(strategies))
-    strategies[[strategy]](chdirresults, gmtfile, gammas, casesensitive)
+
+    process_part <- function(part) {
+        op <- stringi::stri_sub(part, to=1)
+        name <- stringi::stri_sub(part, from=2)
+        
+        paea_results[[name]] %>% 
+            dplyr::select(id, pvalue) %>%
+            filters[[op]]() %>%
+            setNames(c('id', paste('pvalue', name, sep='_')))
+    }
+
+    #' We need by argument and this cannot be 
+    #' passed directly to Reduce 
+    #'
+    join_pair <- function(x, y) {
+        x %>% dplyr::inner_join(y, by='id')
+    }
+    
+    #' Extract parts of the workflow
+    #'
+    parts <- unlist(stringi::stri_extract_all_regex(
+        strategy, '[+-](up|down)_(up|down)'
+    ))
+    
+    Reduce(join_pair, lapply(parts, process_part))
 }
