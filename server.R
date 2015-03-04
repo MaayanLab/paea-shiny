@@ -83,6 +83,9 @@ shinyServer(function(input, output, session) {
         if(input$fetch_disease_sig == 0) { return() }
         if(is.null(choice)) { return() }
         
+        values$chdir <- NULL
+        values$paea <- NULL
+        
         tryCatch({
                 datain <- readRDS(file.path(config$sigs_path, choice))
                 values$control_samples <- unlist(attributes(datain)$gse_data$control)
@@ -124,7 +127,7 @@ shinyServer(function(input, output, session) {
                 log2_transform=input$log2_transform,
                 quantile_normalize=input$quantile_normalize,
                 id_filter=id_filter
-            )
+            ) %>% na.omit()
         } else {
             datain()
         }
