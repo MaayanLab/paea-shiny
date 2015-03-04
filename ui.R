@@ -50,7 +50,7 @@ disease_input <- column(width=6, wellPanel(
         'disease_sigs_choices', 'Choose disease signature', 
         choices = NULL, options = list(placeholder = 'type disease name')
     ),
-    actionButton('fetch_disease_sig', 'Fetch signature')
+    uiOutput('fetch_disease_sig_container')
 ))
 
 

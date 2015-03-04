@@ -38,6 +38,7 @@ shinyServer(function(input, output, session) {
     values$chdir_running <- FALSE
     values$paea_running <- FALSE
     values$manual_upload <- TRUE
+    values$disease_sig_fetch_running <- FALSE
     
     
     #' datain panel - ugly hack to be able to clear upload widget
@@ -54,11 +55,8 @@ shinyServer(function(input, output, session) {
     })
     
     
-    #' datain panel - disease signature choice
+    #'  datain panel - upload observer
     #'
-    updateSelectizeInput(session, 'disease_sigs_choices', choices = disease_sigs_choices, server = TRUE)
-    
-    
     observe({
         inFile <- input$datain
         values$chdir <- NULL
@@ -78,13 +76,29 @@ shinyServer(function(input, output, session) {
     })
     
     
+    #' datain panel - disease signature choice
+    #'
+    updateSelectizeInput(session, 'disease_sigs_choices', choices = disease_sigs_choices, server = TRUE)
+    
+    output$fetch_disease_sig_container <- renderUI({
+        button <- actionButton('fetch_disease_sig', 'Fetch signature')
+        if(input$disease_sigs_choices == '' || values$disease_sig_fetch_running) {
+            button$attribs$disabled <- 'true'
+        }
+        list(button)
+    })
+    
+    
+    #' datain panel - disease sig observe
+    #'
     observe({
         choice <- isolate(input$disease_sigs_choices)
-        if(input$fetch_disease_sig == 0) { return() }
+        if(is.null(input$fetch_disease_sig)) { return() } else if(input$fetch_disease_sig == 0) { return() }
         if(is.null(choice)) { return() }
         
         values$chdir <- NULL
         values$paea <- NULL
+        values$disease_sig_fetch_running <- TRUE
         
         tryCatch({
                 datain <- if(stringi::stri_startswith_fixed(config$sigs_path, 'http')) {
@@ -104,6 +118,8 @@ shinyServer(function(input, output, session) {
                 NULL
             }
         )
+        
+        values$disease_sig_fetch_running <- FALSE
     })
     
     
