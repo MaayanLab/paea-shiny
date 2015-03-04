@@ -40,6 +40,12 @@ shinyServer(function(input, output, session) {
     values$manual_upload <- TRUE
     values$disease_sig_fetch_running <- FALSE
     
+    #'
+    #'
+    output$last_error <- renderText({
+        values$last_error$message
+    })
+    
     
     #' datain panel - ugly hack to be able to clear upload widget
     #' 
@@ -302,6 +308,7 @@ shinyServer(function(input, output, session) {
         gamma <- isolate(input$chdir_gamma)
         
         sampleclass <- factor(ifelse(colnames(datain)[-1] %in% values$control_samples, '1', '2'))
+        print(sampleclass)
         
         set.seed(isolate(input$random_seed))
         
