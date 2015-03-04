@@ -120,7 +120,6 @@ shinyServer(function(input, output, session) {
             },
             error = function(e) {
                 values$last_error <- e
-                print(e$message)
                 NULL
             }
         )
@@ -308,7 +307,6 @@ shinyServer(function(input, output, session) {
         gamma <- isolate(input$chdir_gamma)
         
         sampleclass <- factor(ifelse(colnames(datain)[-1] %in% values$control_samples, '1', '2'))
-        print(sampleclass)
         
         set.seed(isolate(input$random_seed))
         
@@ -555,7 +553,6 @@ shinyServer(function(input, output, session) {
 
                 }),
                 error = function(e) {
-                    print(e)
                     values$last_error <- e
                     NULL
                 }
