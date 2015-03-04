@@ -58,16 +58,14 @@ shinyServer(function(input, output, session) {
     updateSelectizeInput(session, 'disease_sigs_choices', choices = disease_sigs_choices, server = TRUE)
     
     
-    #' Read input data
-    #'
-    datain <- reactive({
+    observe({
         inFile <- input$datain
         values$chdir <- NULL
         values$paea <- NULL
         
         if (is.null(inFile)) return(NULL)
         
-        tryCatch(
+        values$datain <- tryCatch(
             as.data.table(read.csv(
                 inFile$datapath, sep = input$sep
             )),
@@ -76,6 +74,13 @@ shinyServer(function(input, output, session) {
                 NULL
             }
         )
+    })
+    
+    
+    #' Read input data
+    #'
+    datain <- reactive({
+        values$datain
     })
     
     
