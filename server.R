@@ -87,7 +87,12 @@ shinyServer(function(input, output, session) {
         values$paea <- NULL
         
         tryCatch({
-                datain <- readRDS(file.path(config$sigs_path, choice))
+                datain <- if(stringi::stri_startswith_fixed(config$sigs_path, 'http')) {
+                    download.file(file.path(config$sigs_path, choice), file.path(tempdir(), choice))
+                    readRDS(file.path(tempdir(), choice))
+                } else {
+                    readRDS(file.path(config$sigs_path, choice))
+                }
                 values$control_samples <- unlist(attributes(datain)$gse_data$control)
                 values$treatment_samples <- unlist(attributes(datain)$gse_data$treatment)
                 values$datain <- datain  %>% select(-ID_REF)
@@ -95,6 +100,7 @@ shinyServer(function(input, output, session) {
             },
             error = function(e) {
                 values$last_error <- e
+                print(e$message)
                 NULL
             }
         )
