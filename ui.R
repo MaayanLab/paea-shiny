@@ -46,7 +46,10 @@ datain_preprocessing <- column(3, wellPanel(
 ))
 
 disease_input <- column(width=6, wellPanel(
-    selectizeInput('disease_sigs_choices', 'Choose disease signature', choices = NULL),
+    selectizeInput(
+        'disease_sigs_choices', 'Choose disease signature', 
+        choices = NULL, options = list(placeholder = 'type disease name')
+    ),
     actionButton('fetch_disease_sig', 'Fetch signature')
 ))
 
