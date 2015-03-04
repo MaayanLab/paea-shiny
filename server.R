@@ -559,7 +559,7 @@ shinyServer(function(input, output, session) {
     #' paea panel - download block
     #'
     output$paea_downloads_container <- renderUI({
-        button <- downloadButton('download_paea', 'Download current subset')
+        button <- downloadButton('download_paea', 'Download current view')
         
         if (is.null(values$paea)) {
             list(

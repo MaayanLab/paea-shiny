@@ -177,7 +177,7 @@ chdir_tab <- tabPanel(
 
 #' Principle Angle Enrichment Analysis startegy input
 #'
-paea_strategy_radio <- radioButtons('paea_strategy', 'Strategy:', c(
+paea_strategy_radio <- radioButtons('paea_strategy', 'View:', c(
     'in↑ ∩ lib↑' = '+up_up',
     'in↓ ∩ lib↓' = '+down_down',
     'in↑ ∩ lib↓' = '+up_down',
