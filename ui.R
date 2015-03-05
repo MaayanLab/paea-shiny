@@ -153,7 +153,7 @@ chdir_tab <- tabPanel(
             h3('CHDIR results', id='chdir_results_header'),
             tabsetPanel(
                 id='chdir_results',
-                tabPanel('Summary'),
+                tabPanel('Summary', p(uiOutput('chdir_run_summary'))),
                 tabPanel('Plots',
                     p(textOutput('chdir_message')),
                     conditionalPanel(
@@ -220,6 +220,7 @@ paea_output <- column(
     h3('PAEA results', id='pae_results'),
     
     tabsetPanel(
+        paea_summary,
         tabPanel(
             'Enriched sets',
             column(

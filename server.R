@@ -504,6 +504,23 @@ shinyServer(function(input, output, session) {
     })
     
     
+    #' chdir panel - run summary
+    #'
+    
+    output$chdir_run_summary <- renderUI({
+        if(!is.null(values$chdir)) {
+            lapply(
+                names(values$chdir_params),
+                function(x) {
+                    span(
+                        tags$dt(x),
+                        tags$dd(paste(values$chdir_params[[x]], collapse = ', '))
+                    )
+                }
+            )
+        }
+    })
+    
     #' paea panel - run button
     #'
     output$run_paea_container <- renderUI({
