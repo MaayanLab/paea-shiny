@@ -39,7 +39,7 @@ datain_is_valid <- function(datain) {
     } else {
         datain_expr <- datain %>% dplyr::select_(-1)
         # Not pretty but should handle all flavours of data.frames 
-        if(any(lapply(datain_expr, class) != 'numeric')) {
+        if(!all(sapply(datain_expr, is.numeric))) {
             result$valid <- FALSE
             result$message <- 'not numeric'
         }
