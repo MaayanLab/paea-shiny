@@ -153,9 +153,8 @@ chdir_tab <- tabPanel(
             h3('CHDIR results', id='chdir_results_header'),
             tabsetPanel(
                 id='chdir_results',
-                tabPanel('Summary', p(uiOutput('chdir_run_summary'))),
+                tabPanel('Summary', p(textOutput('chdir_message')), uiOutput('chdir_run_summary')),
                 tabPanel('Plots',
-                    p(textOutput('chdir_message')),
                     conditionalPanel(
                         condition = 'output.show_chdir_results === true',
                         helpText(ggvis_bug_message),
@@ -210,7 +209,7 @@ paea_downloads <- column(width=6, wellPanel(
 #' paea tab - paea summary
 #'
 paea_summary <- tabPanel(
-    'Summary', column(12, p(textOutput('paea_message')))
+    'Summary', column(12, p(textOutput('paea_message')), uiOutput('paea_run_summary'))
 )
 
 #' paea tab - output

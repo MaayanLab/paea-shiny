@@ -6,6 +6,7 @@ library(preprocessCore)
 library(nasbMicrotaskViewerHelpers)
 
 source('downloads_handlers.R', local=TRUE)
+source('utils.R', local=TRUE)
 source('config.R', local=TRUE)
 
 last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mtime)), decreasing=TRUE)[1]
@@ -322,12 +323,16 @@ shinyServer(function(input, output, session) {
         #' Store parameters.
         #'
         values$chdir_params <- list(
+            manual_upload=values$manual_upload,
+            input_name=values$input_name,
+            control_samples=values$control_samples,
+            treatment_samples=values$treatment_samples,
+            log2_transform=input$log2_transform,
+            quantile_normalize=input$quantile_normalize,
+            enable_id_filter=input$enable_id_filter,
             gamma=gamma,
             nnull=nnull,
-            seed=seed,
-            control_samples=values$control_samples,
-            manual_upload=values$manual_upload,
-            input_name=values$input_name
+            seed=seed
         )
         
         values$chdir <- tryCatch(
@@ -509,15 +514,7 @@ shinyServer(function(input, output, session) {
     
     output$chdir_run_summary <- renderUI({
         if(!is.null(values$chdir)) {
-            lapply(
-                names(values$chdir_params),
-                function(x) {
-                    span(
-                        tags$dt(x),
-                        tags$dd(paste(values$chdir_params[[x]], collapse = ', '))
-                    )
-                }
-            )
+            render_params(values$chdir_params)
         }
     })
     
@@ -574,10 +571,12 @@ shinyServer(function(input, output, session) {
         if(!(is.null(chdir))) {
             values$paea_running <- TRUE
             
-            values$paea_params <- list(
-                casesensitive=casesensitive,
-                background_dataset=background_dataset,
-                chdir_params=values$chdir_params
+            values$paea_params <- append(
+                list(
+                    casesensitive=casesensitive,
+                    background_dataset=background_dataset
+                ),
+                values$chdir_params
             )
             
             values$paea <- tryCatch(
@@ -660,6 +659,15 @@ shinyServer(function(input, output, session) {
     output$paea_message <- renderText({
         if(is.null(values$paea)) {
             'results not available...'
+        }
+    })
+    
+    
+    #' chdir panel - run summary
+    #'
+    output$paea_run_summary <- renderUI({
+        if(!is.null(values$paea)) {
+            render_params(values$paea_params)
         }
     })
     
