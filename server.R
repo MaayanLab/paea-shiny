@@ -34,6 +34,9 @@ shinyServer(function(input, output, session) {
     values$control_samples <- NULL
     values$treatment_samples <- NULL
     values$last_error <- NULL
+    values$chdir_params <- NULL
+    values$input_name <- NULL
+    
     # Required
     values$chdir_running <- FALSE
     values$paea_running <- FALSE
@@ -70,6 +73,7 @@ shinyServer(function(input, output, session) {
         
         if (is.null(inFile)) return(NULL)
         values$manual_upload <- TRUE
+        values$input_name <- inFile$name
         values$datain <- tryCatch(
             as.data.table(read.csv(
                 inFile$datapath, sep = input$sep
@@ -305,12 +309,25 @@ shinyServer(function(input, output, session) {
         datain <- isolate(datain_preprocessed())
         nnull <- min(as.integer(isolate(input$chdir_nnull)), 1000)
         gamma <- isolate(input$chdir_gamma)
+        seed <- isolate(input$random_seed)
         
         sampleclass <- factor(ifelse(colnames(datain)[-1] %in% values$control_samples, '1', '2'))
         
-        set.seed(isolate(input$random_seed))
+        set.seed(seed)
         
         values$chdir_running <- TRUE
+        
+        #' Store parameters.
+        #'
+        values$chdir_params <- list(
+            gamma=gamma,
+            nnull=nnull,
+            seed=seed,
+            control_samples=values$control_samples,
+            manual_upload=values$manual_upload,
+            input_name=values$input_name
+        )
+        
         values$chdir <- tryCatch(
             chdir_analysis_wrapper(preprocess_chdir_input(datain), sampleclass, gamma, nnull),
             error = function(e) {
@@ -318,6 +335,7 @@ shinyServer(function(input, output, session) {
                 NULL
             }
         )
+        
         values$chdir_running <- FALSE
  
     })
@@ -539,7 +557,13 @@ shinyServer(function(input, output, session) {
             values$paea_params <- list(
                 background_dataset=background_dataset,
                 casesensitive=casesensitive
-            )    
+            )
+            
+            values$paea_params <- list(
+                casesensitive=casesensitive,
+                background_dataset=background_dataset,
+                chdir_params=values$chdir_params
+            )
             
             values$paea <- tryCatch(
                 withProgress(message = '', value = 0, {
@@ -557,6 +581,9 @@ shinyServer(function(input, output, session) {
                     NULL
                 }
             )
+            
+
+            
             values$paea_running <- FALSE
         }
     })
