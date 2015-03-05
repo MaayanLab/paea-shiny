@@ -120,7 +120,9 @@ shinyServer(function(input, output, session) {
                 values$control_samples <- unlist(attributes(datain)$gse_data$control)
                 values$treatment_samples <- unlist(attributes(datain)$gse_data$treatment)
                 values$datain <- datain  %>% select(-ID_REF)
+                
                 values$manual_upload <- FALSE
+                values$input_name <- choice
             },
             error = function(e) {
                 values$last_error <- e
@@ -554,10 +556,6 @@ shinyServer(function(input, output, session) {
         
         if(!(is.null(chdir))) {
             values$paea_running <- TRUE
-            values$paea_params <- list(
-                background_dataset=background_dataset,
-                casesensitive=casesensitive
-            )
             
             values$paea_params <- list(
                 casesensitive=casesensitive,
