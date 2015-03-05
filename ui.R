@@ -153,6 +153,7 @@ chdir_tab <- tabPanel(
             h3('CHDIR results', id='chdir_results_header'),
             tabsetPanel(
                 id='chdir_results',
+                tabPanel('Summary'),
                 tabPanel('Plots',
                     p(textOutput('chdir_message')),
                     conditionalPanel(
