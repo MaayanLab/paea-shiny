@@ -1,5 +1,4 @@
 library(shiny)
-library(ggvis)
 library(markdown)
 
 #' Disappearing plot help 
@@ -69,7 +68,7 @@ datain_preview <- column(
             conditionalPanel(
                 condition = 'output.show_datain_results === true',
                 helpText(ggvis_bug_message),
-                ggvisOutput('datain_density_ggvis')
+                ggvis::ggvisOutput('datain_density_ggvis')
             )
         )
     )

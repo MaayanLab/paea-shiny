@@ -1,5 +1,4 @@
 library(shiny)
-library(ggvis)
 library(magrittr)
 library(nasbMicrotaskViewerHelpers)
 
@@ -230,7 +229,7 @@ shinyServer(function(input, output, session) {
     #'
     observe({
         if(datain_valid()) {
-            plot_density(datain_preprocessed()) %>% bind_shiny('datain_density_ggvis')
+            plot_density(datain_preprocessed()) %>% ggvis::bind_shiny('datain_density_ggvis')
         }
     })
     
@@ -359,7 +358,7 @@ shinyServer(function(input, output, session) {
         # https://groups.google.com/forum/#!topic/ggvis/kQQsdn1RYaE
         if(!is.null(values$chdir)) {
             results <- prepare_results(values$chdir$results[[1]])
-            plot_top_genes(results) %>% bind_shiny('chdir_ggvis_plot')
+            plot_top_genes(results) %>% ggvis::bind_shiny('chdir_ggvis_plot')
         }
     })
     
