@@ -41,7 +41,7 @@ shinyServer(function(input, output, session) {
     values$manual_upload <- TRUE
     values$disease_sig_fetch_running <- FALSE
     
-    #'
+    #' Render last error
     #'
     output$last_error <- renderText({
         values$last_error$message
