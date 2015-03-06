@@ -1,7 +1,6 @@
 library(shiny)
 library(ggvis)
 library(magrittr)
-library(preprocessCore)
 library(nasbMicrotaskViewerHelpers)
 
 source('downloads_handlers.R', local=TRUE)
