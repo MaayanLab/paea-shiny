@@ -1,6 +1,5 @@
 library(shiny)
 library(ggvis)
-library(data.table)
 library(dplyr)
 library(preprocessCore)
 library(nasbMicrotaskViewerHelpers)
@@ -19,7 +18,7 @@ perturbations_data <- lapply(
     drop_duplicates=config$drop_duplicates
 )
 
-disease_sigs <- fread('data/disease_signatures.csv')
+disease_sigs <- data.table::fread('data/disease_signatures.csv')
 disease_sigs_choices <- setNames(
     disease_sigs$file_name,
     paste(disease_sigs$disease, disease_sigs$cell_type, disease_sigs$geo_id, sep = ' | ')
