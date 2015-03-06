@@ -1,6 +1,6 @@
 library(shiny)
 library(ggvis)
-library(dplyr)
+library(magrittr)
 library(preprocessCore)
 library(nasbMicrotaskViewerHelpers)
 
@@ -119,7 +119,7 @@ shinyServer(function(input, output, session) {
                 }
                 values$control_samples <- unlist(attributes(datain)$gse_data$control)
                 values$treatment_samples <- unlist(attributes(datain)$gse_data$treatment)
-                values$datain <- datain  %>% select(-ID_REF)
+                values$datain <- datain  %>% dplyr::select(-ID_REF)
                 
                 values$manual_upload <- FALSE
                 values$input_name <- choice
