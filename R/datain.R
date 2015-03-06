@@ -79,7 +79,7 @@ datain_quantile_normalize <- function(datain, add_noise=TRUE) {
             # Ugly workaround for issue with GeoDE 
             # TODO Remove as soon as possible 
             as.data.frame() %>% 
-            dplyr::mutate_each(funs(add_noise))
+            dplyr::mutate_each(dplyr::funs(add_noise))
         ),
         colnames(datain)
     )
