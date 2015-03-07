@@ -4,5 +4,5 @@
 #' @return character 
 #'
 prepare_enrichr_input <- function(chdir_results) {
-    paste(apply(chdir_results %>% mutate(v = abs(v)), 1, paste, collapse=','), collapse = '\n')
+    paste(apply(chdir_results %>% dplyr::mutate(v = abs(v)), 1, paste, collapse=','), collapse = '\n')
 }
