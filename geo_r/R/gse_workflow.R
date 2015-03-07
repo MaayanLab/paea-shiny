@@ -22,12 +22,12 @@ process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, trea
     # Extract esets names
     output_names <- file.path(outputdir, paste(names(gse), 'rds', sep='.'))
     
-   # Process esets
-   expr <- lapply(
-       gse, process_eset, geo_id=geo_id,
-       control=control, treatment=treatment,
-       description=description
-   )
+    # Process esets
+    expr <- lapply(
+        gse, process_eset, geo_id=geo_id,
+        control=control, treatment=treatment,
+        description=description
+    )
     
     #Write results
     mapply(function(e, f) saveRDS(e, f), expr, output_names)
