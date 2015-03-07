@@ -20,7 +20,7 @@ process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, trea
     gse <- GEOquery::getGEO(GEO=geo_id, destdir=destdir, AnnotGPL=TRUE, getGPL=TRUE)
     
     # Extract esets names
-    output_names <- file.path(outputdir, paste(names(gse), 'rds', sep='.'))
+    output_names <- file.path(outputdir, paste(names(gse), 'csv', sep='.'))
     
     # Process esets
     expr <- lapply(
@@ -30,7 +30,7 @@ process_gse <- function(geo_id, destdir=NULL, outputdir=NULL, control=NULL, trea
     )
     
     #Write results
-    mapply(function(e, f) saveRDS(e, f), expr, output_names)
+    mapply(function(e, f) write.csv(e, file=f, row.names=FALSE), expr, output_names)
     
     output_names 
 }
