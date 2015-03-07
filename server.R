@@ -290,7 +290,7 @@ shinyServer(function(input, output, session) {
     #' 
     output$ngenes <- renderText({
         if(datain_valid()) {
-            nlevels(datain()[[1]])
+            length(unique(datain()[[1]]))
         }
     })
 
