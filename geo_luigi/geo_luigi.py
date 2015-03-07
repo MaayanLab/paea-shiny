@@ -134,7 +134,7 @@ class RunAll(luigi.Task):
     def run(self):
         left = pd.read_csv(StringIO(self.input().open('r').read()), header=None, names=('geo_id', 'file_name'))
         right = pd.read_csv(self.input_path, delimiter='\t', header=None, names=self.fieldnames)
-        merged = pd.merge(left, right, on='geo_id', how='left')[['geo_id', 'disease', 'cell_type', 'file_name']]
+        merged = pd.merge(left, right, on='geo_id', how='left')[['geo_id', 'ctrl_ids', 'pert_ids', 'disease', 'cell_type', 'file_name']]
 
         with self.output().open('w') as fw:
             print(merged.sort('disease').to_csv(index=False), file=fw)
