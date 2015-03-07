@@ -157,7 +157,7 @@ chdir_tab <- tabPanel(
                     conditionalPanel(
                         condition = 'output.show_chdir_results === true',
                         helpText(ggvis_bug_message),
-                        ggvisOutput('chdir_ggvis_plot')
+                        ggvis::ggvisOutput('chdir_ggvis_plot')
                     ) 
                 ),
                 tabPanel(
