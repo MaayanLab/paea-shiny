@@ -65,14 +65,16 @@ shinyServer(function(input, output, session) {
     #'  datain panel - upload observer
     #'
     observe({
-        inFile <- input$datain
+        if (is.null(input$datain)) return()
+        
+        datain <- input$datain
         values$chdir <- NULL
         values$paea <- NULL
         
         values$manual_upload <- TRUE
-        values$datapath <- inFile$datapath
+        values$datapath <- datain$datapath
         
-        values$input_name <- inFile$name
+        values$input_name <- datain$name
     })
     
     
@@ -98,6 +100,7 @@ shinyServer(function(input, output, session) {
         
         values$chdir <- NULL
         values$paea <- NULL
+        
         values$disease_sig_fetch_running <- TRUE
         
         tryCatch({
