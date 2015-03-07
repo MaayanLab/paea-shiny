@@ -69,18 +69,10 @@ shinyServer(function(input, output, session) {
         values$chdir <- NULL
         values$paea <- NULL
         
-        if (is.null(inFile)) return(NULL)
         values$manual_upload <- TRUE
+        values$datapath <- inFile$datapath
+        
         values$input_name <- inFile$name
-        values$datain <- tryCatch(
-            as.data.table(read.csv(
-                inFile$datapath, sep = input$sep
-            )),
-            error = function(e) {
-                values$last_error <- e
-                NULL
-            }
-        )
     })
     
     
@@ -135,7 +127,19 @@ shinyServer(function(input, output, session) {
     #' Read input data
     #'
     datain <- reactive({
-        values$datain
+        if(values$manual_upload) {
+            tryCatch(
+                as.data.table(read.csv(
+                    values$datapath, sep = input$sep
+                )),
+                error = function(e) {
+                    values$last_error <- e
+                    NULL
+                }
+            )
+        } else {
+            values$datain
+        }
     })
     
     
