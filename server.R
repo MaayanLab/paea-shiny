@@ -94,9 +94,7 @@ shinyServer(function(input, output, session) {
     #' datain panel - disease sig observe
     #'
     observe({
-        choice <- isolate(input$disease_sigs_choices)
         if(is.null(input$fetch_disease_sig)) { return() } else if(input$fetch_disease_sig == 0) { return() }
-        if(is.null(choice)) { return() }
         
         values$chdir <- NULL
         values$paea <- NULL
@@ -104,18 +102,25 @@ shinyServer(function(input, output, session) {
         values$disease_sig_fetch_running <- TRUE
         
         tryCatch({
-                datain <- if(stringi::stri_startswith_fixed(config$sigs_path, 'http')) {
+            
+                choice <- isolate(input$disease_sigs_choices)
+                values$input_name <- choice
+                
+                values$datapath <- if(stringi::stri_startswith_fixed(config$sigs_path, 'http')) {
                     download.file(file.path(config$sigs_path, choice), file.path(tempdir(), choice))
-                    readRDS(file.path(tempdir(), choice))
+                    file.path(tempdir(), choice)
                 } else {
-                    readRDS(file.path(config$sigs_path, choice))
+                    file.path(config$sigs_path, choice)
                 }
-                values$control_samples <- unlist(attributes(datain)$gse_data$control)
-                values$treatment_samples <- unlist(attributes(datain)$gse_data$treatment)
-                values$datain <- datain  %>% dplyr::select(-ID_REF)
+                
+                
+                sig <- disease_sigs %>% dplyr::filter(file_name == values$input_name)
+                    
+                values$control_samples <- unlist(stringi::stri_split_fixed(sig$ctrl_ids, ','))
+                values$treatment_samples <- unlist(stringi::stri_split_fixed(sig$pert_ids, ','))
                 
                 values$manual_upload <- FALSE
-                values$input_name <- choice
+                
             },
             error = function(e) {
                 values$last_error <- e
@@ -130,18 +135,18 @@ shinyServer(function(input, output, session) {
     #' Read input data
     #'
     datain <- reactive({
-        if(values$manual_upload) {
+        if(!is.null(values$datapath)) {
             tryCatch(
-                as.data.table(read.csv(
-                    values$datapath, sep = input$sep
-                )),
+                if(values$manual_upload) {
+                    data.table::fread(values$datapath, sep=input$sep) 
+                } else {
+                    data.table::fread(values$datapath) %>% dplyr::select(-ID_REF)
+                },
                 error = function(e) {
                     values$last_error <- e
                     NULL
                 }
             )
-        } else {
-            values$datain
         }
     })
     
@@ -472,7 +477,7 @@ shinyServer(function(input, output, session) {
     #'
     output$chdir_up_genes_table <- renderDataTable({
         if(!is.null(values$chdir)) {
-            chdir_up_genes() %>%  rename(Gene = g, 'Characteristic Direction Coefficient' = v)
+            chdir_up_genes() %>% rename(Gene = g, 'Characteristic Direction Coefficient' = v)
         }
     })
     
