@@ -68,8 +68,6 @@ shinyServer(function(input, output, session) {
         if (is.null(input$datain)) return()
         
         datain <- input$datain
-        values$chdir <- NULL
-        values$paea <- NULL
         
         values$manual_upload <- TRUE
         values$datapath <- datain$datapath
@@ -95,9 +93,6 @@ shinyServer(function(input, output, session) {
     #'
     observe({
         if(is.null(input$fetch_disease_sig)) { return() } else if(input$fetch_disease_sig == 0) { return() }
-        
-        values$chdir <- NULL
-        values$paea <- NULL
         
         values$disease_sig_fetch_running <- TRUE
         
