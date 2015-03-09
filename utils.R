@@ -26,3 +26,14 @@ disabledActionButton <- function(button) {
     button$attribs$disabled <- 'true'
     button
 }
+
+
+#' Return disabled numericInput
+#' 
+#' @param shiny::disabledNumericInput
+#' @return shiny::disabledNumericInput
+#'
+disabledNumericInput <- function(numericInput) {
+    numericInput$children[[2]]$attribs$disabled <- 'true'
+    numericInput
+}
