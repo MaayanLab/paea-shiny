@@ -84,9 +84,10 @@ shinyServer(function(input, output, session) {
     output$fetch_disease_sig_container <- renderUI({
         button <- actionButton('fetch_disease_sig', 'Fetch signature')
         if(input$disease_sigs_choices == '' || values$disease_sig_fetch_running) {
-            button$attribs$disabled <- 'true'
+            list(disabledActionButton(button))
+        } else {
+            list(button)
         }
-        list(button)
     })
     
     
@@ -248,9 +249,8 @@ shinyServer(function(input, output, session) {
     output$run_chdir_container <- renderUI({
         button <- actionButton(inputId = 'run_chdir', label = 'Run Characteristic Direction Analysis', icon = NULL)
         if(!datain_valid() | length(values$control_samples) < 2 | length(values$treatment_samples) < 2 | values$chdir_running) {
-             button$attribs$disabled <- 'true'
              list(
-                button,
+                disabledActionButton(button),
                 if (is.null(datain())) {
                     helpText('Upload your dataset and select control samples first.')
                 } else {
@@ -403,7 +403,7 @@ shinyServer(function(input, output, session) {
         ) 
         if (is.null(values$chdir)) {
             append(
-                lapply(buttons, function(x) { x$attribs$disabled <- 'true'; x }),
+                lapply(buttons, disabledActionButton),
                 list(helpText('No data available. Did you run CHDIR analysis?'))
             )
         } else {
@@ -514,7 +514,7 @@ shinyServer(function(input, output, session) {
             target='_blank', method='post', enctype='multipart/form-data',
             action='http://amp.pharm.mssm.edu/Enrichr/enrich',
             shiny::tags$input(name='list', type='hidden', value=value),
-            if(is.null(values$chdir)) { button$attribs$disabled <- 'true'; button } else { button }
+            if(is.null(values$chdir)) { disabledActionButton(button) } else { button }
         )
     })
     
@@ -533,12 +533,10 @@ shinyServer(function(input, output, session) {
     output$run_paea_container <- renderUI({
         button <- actionButton(inputId = 'run_paea', label = 'Run Principle Angle Enrichment', icon = NULL)
         if (values$paea_running) {
-           list(
-                {button$attribs$disabled <- 'true'; button}
-            )
+           list(disabledActionButton(button))
         } else if(is.null(values$chdir)) {
             list(
-                {button$attribs$disabled <- 'true'; button},
+                list(disabledActionButton(button)),
                 helpText('Before you can run PAEA you have to execute CHDIR analysis.')
             )
         } else {
@@ -642,7 +640,7 @@ shinyServer(function(input, output, session) {
         
         if (is.null(values$paea)) {
             list(
-                {button$attribs$disabled <- 'true'; button},
+                disabledActionButton(button),
                 helpText('No data available. Did you run PAEA analysis?')
             )
         } else {
