@@ -19,8 +19,10 @@ render_params <- function(params) {
 
 #' Return disabled button
 #' 
+#' @param shiny::actionButton
 #' @return shiny::actionButton
 #'
-disabledActionButton <- function(...) {
-    shiny::actionButton(..., disabled='true')
+disabledActionButton <- function(button) {
+    button$attribs$disabled <- 'true'
+    button
 }
