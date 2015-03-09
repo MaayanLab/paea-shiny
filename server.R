@@ -26,20 +26,21 @@ shinyServer(function(input, output, session) {
     
     output$last_modified <- renderText({ last_modified })
     
-    values <- reactiveValues()
-    # Not required. Just to remind myself what is stored inside
-    values$chdir <- NULL
-    values$control_samples <- NULL
-    values$treatment_samples <- NULL
-    values$last_error <- NULL
-    values$chdir_params <- NULL
-    values$input_name <- NULL
+    values <- reactiveValues(
+        # Not required. Just to remind myself what is stored inside
+        chdir = NULL,
+        control_samples = NULL,
+        treatment_samples = NULL,
+        last_error = NULL,
+        chdir_params = NULL,
+        input_name = NULL,
     
-    # Required
-    values$chdir_running <- FALSE
-    values$paea_running <- FALSE
-    values$manual_upload <- TRUE
-    values$disease_sig_fetch_running <- FALSE
+        # Required
+        chdir_running = FALSE,
+        paea_running = FALSE,
+        manual_upload = TRUE,
+        disease_sig_fetch_running = FALSE
+    )
     
     #' Render last error
     #'
