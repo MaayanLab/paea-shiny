@@ -270,11 +270,16 @@ shinyServer(function(input, output, session) {
     #' chdir panel - random number generator seed 
     #'
     output$random_seed_container <- renderUI({
-        rng_seed_input <- numericInput('random_seed', 'Random  number generator seed', as.integer(Sys.time()))
-        if(!input$set_random_seed) {
-            rng_seed_input$children[[2]]$attribs$disabled <- 'true'
+        rng_seed_input <- numericInput(
+            inputId='random_seed',
+            label='Random  number generator seed',
+            value=as.integer(Sys.time())
+        ) 
+        if(!input$set_random_seed){
+            disabledNumericInput(rng_seed_input)
+        } else {
+            rng_seed_input
         }
-        rng_seed_input
     })
     
     #' chdir panel - number of probes
