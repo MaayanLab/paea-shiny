@@ -66,6 +66,20 @@ function initTour() {
         at: 'top center'
     }, {
         content: [
+            '<p>If you prefer you can use disease signature dataset ',
+            'obtained from the Gene Expression Omnibus</p>'
+        ].join(''),
+        highlightTarget: true,
+        nextButton: true,
+        closeButton: true,
+        target: $('#datain_type'),
+        my: 'bottom center',
+        at: 'top center',
+        teardown: function(tour, options) {
+            $('input:radio[name=datain_type]').filter('[value=disease]').trigger('click');
+        }
+    }, {
+        content: [
             '<p>Add preprocessing steps</p>'
         ].join(''),
         highlightTarget: true,
