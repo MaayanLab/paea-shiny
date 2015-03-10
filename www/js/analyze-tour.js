@@ -66,7 +66,7 @@ function initTour() {
         at: 'top center'
     }, {
         content: [
-            '<p>Add preprocessing steps/p>'
+            '<p>Add preprocessing steps</p>'
         ].join(''),
         highlightTarget: true,
         nextButton: true,
