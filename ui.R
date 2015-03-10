@@ -1,5 +1,4 @@
 library(shiny)
-library(markdown)
 
 #' Disappearing plot help 
 #' https://groups.google.com/forum/#!topic/ggvis/kQQsdn1RYaE
