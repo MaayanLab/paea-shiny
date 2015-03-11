@@ -22,11 +22,11 @@ disease_sigs_choices <- setNames(
     paste(disease_sigs$disease, disease_sigs$cell_type, disease_sigs$geo_id, sep = ' | ')
 )
 
-shinyServer(function(input, output, session) {
+shiny::shinyServer(function(input, output, session) {
     
-    output$last_modified <- renderText({ last_modified })
+    output$last_modified <- shiny::renderText({ last_modified })
     
-    values <- reactiveValues(
+    values <- shiny::reactiveValues(
         # Not required. Just to remind myself what is stored inside
         chdir = NULL,
         control_samples = NULL,
@@ -44,15 +44,15 @@ shinyServer(function(input, output, session) {
     
     #' Render last error
     #'
-    output$last_error <- renderText({
+    output$last_error <- shiny::renderText({
         values$last_error$message
     })
     
     
     #' datain panel - ugly hack to be able to clear upload widget
     #' 
-    output$datain_container <- renderUI({
-        fileInput(
+    output$datain_container <- shiny::renderUI({
+        shiny::fileInput(
             'datain', 'Choose file to upload',
             accept = c(
                 'text/csv', 'text/comma-separated-values',
@@ -65,7 +65,7 @@ shinyServer(function(input, output, session) {
     
     #'  datain panel - upload observer
     #'
-    observe({
+    shiny::observe({
         if (is.null(input$datain)) return()
         
         datain <- input$datain
@@ -79,10 +79,13 @@ shinyServer(function(input, output, session) {
     
     #' datain panel - disease signature choice
     #'
-    updateSelectizeInput(session, 'disease_sigs_choices', choices = disease_sigs_choices, server = TRUE)
+    shiny::updateSelectizeInput(
+        session, 'disease_sigs_choices',
+        choices = disease_sigs_choices, server = TRUE
+    )
     
-    output$fetch_disease_sig_container <- renderUI({
-        button <- actionButton('fetch_disease_sig', 'Fetch signature')
+    output$fetch_disease_sig_container <- shiny::renderUI({
+        button <- shiny::actionButton('fetch_disease_sig', 'Fetch signature')
         if(input$disease_sigs_choices == '' || values$disease_sig_fetch_running) {
             list(disabledActionButton(button))
         } else {
@@ -93,14 +96,14 @@ shinyServer(function(input, output, session) {
     
     #' datain panel - disease sig observe
     #'
-    observe({
+    shiny::observe({
         if(is.null(input$fetch_disease_sig)) { return() } else if(input$fetch_disease_sig == 0) { return() }
         
         values$disease_sig_fetch_running <- TRUE
         
         tryCatch({
             
-                choice <- isolate(input$disease_sigs_choices)
+                choice <- shiny::isolate(input$disease_sigs_choices)
                 values$input_name <- choice
                 
                 values$datapath <- if(stringi::stri_startswith_fixed(config$sigs_path, 'http')) {
@@ -131,7 +134,7 @@ shinyServer(function(input, output, session) {
     
     #' Read input data
     #'
-    datain <- reactive({
+    datain <- shiny::reactive({
         if(!is.null(values$datapath)) {
             tryCatch(
                 if(values$manual_upload) {
@@ -150,13 +153,13 @@ shinyServer(function(input, output, session) {
     
     #' Is input valid?
     #'
-    datain_valid <- reactive({ datain_is_valid(datain())$valid })
+    datain_valid <- shiny::reactive({ datain_is_valid(datain())$valid })
     
     
     #' Apply preprocessing steps to datain
     #'
     #'
-    datain_preprocessed <- reactive({
+    datain_preprocessed <- shiny::reactive({
         if(datain_valid()) {
             id_filter <- if(input$enable_id_filter) {
                 config$id_filter
@@ -175,37 +178,37 @@ shinyServer(function(input, output, session) {
     
     #' datain - input data preview
     #'
-    output$contents <- renderDataTable({
+    output$contents <- shiny::renderDataTable({
         datain_preprocessed()
     })
     
     
     #' datain panel - control/treatment samples checboxes
     #'
-    output$sampleclass_container <- renderUI({
+    output$sampleclass_container <- shiny::renderUI({
         if (datain_valid() && values$manual_upload) {
-            checkboxGroupInput(
+           shiny::checkboxGroupInput(
                 'sampleclass',
                 'Choose control samples',
                 colnames(datain())[-1]
             )
         } else if (is.null(datain())) {
-            helpText('To select samples you have to upload your dataset.')
+            shiny::helpText('To select samples you have to upload your dataset.')
         } else if (ncol(datain()) == 1) {
-            helpText('No experimental data detected. Please check separator and/or uploaded file')
+           shiny:: helpText('No experimental data detected. Please check separator and/or uploaded file')
         } else if (ncol(datain()) < 5) {
-            helpText('You need at least four samples to run Characteristic Direction Analysis')
+            shiny::helpText('You need at least four samples to run Characteristic Direction Analysis')
         } else if (!values$manual_upload) {
-            helpText('You can choose samples only for manually uploaded data sets.')
+            shiny::helpText('You can choose samples only for manually uploaded data sets.')
         } else {
-            helpText('It looks like your dataset is invalid')
+            shiny::helpText('It looks like your dataset is invalid')
         } 
     })
     
     
     #' Update lists of control/treatment samples
     #'
-    observe({
+    shiny::observe({
         if(values$manual_upload) {
             if(datain_valid()) {
                 datain <- datain()
@@ -222,7 +225,7 @@ shinyServer(function(input, output, session) {
     
     #' datain  panel - status message
     #'
-    output$upload_message <- renderText({
+    output$upload_message <- shiny::renderText({
         if(is.null(datain())) {
             'preview not available...'
         }
@@ -231,12 +234,12 @@ shinyServer(function(input, output, session) {
     
     #' datain tab - set plots visibility
     #'
-    output$show_datain_results <- reactive({ datain_is_valid(datain())$valid })
-    outputOptions(output, 'show_datain_results', suspendWhenHidden = FALSE)
+    output$show_datain_results <- shiny::reactive({ datain_is_valid(datain())$valid })
+    shiny::outputOptions(output, 'show_datain_results', suspendWhenHidden = FALSE)
     
     #' datain tab - density plot
     #'
-    observe({
+    shiny::observe({
         if(datain_valid()) {
             plot_density(datain_preprocessed()) %>% ggvis::bind_shiny('datain_density_ggvis')
         }
@@ -246,15 +249,15 @@ shinyServer(function(input, output, session) {
     #' chdir panel - run button
     #'
     #'
-    output$run_chdir_container <- renderUI({
-        button <- actionButton(inputId = 'run_chdir', label = 'Run Characteristic Direction Analysis', icon = NULL)
+    output$run_chdir_container <- shiny::renderUI({
+        button <- shiny::actionButton(inputId = 'run_chdir', label = 'Run Characteristic Direction Analysis', icon = NULL)
         if(!datain_valid() | length(values$control_samples) < 2 | length(values$treatment_samples) < 2 | values$chdir_running) {
              list(
                 disabledActionButton(button),
                 if (is.null(datain())) {
-                    helpText('Upload your dataset and select control samples first.')
+                    shiny::helpText('Upload your dataset and select control samples first.')
                 } else {
-                    helpText('You need at least two control and two treatment samples to run chdir.')
+                    shiny::helpText('You need at least two control and two treatment samples to run chdir.')
                 }
              )
             
@@ -265,13 +268,13 @@ shinyServer(function(input, output, session) {
     
     #' Not the best solution, but we want to render buttons even if we switch tabs using tourist
     #'
-    outputOptions(output, 'run_chdir_container', suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, 'run_chdir_container', suspendWhenHidden = FALSE)
     
     
     #' chdir panel - random number generator seed 
     #'
-    output$random_seed_container <- renderUI({
-        rng_seed_input <- numericInput(
+    output$random_seed_container <- shiny::renderUI({
+        rng_seed_input <- shiny::numericInput(
             inputId='random_seed',
             label='Random  number generator seed',
             value=as.integer(Sys.time())
@@ -285,7 +288,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - number of probes
     #'
-    output$nprobes <- renderText({
+    output$nprobes <- shiny::renderText({
         if(datain_valid()) {
             nrow(datain())
         }
@@ -294,7 +297,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - number of genes
     #' 
-    output$ngenes <- renderText({
+    output$ngenes <- shiny::renderText({
         if(datain_valid()) {
             length(unique(datain()[[1]]))
         }
@@ -303,26 +306,26 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - control samples
     #'
-    output$control_samples <- renderText({
+    output$control_samples <- shiny::renderText({
         paste(values$control_samples, collapse = ', ')
     })
     
     
     #' chdir panel - treatment samples
     #'
-    output$treatment_samples <- renderText({
+    output$treatment_samples <- shiny::renderText({
         paste(values$treatment_samples, collapse = ', ')
     })
     
  
     #' Run Characteristic Direction Analysis
     #'
-    observe({
+    shiny::observe({
         if(is.null(input$run_chdir)) { return() } else if(input$run_chdir == 0) { return() }
-        datain <- isolate(datain_preprocessed())
-        nnull <- min(as.integer(isolate(input$chdir_nnull)), 1000)
-        gamma <- isolate(input$chdir_gamma)
-        seed <- isolate(input$random_seed)
+        datain <- shiny::isolate(datain_preprocessed())
+        nnull <- min(as.integer(shiny::isolate(input$chdir_nnull)), 1000)
+        gamma <- shiny::isolate(input$chdir_gamma)
+        seed <- shiny::isolate(input$random_seed)
         
         sampleclass <- factor(ifelse(colnames(datain)[-1] %in% values$control_samples, '1', '2'))
         
@@ -360,13 +363,13 @@ shinyServer(function(input, output, session) {
     
     #' chdir tab - set plots visibility
     #'
-    output$show_chdir_results <- reactive({ !is.null(values$chdir) })
-    outputOptions(output, 'show_chdir_results', suspendWhenHidden = FALSE)
+    output$show_chdir_results <- shiny::reactive({ !is.null(values$chdir) })
+    shiny::outputOptions(output, 'show_chdir_results', suspendWhenHidden = FALSE)
 
     
     #' Plot top genes from Characteristic Direction Analysis
     #'
-    observe({
+    shiny::observe({
         # Not as reactive as it should be
         # https://groups.google.com/forum/#!topic/ggvis/kQQsdn1RYaE
         if(!is.null(values$chdir)) {
@@ -377,8 +380,8 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel number of significant genes to keep
     #' 
-    output$ngenes_tokeep_contatiner <- renderUI({
-        slider <- sliderInput(
+    output$ngenes_tokeep_contatiner <- shiny::renderUI({
+        slider <- shiny::sliderInput(
             'ngenes_tokeep', label='Limit number of genes to return',
             min=1, max=config$max_ngenes_tokeep, step=1, value=100, round=TRUE
         )
@@ -395,16 +398,16 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - download block
     #'
-    output$chdir_downloads_container <- renderUI({
+    output$chdir_downloads_container <- shiny::renderUI({
         buttons <- list(
-            downloadButton('download_chdir', 'Download chdir'),
-            downloadButton('download_chdir_up', 'Download up genes'),
-            downloadButton('download_chdir_down', 'Download down genes')
+            shiny::downloadButton('download_chdir', 'Download chdir'),
+            shiny::downloadButton('download_chdir_up', 'Download up genes'),
+            shiny::downloadButton('download_chdir_down', 'Download down genes')
         ) 
         if (is.null(values$chdir)) {
             append(
                 lapply(buttons, disabledActionButton),
-                list(helpText('No data available. Did you run CHDIR analysis?'))
+                list(shiny::helpText('No data available. Did you run CHDIR analysis?'))
             )
         } else {
             buttons
@@ -413,12 +416,12 @@ shinyServer(function(input, output, session) {
     
     #' See coment for run_chdir_container
     #'
-    outputOptions(output, 'chdir_downloads_container', suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, 'chdir_downloads_container', suspendWhenHidden = FALSE)
     
 
     #' chdir panel - number of significant upregulated genes
     #'
-    output$n_sig_up_genes <- renderText({
+    output$n_sig_up_genes <- shiny::renderText({
         if(!is.null(values$chdir)) {
             nrow(chdir_up_genes())
         }
@@ -426,7 +429,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - number of significant downregulated genes
     #'
-    output$n_sig_down_genes <- renderText({
+    output$n_sig_down_genes <- shiny::renderText({
         if(!is.null(values$chdir)) {
             nrow(chdir_down_genes())
         }
@@ -435,7 +438,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - chdir download
     #'
-    output$download_chdir <- downloadHandler(
+    output$download_chdir <- shiny::downloadHandler(
         filename = 'chdir.tsv',
         content = chdir_download_handler(prepare_results(values$chdir$chdirprops$chdir[[1]][, 1]))
     )
@@ -443,7 +446,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - prepare down genes
     #'
-    chdir_up_genes <- reactive({
+    chdir_up_genes <- shiny::reactive({
         if(!is.null(values$chdir)) {
             head(prepare_up_genes(values$chdir$results[[1]]), input$ngenes_tokeep)
         }
@@ -452,7 +455,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - prepare up genes
     #'
-    chdir_down_genes <- reactive({
+    chdir_down_genes <- shiny::reactive({
         if(!is.null(values$chdir)) {
             head(prepare_down_genes(values$chdir$results[[1]]), input$ngenes_tokeep)
         }
@@ -461,7 +464,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - chdir download
     #'
-    output$download_chdir_up <- downloadHandler(
+    output$download_chdir_up <- shiny::downloadHandler(
         filename = 'chdir_up_genes.tsv',
         content = chdir_download_handler(chdir_up_genes())
 
@@ -469,14 +472,14 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - chdir download
     #'
-    output$download_chdir_down <- downloadHandler(
+    output$download_chdir_down <- shiny::downloadHandler(
         filename = 'chdir_up_genes.tsv',
         content = chdir_download_handler(chdir_down_genes())
     )
     
     #' chdir panel - up genes table
     #'
-    output$chdir_up_genes_table <- renderDataTable({
+    output$chdir_up_genes_table <- shiny::renderDataTable({
         if(!is.null(values$chdir)) {
             chdir_up_genes() %>% dplyr::rename(Gene = g, 'Characteristic Direction Coefficient' = v)
         }
@@ -485,7 +488,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - down genes table
     #'
-    output$chdir_down_genes_table <- renderDataTable({
+    output$chdir_down_genes_table <- shiny::renderDataTable({
         if(!is.null(values$chdir)) {
             chdir_down_genes() %>% dplyr::rename(Gene = g, 'Characteristic Direction Coefficient' = v)
         }
@@ -494,7 +497,7 @@ shinyServer(function(input, output, session) {
         
     #' chdir panel - status message
     #'
-    output$chdir_message <- renderText({
+    output$chdir_message <- shiny::renderText({
         if(is.null(values$chdir)) {
             'results not available...'
         }
@@ -503,7 +506,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - Enrichr submit form
     #'
-    output$enrichr_form <- renderUI({
+    output$enrichr_form <- shiny::renderUI({
         button <-shiny::tags$button('Analyze with Enrichr', class='btn btn-default')
         chdir_diff_genes <- list(up=chdir_up_genes, down=chdir_down_genes)
         value <- if(is.null(values$chdir)) { '' } else {
@@ -522,7 +525,7 @@ shinyServer(function(input, output, session) {
     #' chdir panel - run summary
     #'
     
-    output$chdir_run_summary <- renderUI({
+    output$chdir_run_summary <- shiny::renderUI({
         if(!is.null(values$chdir)) {
             render_params(values$chdir_params)
         }
@@ -530,14 +533,14 @@ shinyServer(function(input, output, session) {
     
     #' paea panel - run button
     #'
-    output$run_paea_container <- renderUI({
-        button <- actionButton(inputId = 'run_paea', label = 'Run Principle Angle Enrichment', icon = NULL)
+    output$run_paea_container <- shiny::renderUI({
+        button <- shiny::actionButton(inputId = 'run_paea', label = 'Run Principle Angle Enrichment', icon = NULL)
         if (values$paea_running) {
            list(disabledActionButton(button))
         } else if(is.null(values$chdir)) {
             list(
                 list(disabledActionButton(button)),
-                helpText('Before you can run PAEA you have to execute CHDIR analysis.')
+                shiny::helpText('Before you can run PAEA you have to execute CHDIR analysis.')
             )
         } else {
             list(button)
@@ -547,14 +550,14 @@ shinyServer(function(input, output, session) {
     
     #' See coment for run_chdir_container
     #'
-    outputOptions(output, 'run_paea_container', suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, 'run_paea_container', suspendWhenHidden = FALSE)
     
     
     #' Choose background dataset
     #'
-    output$background_dataset_container <- renderUI({
+    output$background_dataset_container <- shiny::renderUI({
         datasets <- names(perturbations_data)
-        radioButtons(
+        shiny::radioButtons(
             'background_dataset', 'Background',
             setNames(datasets, stringi::stri_trans_totitle(datasets))
         )
@@ -562,7 +565,7 @@ shinyServer(function(input, output, session) {
     
     #' paea panel - workflow flowchart
     #'
-    output$paea_strategy_chart <- renderImage(
+    output$paea_strategy_chart <- shiny::renderImage(
         list(src=file.path('www/img', paste(input$paea_strategy, 'png', sep='.')), contentType='image/png'),
         deleteFile=FALSE
     )
@@ -570,11 +573,11 @@ shinyServer(function(input, output, session) {
         
     #' Run Principle Angle Enrichment Analysis
     #'
-    observe({
+    shiny::observe({
         if(is.null(input$run_paea)) { return() } else if(input$run_paea == 0) { return() }
-        chdir <- isolate(values$chdir)
-        casesensitive <- isolate(input$paea_casesensitive)
-        background_dataset <- isolate(input$background_dataset)
+        chdir <- shiny::isolate(values$chdir)
+        casesensitive <- shiny::isolate(input$paea_casesensitive)
+        background_dataset <- shiny::isolate(input$background_dataset)
         
         if(!(is.null(chdir))) {
             values$paea_running <- TRUE
@@ -588,7 +591,7 @@ shinyServer(function(input, output, session) {
             )
             
             values$paea <- tryCatch(
-                withProgress(message = '', value = 0, {
+                shiny::withProgress(message = '', value = 0, {
                      
                     lapply(paea_analysis_dispatch(
                         chdirresults=chdir$chdirprops,
@@ -613,9 +616,9 @@ shinyServer(function(input, output, session) {
     
     #' PAEA results
     #' 
-    paea_results <- reactive({
+    paea_results <- shiny::reactive({
         if(!is.null(values$paea)) {
-            background_dataset <- isolate(input$background_dataset)
+            background_dataset <- shiny::isolate(input$background_dataset)
             description <- perturbations_data[[background_dataset]]$description
             
             prepare_paea_results(combine_results(values$paea, input$paea_strategy), description)
@@ -626,7 +629,7 @@ shinyServer(function(input, output, session) {
     
     #' PAEA output
     #'
-    output$paea_results_table <- renderDataTable({
+    output$paea_results_table <- shiny::renderDataTable({
         if(!is.null(paea_results())) {
             paea_results()
         }
@@ -635,13 +638,13 @@ shinyServer(function(input, output, session) {
     
     #' paea panel - download block
     #'
-    output$paea_downloads_container <- renderUI({
-        button <- downloadButton('download_paea', 'Download current view')
+    output$paea_downloads_container <- shiny::renderUI({
+        button <- shiny::downloadButton('download_paea', 'Download current view')
         
         if (is.null(values$paea)) {
             list(
                 disabledActionButton(button),
-                helpText('No data available. Did you run PAEA analysis?')
+                shiny::helpText('No data available. Did you run PAEA analysis?')
             )
         } else {
             list(button)
@@ -651,12 +654,12 @@ shinyServer(function(input, output, session) {
     
     #' See coment for run_chdir_container
     #'
-    outputOptions(output, 'paea_downloads_container', suspendWhenHidden = FALSE)
+    shiny::outputOptions(output, 'paea_downloads_container', suspendWhenHidden = FALSE)
     
     
     #' paea panel - downloads handler
     #'
-    output$download_paea <- downloadHandler(
+    output$download_paea <- shiny::downloadHandler(
         filename = 'paea_results.tsv',
         content = paea_download_handler(paea_results())
     )
@@ -664,7 +667,7 @@ shinyServer(function(input, output, session) {
     
     #' paea panel - status message
     #'
-    output$paea_message <- renderText({
+    output$paea_message <- shiny::renderText({
         if(is.null(values$paea)) {
             'results not available...'
         }
@@ -673,7 +676,7 @@ shinyServer(function(input, output, session) {
     
     #' chdir panel - run summary
     #'
-    output$paea_run_summary <- renderUI({
+    output$paea_run_summary <- shiny::renderUI({
         if(!is.null(values$paea)) {
             render_params(values$paea_params)
         }
