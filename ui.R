@@ -17,7 +17,7 @@ seperator_input <- shiny::radioButtons(
 )
 
 
-datain_input_choice <- shiny::column(3, shiny::wellPanel(
+datain_input_choice <- shiny::column(width=3, shiny::wellPanel(
     shiny::radioButtons(
         'datain_type', 'Input type',
         c('Custom expression data'='upload', 'Disease signature'='disease')
@@ -25,18 +25,18 @@ datain_input_choice <- shiny::column(3, shiny::wellPanel(
 ))
 
 
-datain_upload <- column(3, shiny::wellPanel(
+datain_upload <- shiny::column(width=3, shiny::wellPanel(
     h3('Expression data'),
     shiny::uiOutput('datain_container'),
     seperator_input        
 ))
 
-datain_sampleclass <- shiny::column(3, shiny::wellPanel(
+datain_sampleclass <- shiny::column(width=3, shiny::wellPanel(
     h3('Control samples', id='control_samples'),
     shiny::uiOutput('sampleclass_container')
 ))
 
-datain_preprocessing <- shiny::column(3, shiny::wellPanel(
+datain_preprocessing <- shiny::column(width=3, shiny::wellPanel(
     shiny::h3('Preprocessing', id='datain_preprocessing'),
     shiny::checkboxInput(inputId='log2_transform', label='log2 transform' , value = FALSE),
     shiny::checkboxInput(inputId='quantile_normalize', label='Quantile normalize', value = FALSE),
@@ -79,7 +79,7 @@ datain_preview <- shiny::column(
 upload_tab <- shiny::tabPanel(
     'Upload dataset',
     shiny::fluidRow(
-        shiny::column(12, p('')),
+        shiny::column(width=12, p('')),
         datain_input_choice,
         shiny::conditionalPanel(
             'input.datain_type === "upload"',
@@ -100,8 +100,8 @@ upload_tab <- shiny::tabPanel(
 chdir_tab <- shiny::tabPanel(
     'Characteristic Direction Analysis',
     shiny::fluidRow(
-        shiny::column(12, shiny::p('')), 
-        shiny::column(4, shiny::wellPanel(
+        shiny::column(width=12, shiny::p('')), 
+        shiny::column(width=4, shiny::wellPanel(
             shiny::h3('Input summary', id='chdir_input_summary'),
             shiny::tags$dl(
                 shiny::tags$dt('#genes:'),
@@ -115,7 +115,7 @@ chdir_tab <- shiny::tabPanel(
             )
         )),
    
-        shiny::column(4, shiny::wellPanel(
+        shiny::column(width=4, shiny::wellPanel(
             shiny::h3('CHDIR parameters', id='chdir_parameters'),
             shiny::sliderInput('chdir_gamma', 'Gamma', 1.0, min = 0, max = 1, step = 0.05),
             shiny::sliderInput('chdir_nnull', 'Nnull', 10, min = 2, max = 100, step = 1, round=TRUE),
@@ -129,7 +129,7 @@ chdir_tab <- shiny::tabPanel(
             shiny::uiOutput('run_chdir_container')
         )),
         
-        shiny::column(4,
+        shiny::column(width=4,
             shiny::wellPanel(
                 shiny::h3('Downloads', id='chdir_downloads'),
                 shiny::uiOutput('ngenes_tokeep_contatiner'),
@@ -147,7 +147,7 @@ chdir_tab <- shiny::tabPanel(
                 shiny::uiOutput('enrichr_form')
             )
         ),
-        shiny::column(12,
+        shiny::column(width=12,
             shiny::h3('CHDIR results', id='chdir_results_header'),
             shiny::tabsetPanel(
                 id='chdir_results',
@@ -189,7 +189,7 @@ paea_strategy_radio <- shiny::radioButtons('paea_strategy', 'View:', c(
 
 #' paea tab - input parameters
 #'
-paea_input_parameters <- shiny::column(6, shiny::wellPanel(
+paea_input_parameters <- shiny::column(width=6, shiny::wellPanel(
     shiny::h3('PAEA parameters', id='paea_parameters'),
     shiny::checkboxInput('paea_casesensitive', 'Case Sensitive', FALSE),
     shiny::helpText('Check if you want gene lables comparisons to be case sensitive. Not recommended.'),
@@ -207,7 +207,7 @@ paea_downloads <- shiny::column(width=6, shiny::wellPanel(
 #' paea tab - paea summary
 #'
 paea_summary <- shiny::tabPanel(
-    'Summary', shiny::column(12, shiny::p(shiny::textOutput('paea_message')), shiny::uiOutput('paea_run_summary'))
+    'Summary', shiny::column(width=12, shiny::p(shiny::textOutput('paea_message')), shiny::uiOutput('paea_run_summary'))
 )
 
 #' paea tab - output
@@ -242,7 +242,7 @@ paea_output <- shiny::column(
 paea_tab <- shiny::tabPanel(
     'Principle Angle Enrichment Analysis',
     shiny::fluidRow(
-        shiny::column(12, shiny::p('')),
+        shiny::column(width=12, shiny::p('')),
         paea_input_parameters,
         paea_downloads,
         paea_output
@@ -266,7 +266,7 @@ analyze_panel <- shiny::tabPanel(
 #'
 about_panel <- shiny::tabPanel(
     title = 'About',
-    shiny::fluidRow(shiny::column(12,
+    shiny::fluidRow(shiny::column(width=12,
         shiny::includeMarkdown('about.md'),
         shiny::tags$dl(
             shiny::tags$dt('Last update:'),
@@ -281,7 +281,7 @@ about_panel <- shiny::tabPanel(
 shiny::shinyUI(
     shiny::navbarPage(
         title='NASB Microtask Viewer',
-        footer=shiny::column(12),
+        footer=shiny::column(width=12),
         analyze_panel,
         about_panel,
         
