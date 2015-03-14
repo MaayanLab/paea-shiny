@@ -618,11 +618,8 @@ shiny::shinyServer(function(input, output, session) {
     #' 
     paea_results <- shiny::reactive({
         if(!is.null(values$paea)) {
-            background_dataset <- shiny::isolate(input$background_dataset)
-            description <- perturbations_data[[background_dataset]]$description
-            
+            description <- perturbations_data[[values$paea_params$background_dataset]]$description
             prepare_paea_results(combine_results(values$paea, input$paea_strategy), description)
-
         }
     })
     
