@@ -527,7 +527,7 @@ shiny::shinyServer(function(input, output, session) {
     
     output$chdir_run_summary <- shiny::renderUI({
         if(!is.null(values$chdir)) {
-            render_params(values$chdir_params)
+            list_to_defs(values$chdir_params)
         }
     })
     
