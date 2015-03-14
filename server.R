@@ -675,7 +675,7 @@ shiny::shinyServer(function(input, output, session) {
     #'
     output$paea_run_summary <- shiny::renderUI({
         if(!is.null(values$paea)) {
-            render_params(values$paea_params)
+            list_to_defs(values$paea_params)
         }
     })
     

@@ -16,6 +16,7 @@ list_to_defs <- function(params, container=shiny::div) {
     )
 }
 
+
 #' Return disabled button
 #' 
 #' @param shiny::actionButton
