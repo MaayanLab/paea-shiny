@@ -1,6 +1,7 @@
 #' Convert list of params to list of def tags
 #' 
 #' @param params list
+#' @param container shiny html element
 #' @return container html element containing (dt, dd) pair for each element of the list
 #'
 list_to_defs <- function(params, container=shiny::div) {
