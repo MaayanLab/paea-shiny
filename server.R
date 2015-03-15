@@ -10,10 +10,14 @@ last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mti
 
 options(shiny.maxRequestSize=120*1024^2) 
 
+
+
 perturbations_data <- lapply(
     config$data_paths,
-    nasbMicrotaskViewerHelpers::preprocess,
-    drop_duplicates=config$drop_duplicates
+    function(data_path) {
+        force(data_path)
+        shiny::reactive({ nasbMicrotaskViewerHelpers::preprocess(data_path, drop_duplicates=config$drop_duplicates) })
+    }
 )
 
 disease_sigs <- data.table::fread('data/disease_signatures.csv')
@@ -595,7 +599,7 @@ shiny::shinyServer(function(input, output, session) {
                      
                     lapply(paea_analysis_dispatch(
                         chdirresults=chdir$chdirprops,
-                        gmtfile=prepare_gene_sets(perturbations_data[[background_dataset]]$genes),
+                        gmtfile=prepare_gene_sets(perturbations_data[[background_dataset]]()$genes),
                         casesensitive=casesensitive,
                         with_progress=TRUE
                     ), paea_to_df)
@@ -618,7 +622,7 @@ shiny::shinyServer(function(input, output, session) {
     #' 
     paea_results <- shiny::reactive({
         if(!is.null(values$paea)) {
-            description <- perturbations_data[[values$paea_params$background_dataset]]$description
+            description <- perturbations_data[[values$paea_params$background_dataset]]()$description
             prepare_paea_results(combine_results(values$paea, input$paea_strategy), description)
         }
     })
