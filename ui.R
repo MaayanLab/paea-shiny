@@ -11,7 +11,7 @@ ggvis_bug_message <- paste(
 
 #' Input separator choice
 #'
-seperator_input <- shiny::radioButtons(
+datain <- shiny::radioButtons(
     'sep', 'Separator',
     c(Comma=',', Semicolon=';', Tab='\t'),
 )
@@ -28,7 +28,7 @@ datain_input_choice <- shiny::column(width=3, shiny::wellPanel(
 datain_upload <- shiny::column(width=3, shiny::wellPanel(
     h3('Expression data'),
     shiny::uiOutput('datain_container'),
-    seperator_input        
+    datain        
 ))
 
 datain_sampleclass <- shiny::column(width=3, shiny::wellPanel(
@@ -43,7 +43,7 @@ datain_preprocessing <- shiny::column(width=3, shiny::wellPanel(
     shiny::checkboxInput(inputId='enable_id_filter', label='Enable id filter', value = TRUE)
 ))
 
-disease_input <- shiny::column(width=6, shiny::wellPanel(
+datain_disease_input <- shiny::column(width=6, shiny::wellPanel(
     shiny::selectizeInput(
         'disease_sigs_choices', 'Choose disease signature', 
         choices = NULL, options = list(placeholder = 'type disease name')
@@ -76,7 +76,7 @@ datain_preview <- shiny::column(
 
 #' Dataset download 
 #'
-upload_tab <- shiny::tabPanel(
+datain_tab <- shiny::tabPanel(
     'Upload dataset',
     shiny::fluidRow(
         shiny::column(width=12, p('')),
@@ -88,7 +88,7 @@ upload_tab <- shiny::tabPanel(
         ),
         shiny::conditionalPanel(
             'input.datain_type === "disease"',
-            disease_input
+            datain_disease_input
         ),
         datain_preprocessing,
         datain_preview
@@ -256,7 +256,7 @@ analyze_panel <- shiny::tabPanel(
     title='Analyze',
     shiny::tabsetPanel(
         id='workflow_panel',
-        upload_tab,
+        datain_tab,
         chdir_tab,
         paea_tab
     )
