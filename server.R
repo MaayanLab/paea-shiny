@@ -3,7 +3,6 @@ library(magrittr)
 library(nasbMicrotaskViewerHelpers)
 
 source('downloads_handlers.R', local=TRUE)
-source('utils.R', local=TRUE)
 source('config.R', local=TRUE)
 
 last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mtime)), decreasing=TRUE)[1]
