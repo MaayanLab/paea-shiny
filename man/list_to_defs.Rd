@@ -4,15 +4,13 @@
 \alias{list_to_defs}
 \title{Convert list of params to list of def tags}
 \usage{
-list_to_defs(params, container = shiny::div)
+list_to_defs(params)
 }
 \arguments{
 \item{params}{list}
-
-\item{container}{shiny html element}
 }
 \value{
-container html element containing (dt, dd) pair for each element of the list
+container html dl containing (dt, dd) pair for each element of the list
 }
 \description{
 Convert list of params to list of def tags

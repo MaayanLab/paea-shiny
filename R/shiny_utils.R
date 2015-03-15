@@ -1,13 +1,12 @@
 #' Convert list of params to list of def tags
 #' 
 #' @param params list
-#' @param container shiny html element
-#' @return container html element containing (dt, dd) pair for each element of the list
+#' @return container html dl containing (dt, dd) pair for each element of the list
 #'
-list_to_defs <- function(params, container=shiny::div) {
+list_to_defs <- function(params) {
     params <- lapply(params, paste, collapse=', ')
     names(params) <- stringi::stri_trans_totitle(stringi::stri_replace_all_fixed(names(params), '_', ' '))
-    container(lapply(
+    shiny::tags$dl(lapply(
         names(params),
             function(x) {
                 shiny::span(shiny::tags$dt(x), shiny::tags$dd(params[[x]]))
