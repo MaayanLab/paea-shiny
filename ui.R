@@ -17,39 +17,38 @@ datain <- shiny::radioButtons(
 )
 
 
-datain_input_choice <- shiny::column(width=3, shiny::wellPanel(
-    shiny::radioButtons(
+datain_input_choice <- shiny::radioButtons(
         'datain_type', 'Input type',
         c('Custom expression data'='upload', 'Disease signature'='disease')
     )
-))
 
 
-datain_upload <- shiny::column(width=3, shiny::wellPanel(
+
+datain_upload <- shiny::div(
     h3('Expression data'),
     shiny::uiOutput('datain_container'),
     datain        
-))
+)
 
-datain_sampleclass <- shiny::column(width=3, shiny::wellPanel(
+datain_sampleclass <- shiny::div(
     h3('Control samples', id='control_samples'),
     shiny::uiOutput('sampleclass_container')
-))
+)
 
-datain_preprocessing <- shiny::column(width=3, shiny::wellPanel(
+datain_preprocessing <- shiny::div(
     shiny::h3('Preprocessing', id='datain_preprocessing'),
     shiny::checkboxInput(inputId='log2_transform', label='log2 transform' , value = FALSE),
     shiny::checkboxInput(inputId='quantile_normalize', label='Quantile normalize', value = FALSE),
     shiny::checkboxInput(inputId='enable_id_filter', label='Enable id filter', value = TRUE)
-))
+)
 
-datain_disease_input <- shiny::column(width=6, shiny::wellPanel(
+datain_disease_input <- shiny::div(
     shiny::selectizeInput(
         'disease_sigs_choices', 'Choose disease signature', 
         choices = NULL, options = list(placeholder = 'type disease name')
     ),
     shiny::uiOutput('fetch_disease_sig_container')
-))
+)
 
 
 datain_preview <- shiny::column(
@@ -78,8 +77,8 @@ datain_preview <- shiny::column(
 #'
 datain_tab <- shiny::tabPanel(
     'Upload dataset',
-    shiny::fluidRow(
-        shiny::column(width=12, p('')),
+    shiny::column(width=12, p('')),
+    sidebarPanel(
         datain_input_choice,
         shiny::conditionalPanel(
             'input.datain_type === "upload"',
@@ -90,15 +89,19 @@ datain_tab <- shiny::tabPanel(
             'input.datain_type === "disease"',
             datain_disease_input
         ),
-        datain_preprocessing,
+        datain_preprocessing
+    ),
+    mainPanel(
         datain_preview
     )
+    
+    
 )
 
 
 #' Characteristic Direction Analysis input summary
 #'
-chdir_input_summary_col <- shiny::column(width=4, shiny::wellPanel(
+chdir_input_summary_col <- shiny::div(
     shiny::h3('Input summary', id='chdir_input_summary'),
     shiny::tags$dl(
         shiny::tags$dt('#genes:'),
@@ -110,12 +113,12 @@ chdir_input_summary_col <- shiny::column(width=4, shiny::wellPanel(
         shiny::tags$dt('Treatment samples:'),
         shiny::tags$dd(shiny::textOutput('treatment_samples'))
     )
-))
+)
 
 
 #' Characteristic Direction Analysis parameters
 #' 
-chdir_parameters_col <- shiny::column(width=4, shiny::wellPanel(
+chdir_parameters_col <- shiny::div(
     shiny::h3('CHDIR parameters', id='chdir_parameters'),
     shiny::sliderInput('chdir_gamma', 'Gamma', 1.0, min = 0, max = 1, step = 0.05),
     shiny::sliderInput('chdir_nnull', 'Nnull', 10, min = 2, max = 100, step = 1, round=TRUE),
@@ -127,7 +130,7 @@ chdir_parameters_col <- shiny::column(width=4, shiny::wellPanel(
         'seed value.'
     )),
     shiny::uiOutput('run_chdir_container')
-))
+)
 
 
 #' Characteristic Direction Analysis results
@@ -159,9 +162,7 @@ chdir_results_col <- shiny::column(
 
 #' Characteristic Direction Analysis downloads
 #' 
-chdir_downloads_col <- shiny::column(
-    width=4,
-    shiny::wellPanel(
+chdir_downloads_col <- shiny::div(shiny::div(
         shiny::h3('Downloads', id='chdir_downloads'),
         shiny::uiOutput('ngenes_tokeep_contatiner'),
         shiny::tags$dl(
@@ -172,7 +173,7 @@ chdir_downloads_col <- shiny::column(
         ),
         shiny::uiOutput('chdir_downloads_container')
     ),
-    shiny::wellPanel(
+    shiny::div(
         shiny::h3('Analyze with Enrichr'),
         shiny::radioButtons('enrichr_subset', 'Subset', c('Upregulated'='up', 'Downregulated'='down')),
         shiny::uiOutput('enrichr_form')
@@ -184,11 +185,13 @@ chdir_downloads_col <- shiny::column(
 #'
 chdir_tab <- shiny::tabPanel(
     'Characteristic Direction Analysis',
-    shiny::fluidRow(
-        shiny::column(width=12, shiny::p('')), 
+    shiny::column(width=12, shiny::p('')), 
+    shiny::sidebarPanel(
         chdir_input_summary_col,
         chdir_parameters_col,
-        chdir_downloads_col,
+        chdir_downloads_col
+    ), 
+    shiny::mainPanel(
         chdir_results_col
     )
 )
@@ -210,20 +213,20 @@ paea_strategy_radio <- shiny::radioButtons('paea_strategy', 'View:', c(
 
 #' paea tab - input parameters
 #'
-paea_input_parameters <- shiny::column(width=6, shiny::wellPanel(
+paea_input_parameters <- shiny::div(
     shiny::h3('PAEA parameters', id='paea_parameters'),
     shiny::checkboxInput('paea_casesensitive', 'Case Sensitive', FALSE),
     shiny::helpText('Check if you want gene lables comparisons to be case sensitive. Not recommended.'),
     shiny::uiOutput('background_dataset_container'),
     shiny::uiOutput('run_paea_container')
-))
+)
 
 #' paea tab - downloads
 #'
-paea_downloads <- shiny::column(width=6, shiny::wellPanel(
+paea_downloads <- shiny::div(
     shiny::h3('Downloads', id='paea_downloads'),
     shiny::uiOutput('paea_downloads_container')
-))
+)
 
 #' paea tab - paea summary
 #'
@@ -262,10 +265,12 @@ paea_output <- shiny::column(
 #'
 paea_tab <- shiny::tabPanel(
     'Principle Angle Enrichment Analysis',
-    shiny::fluidRow(
-        shiny::column(width=12, shiny::p('')),
+    shiny::column(width=12, shiny::p('')),
+    shiny::sidebarPanel(
         paea_input_parameters,
-        paea_downloads,
+        paea_downloads
+    ),
+    shiny::mainPanel(
         paea_output
     )
 )
