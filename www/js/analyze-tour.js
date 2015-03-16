@@ -142,7 +142,17 @@ function initTour() {
         at: 'bottom center'
     }, {
         content: [
-            '<p>... and start PAE analysis</p>'
+            '<p>...send results to the Enrichr...</p>'
+        ].join(''),
+        highlightTarget: true,
+        nextButton: true,
+        closeButton: true,
+        target: $('#enrichr_form'),
+        my: 'top center',
+        at: 'bottom center'
+    }, {
+        content: [
+            '<p>or start PAE analysis</p>'
         ].join(''),
         highlightTarget: true,
         nextButton: true,
