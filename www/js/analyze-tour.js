@@ -32,8 +32,8 @@ function initTour() {
         nextButton: true,
         closeButton: true,
         target: $('#datain_container'),
-        my: 'bottom left',
-        at: 'top center',
+        my: 'top left',
+        at: 'bottom center',
     }, {
         content: [
             '<p>Select input file separator</p>'
