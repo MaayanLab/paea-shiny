@@ -139,7 +139,7 @@ function initTour() {
         closeButton: true,
         target: $('#chdir_downloads'),
         my: 'bottom center',
-        at: 'bottom center'
+        at: 'top center'
     }, {
         content: [
             '<p>...send results to the Enrichr...</p>'
@@ -191,8 +191,8 @@ function initTour() {
         nextButton: true,
         closeButton: true,
         target: $('#paea_downloads'),
-        my: 'top left',
-        at: 'top left'
+        my: 'bottom center',
+        at: 'top center'
     }];
 
     var tour = new Tourist.Tour({
