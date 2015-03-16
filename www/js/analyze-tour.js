@@ -18,7 +18,10 @@ function initTour() {
             content: '<p>Welcome...</p>',
             target: [50, 120],
             nextButton: true,
-            my: 'bottom left'
+            my: 'bottom left',
+            teardown: function(tour, options) {
+                $('input:radio[name=datain_type]').filter('[value=upload]').trigger('click');
+            }
     }, {
         content: [
             '<p>Choose expression dataset to upload.</p>',
