@@ -17,13 +17,19 @@ datain <- shiny::radioButtons(
 )
 
 
-datain_input_choice <- shiny::column(width=3, shiny::wellPanel(
+datain_input_choice <- shiny::wellPanel(
     shiny::radioButtons(
         'datain_type', 'Input type',
         c('Custom expression data'='upload', 'Disease signature'='disease')
     )
-))
+)
 
+
+datain_start_tour <- shiny::wellPanel(
+    shiny::helpText(
+        shiny::p('Not sure where to start?', shiny::a('Begin a guided tutorial tour', href='#', id='start_tour'))
+    )
+)
 
 datain_upload <- shiny::column(width=3, shiny::wellPanel(
     h3('Expression data'),
@@ -80,7 +86,11 @@ datain_tab <- shiny::tabPanel(
     'Upload dataset',
     shiny::fluidRow(
         shiny::column(width=12, p('')),
-        datain_input_choice,
+        shiny::column(
+            width=3,
+            datain_input_choice,
+            datain_start_tour
+        ),
         shiny::conditionalPanel(
             'input.datain_type === "upload"',
             datain_upload,

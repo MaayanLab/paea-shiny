@@ -194,5 +194,5 @@ function initTour() {
 }
 
 $(document).ready(function() {
-    window.setTimeout(initTour, 1000);
+    $('#start_tour').click(initTour);
 })
