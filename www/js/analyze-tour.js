@@ -204,5 +204,8 @@ function initTour() {
 }
 
 $(document).ready(function() {
-    $('#start_tour').click(initTour);
+    $('#start_tour').click(function(event) {
+        event.preventDefault();
+        initTour();
+    });
 })
