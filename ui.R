@@ -110,7 +110,7 @@ datain_tab <- shiny::tabPanel(
 
 #' Characteristic Direction Analysis input summary
 #'
-chdir_input_summary_col <- shiny::column(width=4, shiny::wellPanel(
+chdir_input_summary <- shiny::wellPanel(
     shiny::h3('Input summary', id='chdir_input_summary'),
     shiny::tags$dl(
         shiny::tags$dt('#genes:'),
@@ -122,12 +122,12 @@ chdir_input_summary_col <- shiny::column(width=4, shiny::wellPanel(
         shiny::tags$dt('Treatment samples:'),
         shiny::tags$dd(shiny::textOutput('treatment_samples'))
     )
-))
+)
 
 
 #' Characteristic Direction Analysis parameters
 #' 
-chdir_parameters_col <- shiny::column(width=4, shiny::wellPanel(
+chdir_parameters <- shiny::wellPanel(
     shiny::h3('CHDIR parameters', id='chdir_parameters'),
     shiny::sliderInput('chdir_gamma', 'Gamma', 1.0, min = 0, max = 1, step = 0.05),
     shiny::sliderInput('chdir_nnull', 'Nnull', 10, min = 2, max = 100, step = 1, round=TRUE),
@@ -139,13 +139,12 @@ chdir_parameters_col <- shiny::column(width=4, shiny::wellPanel(
         'seed value.'
     )),
     shiny::uiOutput('run_chdir_container')
-))
+)
 
 
 #' Characteristic Direction Analysis results
 #' 
-chdir_results_col <- shiny::column(
-    width=12,
+chdir_results <- shiny::div(
     shiny::h3('CHDIR results', id='chdir_results_header'),
     shiny::tabsetPanel(
         id='chdir_results',
@@ -171,24 +170,25 @@ chdir_results_col <- shiny::column(
 
 #' Characteristic Direction Analysis downloads
 #' 
-chdir_downloads_col <- shiny::column(
-    width=4,
-    shiny::wellPanel(
-        shiny::h3('Downloads', id='chdir_downloads'),
-        shiny::uiOutput('ngenes_tokeep_contatiner'),
-        shiny::tags$dl(
-            shiny::tags$dt('#{significant upregulated genes}:'),
-            shiny::tags$dd(shiny::textOutput('n_sig_up_genes')),
-            shiny::tags$dt('#{significant downregulated genes}:'),
-            shiny::tags$dd(shiny::textOutput('n_sig_down_genes'))
-        ),
-        shiny::uiOutput('chdir_downloads_container')
+chdir_downloads <- shiny::wellPanel(
+    shiny::h3('Downloads', id='chdir_downloads'),
+    shiny::uiOutput('ngenes_tokeep_contatiner'),
+    shiny::tags$dl(
+        shiny::tags$dt('#{significant upregulated genes}:'),
+        shiny::tags$dd(shiny::textOutput('n_sig_up_genes')),
+        shiny::tags$dt('#{significant downregulated genes}:'),
+        shiny::tags$dd(shiny::textOutput('n_sig_down_genes'))
     ),
-    shiny::wellPanel(
-        shiny::h3('Analyze with Enrichr'),
-        shiny::radioButtons('enrichr_subset', 'Subset', c('Upregulated'='up', 'Downregulated'='down')),
-        shiny::uiOutput('enrichr_form')
-    )
+    shiny::uiOutput('chdir_downloads_container')
+)
+
+
+#' Characteristic Direction Analysis Enrichr
+#'
+chdir_enrichr <- shiny::wellPanel(
+    shiny::h3('Analyze with Enrichr'),
+    shiny::radioButtons('enrichr_subset', 'Subset', c('Upregulated'='up', 'Downregulated'='down')),
+    shiny::uiOutput('enrichr_form')
 )
 
 
@@ -198,10 +198,14 @@ chdir_tab <- shiny::tabPanel(
     'Characteristic Direction Analysis',
     shiny::fluidRow(
         shiny::column(width=12, shiny::p('')), 
-        chdir_input_summary_col,
-        chdir_parameters_col,
-        chdir_downloads_col,
-        chdir_results_col
+        shiny::column(width=4, chdir_input_summary),
+        shiny::column(width=4, chdir_parameters),
+        shiny::column(
+            width=4, 
+            chdir_downloads,
+            chdir_enrichr
+        ),
+        shiny::column(width=12, chdir_results)
     )
 )
 
