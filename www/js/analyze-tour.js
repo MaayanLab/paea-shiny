@@ -109,7 +109,7 @@ function initTour() {
         closeButton: true,
         target: $('#chdir_input_summary'),
         my: 'bottom center',
-        at: 'bottom center'
+        at: 'top center'
     }, {
         content: [
             '<p>Set parameters...</p>'
