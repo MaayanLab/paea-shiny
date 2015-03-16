@@ -31,35 +31,37 @@ datain_start_tour <- shiny::wellPanel(
     )
 )
 
-datain_upload <- shiny::column(width=3, shiny::wellPanel(
+datain_upload <-shiny::wellPanel(
     h3('Expression data'),
     shiny::uiOutput('datain_container'),
     datain        
-))
+)
 
-datain_sampleclass <- shiny::column(width=3, shiny::wellPanel(
+
+datain_sampleclass <- shiny::wellPanel(
     h3('Control samples', id='control_samples'),
     shiny::uiOutput('sampleclass_container')
-))
+)
 
-datain_preprocessing <- shiny::column(width=3, shiny::wellPanel(
+
+datain_preprocessing <- shiny::wellPanel(
     shiny::h3('Preprocessing', id='datain_preprocessing'),
     shiny::checkboxInput(inputId='log2_transform', label='log2 transform' , value = FALSE),
     shiny::checkboxInput(inputId='quantile_normalize', label='Quantile normalize', value = FALSE),
     shiny::checkboxInput(inputId='enable_id_filter', label='Enable id filter', value = TRUE)
-))
+)
 
-datain_disease_input <- shiny::column(width=6, shiny::wellPanel(
+
+datain_disease_input <- shiny::wellPanel(
     shiny::selectizeInput(
         'disease_sigs_choices', 'Choose disease signature', 
         choices = NULL, options = list(placeholder = 'type disease name')
     ),
     shiny::uiOutput('fetch_disease_sig_container')
-))
+)
 
 
-datain_preview <- shiny::column(
-    width=12, 
+datain_preview <- shiny::div(
     shiny::h3('Input preview', id='datain_preview_header'),
     shiny::tabsetPanel(
         id='datain_preview',
@@ -93,15 +95,15 @@ datain_tab <- shiny::tabPanel(
         ),
         shiny::conditionalPanel(
             'input.datain_type === "upload"',
-            datain_upload,
-            datain_sampleclass
+            shiny::column(width=3, datain_upload),
+            shiny::column(width=3, datain_sampleclass)
         ),
         shiny::conditionalPanel(
             'input.datain_type === "disease"',
-            datain_disease_input
+            shiny::column(width=6, datain_disease_input)
         ),
-        datain_preprocessing,
-        datain_preview
+        shiny::column(width=3, datain_preprocessing),
+        shiny::column(width=12, datain_preview)
     )
 )
 
