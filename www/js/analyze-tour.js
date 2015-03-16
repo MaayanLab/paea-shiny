@@ -118,7 +118,7 @@ function initTour() {
         closeButton: true,
         target: $('#chdir_parameters'),
         my: 'bottom center',
-        at: 'bottom center'
+        at: 'top center'
     }, {
         content: [
             '<p>...and run chdir</p>'
