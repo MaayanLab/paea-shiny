@@ -73,8 +73,8 @@ function initTour() {
         nextButton: true,
         closeButton: true,
         target: $('#datain_type'),
-        my: 'bottom center',
-        at: 'top center',
+        my: 'top left',
+        at: 'bottom right',
         teardown: function(tour, options) {
             $('input:radio[name=datain_type]').filter('[value=disease]').trigger('click');
         }
