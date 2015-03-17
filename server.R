@@ -173,7 +173,8 @@ shiny::shinyServer(function(input, output, session) {
                 log2_transform=input$log2_transform,
                 quantile_normalize=input$quantile_normalize,
                 id_filter=id_filter
-            ) %>% na.omit()
+            )
+            
         } else {
             datain()
         }
