@@ -516,10 +516,14 @@ shiny::shinyServer(function(input, output, session) {
             chdir_diff_genes[[input$enrichr_subset]]() %>% prepare_enrichr_input() 
         }
         
+        #' Prepare description string for Enrichr
+        description <- paste(values$input_name, ' (', input$enrichr_subset, ')', sep='')
+        
         shiny::tags$form(
             target='_blank', method='post', enctype='multipart/form-data',
             action='http://amp.pharm.mssm.edu/Enrichr/enrich',
             shiny::tags$input(name='list', type='hidden', value=value),
+            shiny::tags$input(name='description', type='hidden', value=description),
             if(is.null(values$chdir)) { disabledActionButton(button) } else { button }
         )
     })
