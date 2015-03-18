@@ -45,6 +45,8 @@ shiny::shinyServer(function(input, output, session) {
         disease_sig_fetch_running = FALSE
     )
     
+    error_handler <- shiny_error_handler(values)
+    
     #' Render last error
     #'
     output$last_error <- shiny::renderText({
@@ -125,10 +127,7 @@ shiny::shinyServer(function(input, output, session) {
                 values$manual_upload <- FALSE
                 
             },
-            error = function(e) {
-                values$last_error <- e
-                NULL
-            }
+            error = error_handler
         )
         
         values$disease_sig_fetch_running <- FALSE
@@ -145,10 +144,7 @@ shiny::shinyServer(function(input, output, session) {
                 } else {
                     data.table::fread(values$datapath) %>% dplyr::select(-ID_REF)
                 },
-                error = function(e) {
-                    values$last_error <- e
-                    NULL
-                }
+                error = error_handler
             )
         }
     })
@@ -356,10 +352,7 @@ shiny::shinyServer(function(input, output, session) {
         
         values$chdir <- tryCatch(
             chdir_analysis_wrapper(preprocess_chdir_input(datain), sampleclass, gamma, nnull),
-            error = function(e) {
-                values$last_error <- e
-                NULL
-            }
+            error = error_handler
         )
         
         values$chdir_running <- FALSE
@@ -611,10 +604,7 @@ shiny::shinyServer(function(input, output, session) {
                     ), paea_to_df)
 
                 }),
-                error = function(e) {
-                    values$last_error <- e
-                    NULL
-                }
+                error = error_handler
             )
             
 
