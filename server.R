@@ -213,17 +213,18 @@ shiny::shinyServer(function(input, output, session) {
     #' Update lists of control/treatment samples
     #'
     shiny::observe({
-        if(values$manual_upload) {
-            if(datain_valid()) {
-                datain <- datain()
-                samples_mask <- colnames(datain)[-1] %in%  input$sampleclass
-                values$control_samples <- colnames(datain)[-1][samples_mask]
-                values$treatment_samples <- colnames(datain)[-1][!samples_mask]
-            } else {
-                values$control_samples <- NULL
-                values$treatment_samples <- NULL
-            }
+        if(!values$manual_upload) { return() }
+        
+        if(datain_valid()) {
+            datain <- datain()
+            samples_mask <- colnames(datain)[-1] %in%  input$sampleclass
+            values$control_samples <- colnames(datain)[-1][samples_mask]
+            values$treatment_samples <- colnames(datain)[-1][!samples_mask]
+        } else {
+            values$control_samples <- NULL
+            values$treatment_samples <- NULL
         }
+        
     })
     
     
