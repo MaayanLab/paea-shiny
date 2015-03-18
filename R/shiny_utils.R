@@ -36,3 +36,16 @@ disabledNumericInput <- function(numericInput) {
     numericInput$children[[2]]$attribs$disabled <- 'true'
     numericInput
 }
+
+
+#' Create error handler function
+#' 
+#' @param shiny::reactiveValues
+#' @return function which stores error in values$last_error
+#'
+shiny_error_handler <- function(values) {
+    function(e) {
+        values$last_error <- e
+        NULL
+    }
+}
