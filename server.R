@@ -19,7 +19,7 @@ perturbations_data <- lapply(
     }
 )
 
-disease_sigs <- data.table::fread('data/disease_signatures.csv')
+disease_sigs <- data.table::fread(config$sigs_list_path)
 disease_sigs_choices <- setNames(
     disease_sigs$file_name,
     paste(disease_sigs$disease, disease_sigs$cell_type, disease_sigs$geo_id, sep = ' | ')
