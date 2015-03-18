@@ -245,9 +245,10 @@ shiny::shinyServer(function(input, output, session) {
     #' datain tab - density plot
     #'
     shiny::observe({
-        if(datain_valid()) {
-            plot_density(datain_preprocessed()) %>% ggvis::bind_shiny('datain_density_ggvis')
-        }
+        if(!datain_valid()) { return() }
+        
+        plot_density(datain_preprocessed()) %>% 
+            ggvis::bind_shiny('datain_density_ggvis')
     })
     
     
