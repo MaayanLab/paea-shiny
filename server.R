@@ -100,7 +100,7 @@ shiny::shinyServer(function(input, output, session) {
     #' datain panel - disease sig observe
     #'
     shiny::observe({
-        if(is.null(input$fetch_disease_sig)) { return() } else if(input$fetch_disease_sig == 0) { return() }
+        if(is.null(input$fetch_disease_sig) || input$fetch_disease_sig == 0) { return() }
         
         values$disease_sig_fetch_running <- TRUE
         
@@ -327,7 +327,7 @@ shiny::shinyServer(function(input, output, session) {
     #' Run Characteristic Direction Analysis
     #'
     shiny::observe({
-        if(is.null(input$run_chdir)) { return() } else if(input$run_chdir == 0) { return() }
+        if(is.null(input$run_chdir) || input$run_chdir == 0) { return() }
         datain <- shiny::isolate(datain_preprocessed())
         nnull <- min(as.integer(shiny::isolate(input$chdir_nnull)), 1000)
         gamma <- shiny::isolate(input$chdir_gamma)
@@ -584,7 +584,7 @@ shiny::shinyServer(function(input, output, session) {
     #' Run Principle Angle Enrichment Analysis
     #'
     shiny::observe({
-        if(is.null(input$run_paea)) { return() } else if(input$run_paea == 0) { return() }
+        if(is.null(input$run_paea) || input$run_paea == 0) { return() }
         chdir <- shiny::isolate(values$chdir)
         casesensitive <- shiny::isolate(input$paea_casesensitive)
         background_dataset <- shiny::isolate(input$background_dataset)
