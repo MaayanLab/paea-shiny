@@ -38,7 +38,7 @@ datain_is_valid <- function(datain) {
     } else if(
         datain %>% 
             dplyr::select_(-1) %>%
-            mutate_each(funs(is.numeric)) %>% 
+            dplyr::mutate_each(funs(is.numeric)) %>% 
             not_all()
     ) {
         valid <- FALSE
