@@ -152,7 +152,7 @@ shiny::shinyServer(function(input, output, session) {
     
     #' Is input valid?
     #'
-    datain_valid <- shiny::reactive({ datain_is_valid(datain())$valid })
+    datain_valid <- shiny::reactive({ datain_is_valid(datain()) })
     
     
     #' Apply preprocessing steps to datain
@@ -186,23 +186,20 @@ shiny::shinyServer(function(input, output, session) {
     #' datain panel - control/treatment samples checboxes
     #'
     output$sampleclass_container <- shiny::renderUI({
-        if (datain_valid() && values$manual_upload) {
+        datain_valid <- datain_valid()
+        
+        if (!values$manual_upload) {
+            shiny::helpText('You can choose samples only for manually uploaded data sets.')
+        } else if (datain_valid) {
            shiny::checkboxGroupInput(
                 'sampleclass',
                 'Choose control samples',
                 colnames(datain())[-1]
             )
-        } else if (is.null(datain())) {
-            shiny::helpText('To select samples you have to upload your dataset.')
-        } else if (ncol(datain()) == 1) {
-           shiny:: helpText('No experimental data detected. Please check separator and/or uploaded file')
-        } else if (ncol(datain()) < 5) {
-            shiny::helpText('You need at least four samples to run Characteristic Direction Analysis')
-        } else if (!values$manual_upload) {
-            shiny::helpText('You can choose samples only for manually uploaded data sets.')
         } else {
-            shiny::helpText('It looks like your dataset is invalid')
-        } 
+            #' Manual upload and invalid data
+            shiny::helpText(attributes(datain_valid)$message)
+        }
     })
     
     
@@ -235,7 +232,7 @@ shiny::shinyServer(function(input, output, session) {
     
     #' datain tab - set plots visibility
     #'
-    output$show_datain_results <- shiny::reactive({ datain_is_valid(datain())$valid })
+    output$show_datain_results <- shiny::reactive({ datain_valid() })
     shiny::outputOptions(output, 'show_datain_results', suspendWhenHidden = FALSE)
     
     #' datain tab - density plot
