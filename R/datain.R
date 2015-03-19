@@ -23,28 +23,28 @@ plot_density <- function(datain) {
 #' Check if datain is a valid es. Experimental.
 #' 
 #' @param datain data.frame
-#' @return list with logical field valid, may change in the future
+#' @return single logical value with message attribute
 #'
 datain_is_valid <- function(datain) {
-    result <- list(valid=TRUE, message=NULL)
-    if(is.null(datain)) {
-        result$valid <- FALSE
-        result$message <- 'datain is null'
-    } else if(!is.data.frame(datain)) {
-        result$valid <- FALSE
-        result$message <- 'datain is null'
+    not_all <- function(x) !all(sapply(x, all))
+    valid <- TRUE
+    
+    if(is.null(datain) || !is.data.frame(datain)) {
+        valid <- FALSE
+        attributes(valid)$message <- 'To select samples you have to upload valid dataset.'
     } else if (ncol(datain) < 5) {
-        result$valid <- FALSE
-        result$message <- 'not enough columns'
-    } else {
-        datain_expr <- datain %>% dplyr::select_(-1)
-        # Not pretty but should handle all flavours of data.frames 
-        if(!all(sapply(datain_expr, is.numeric))) {
-            result$valid <- FALSE
-            result$message <- 'not numeric'
-        }
+        valid <- FALSE
+        attributes(valid)$message <- 'You need at least four samples to run Characteristic Direction Analysis'
+    } else if(
+        datain %>% 
+            dplyr::select_(-1) %>%
+            mutate_each(funs(is.numeric)) %>% 
+            not_all()
+    ) {
+        valid <- FALSE
+        attributes(valid)$message <- 'Your dataset contains non-numeric entries'
     }
-    result
+    valid
 }
 
 

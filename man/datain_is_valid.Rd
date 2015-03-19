@@ -10,7 +10,7 @@ datain_is_valid(datain)
 \item{datain}{data.frame}
 }
 \value{
-list with logical field valid, may change in the future
+single logical value with message attribute
 }
 \description{
 Check if datain is a valid es. Experimental.

@@ -12,11 +12,11 @@ testthat::test_that('Test plot_density', {
 
 
 test_that('Test datain_is_valid', {
-    testthat::expect_false(datain_is_valid(NULL)$valid) 
-    testthat::expect_false(datain_is_valid(data.frame())$valid)
-    testthat::expect_false(datain_is_valid(data.frame(runif(10)))$valid) 
-    testthat::expect_true(datain_is_valid(data.frame(gene=letters, 0, 0, 0, 0))$valid)  
-    testthat::expect_true(datain_is_valid(data.table(gene=letters, 0, 0, 0, 0))$valid)  
+    testthat::expect_false(datain_is_valid(NULL)) 
+    testthat::expect_false(datain_is_valid(data.frame()))
+    testthat::expect_false(datain_is_valid(data.frame(runif(10)))) 
+    testthat::expect_true(datain_is_valid(data.frame(gene=letters, 0, 0, 0, 0)))  
+    testthat::expect_true(datain_is_valid(data.table(gene=letters, 0, 0, 0, 0)))  
 })
 
 
