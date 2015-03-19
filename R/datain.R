@@ -26,7 +26,7 @@ plot_density <- function(datain) {
 #' @return single logical value with message attribute
 #'
 datain_is_valid <- function(datain) {
-    not_all <- function(x) !all(sapply(x, all))
+    not_all_numeric <- function(x) !all(sapply(x, is.numeric))
     valid <- TRUE
     
     if(is.null(datain) || !is.data.frame(datain)) {
@@ -38,8 +38,7 @@ datain_is_valid <- function(datain) {
     } else if(
         datain %>% 
             dplyr::select_(-1) %>%
-            dplyr::mutate_each(dplyr::funs(is.numeric)) %>% 
-            not_all()
+            not_all_numeric()
     ) {
         valid <- FALSE
         attributes(valid)$message <- 'Your dataset contains non-numeric entries'
