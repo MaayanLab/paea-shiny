@@ -351,11 +351,10 @@ shiny::shinyServer(function(input, output, session) {
         
         values$chdir <- tryCatch(
             chdir_analysis_wrapper(preprocess_chdir_input(datain), sampleclass, gamma, nnull),
-            error = error_handler
+            error = error_handler,
+            finally = { values$chdir_running <- FALSE }
         )
         
-        values$chdir_running <- FALSE
- 
     })
     
     
