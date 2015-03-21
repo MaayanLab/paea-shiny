@@ -127,10 +127,11 @@ shiny::shinyServer(function(input, output, session) {
                 values$manual_upload <- FALSE
                 
             },
-            error = error_handler
+            error = error_handler,
+            finally = { values$disease_sig_fetch_running <- FALSE }
         )
         
-        values$disease_sig_fetch_running <- FALSE
+        
     })
     
     
