@@ -155,20 +155,22 @@ shiny::shinyServer(function(input, output, session) {
     datain_valid <- shiny::reactive({ datain_is_valid(datain()) })
     
     
+    id_filter <- reactive({
+        if(input$enable_id_filter) { config$id_filter }
+    })
+    
+    
     #' Apply preprocessing steps to datain
     #'
     #'
     datain_preprocessed <- shiny::reactive({
         if(datain_valid()) {
-            id_filter <- if(input$enable_id_filter) {
-                config$id_filter
-            } else { NULL }
             
             datain_preprocess(
                 datain=datain(),
                 log2_transform=input$log2_transform,
                 quantile_normalize=input$quantile_normalize,
-                id_filter=id_filter
+                id_filter=id_filter()
             )
             
         } else {
