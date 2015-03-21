@@ -603,12 +603,13 @@ shiny::shinyServer(function(input, output, session) {
                     ), paea_to_df)
 
                 }),
-                error = error_handler
+                error = error_handler,
+                finally = { values$paea_running <- FALSE }
             )
             
 
             
-            values$paea_running <- FALSE
+            
         }
     })
     
