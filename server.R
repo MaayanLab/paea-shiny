@@ -118,12 +118,6 @@ shiny::shinyServer(function(input, output, session) {
                     file.path(config$sigs_path, choice)
                 }
                 
-                
-                sig <- disease_sigs %>% dplyr::filter(file_name == values$input_name)
-                    
-                values$control_samples <- unlist(stringi::stri_split_fixed(sig$ctrl_ids, ','))
-                values$treatment_samples <- unlist(stringi::stri_split_fixed(sig$pert_ids, ','))
-                
                 values$manual_upload <- FALSE
                 
             },
@@ -204,23 +198,23 @@ shiny::shinyServer(function(input, output, session) {
             shiny::helpText(attributes(datain_valid)$message)
         }
     })
-    
+
     
     #' Update lists of control/treatment samples
     #'
-    shiny::observe({
-        if(!values$manual_upload) { return() }
-        
-        if(datain_valid()) {
-            datain <- datain()
-            samples_mask <- colnames(datain)[-1] %in%  input$sampleclass
-            values$control_samples <- colnames(datain)[-1][samples_mask]
-            values$treatment_samples <- colnames(datain)[-1][!samples_mask]
-        } else {
-            values$control_samples <- NULL
-            values$treatment_samples <- NULL
-        }
-        
+    samples <- shiny::reactive({
+        if(values$manual_upload && datain_valid()) {
+            list(
+                control=input$sampleclass,
+                treatment = setdiff(colnames(datain())[-1], input$sampleclass)
+            )
+        } else if (!values$manual_upload && !is.null(values$input_name)) {
+            sig <- disease_sigs %>% dplyr::filter(file_name == values$input_name)
+            list(
+                control=unlist(stringi::stri_split_fixed(sig$ctrl_ids, ',')),
+                treatment=unlist(stringi::stri_split_fixed(sig$pert_ids, ','))
+            )
+        } 
     })
     
     
@@ -253,7 +247,7 @@ shiny::shinyServer(function(input, output, session) {
     #'
     output$run_chdir_container <- shiny::renderUI({
         button <- shiny::actionButton(inputId = 'run_chdir', label = 'Run Characteristic Direction Analysis', icon = NULL)
-        if(!datain_valid() | length(values$control_samples) < 2 | length(values$treatment_samples) < 2 | values$chdir_running) {
+        if(!datain_valid() | length(samples()$control) < 2 | length(samples()$treatment) < 2 | values$chdir_running) {
              list(
                 disabledActionButton(button),
                 if (is.null(datain())) {
@@ -309,14 +303,14 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - control samples
     #'
     output$control_samples <- shiny::renderText({
-        paste(values$control_samples, collapse = ', ')
+        paste(samples()$control, collapse = ', ')
     })
     
     
     #' chdir panel - treatment samples
     #'
     output$treatment_samples <- shiny::renderText({
-        paste(values$treatment_samples, collapse = ', ')
+        paste(samples()$treatment, collapse = ', ')
     })
     
  
@@ -329,7 +323,7 @@ shiny::shinyServer(function(input, output, session) {
         gamma <- shiny::isolate(input$chdir_gamma)
         seed <- shiny::isolate(input$random_seed)
         
-        sampleclass <- factor(ifelse(colnames(datain)[-1] %in% values$control_samples, '1', '2'))
+        sampleclass <- factor(ifelse(colnames(datain)[-1] %in% samples()$control, '1', '2'))
         
         set.seed(seed)
         
@@ -340,8 +334,8 @@ shiny::shinyServer(function(input, output, session) {
         values$chdir_params <- list(
             manual_upload=values$manual_upload,
             input_name=values$input_name,
-            control_samples=values$control_samples,
-            treatment_samples=values$treatment_samples,
+            control_samples=samples()$control,
+            treatment_samples=samples()$treatment,
             log2_transform=input$log2_transform,
             quantile_normalize=input$quantile_normalize,
             enable_id_filter=input$enable_id_filter,
