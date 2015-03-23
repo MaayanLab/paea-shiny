@@ -107,16 +107,9 @@ shiny::shinyServer(function(input, output, session) {
         values$disease_sig_fetch_running <- TRUE
         
         tryCatch({
-            
-                choice <- shiny::isolate(input$disease_sigs_choices)
-                values$input_name <- choice
-                
-                values$datapath <- if(stringi::stri_startswith_fixed(config$sigs_path, 'http')) {
-                    download.file(file.path(config$sigs_path, choice), file.path(tempdir(), choice))
-                    file.path(tempdir(), choice)
-                } else {
-                    file.path(config$sigs_path, choice)
-                }
+
+                values$input_name <- shiny::isolate(input$disease_sigs_choices)
+                values$datapath <- get_path(config$sigs_path, isolate(values$input_name))
                 
                 values$manual_upload <- FALSE
                 
