@@ -587,7 +587,7 @@ shiny::shinyServer(function(input, output, session) {
             )
             
             values$paea <- tryCatch(
-                shiny::withProgress(message = '', value = 0, {
+                shiny::withProgress(message = 'Running PAEA', value = 0, {
                      
                     lapply(paea_analysis_dispatch(
                         chdirresults=chdir$chdirprops,
