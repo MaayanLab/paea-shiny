@@ -593,10 +593,7 @@ shiny::shinyServer(function(input, output, session) {
                 error = error_handler,
                 finally = { values$paea_running <- FALSE }
             )
-            
-
-            
-            
+ 
         }
     })
     
