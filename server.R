@@ -560,41 +560,42 @@ shiny::shinyServer(function(input, output, session) {
     )
 
         
+    #' Prepare Principle Angle Enrichment Analysis parameters
+    #'
+    shiny::observe({
+        if(is.null(input$run_paea) || input$run_paea == 0 || is.null(shiny::isolate(values$chdir))) { return() }
+        
+        values$paea_params <- append(
+            list(
+                casesensitive=shiny::isolate(input$paea_casesensitive),
+                background_dataset=shiny::isolate(input$background_dataset)
+            ),
+            values$chdir_params
+        )
+    })
+    
+    
     #' Run Principle Angle Enrichment Analysis
     #'
     shiny::observe({
-        if(is.null(input$run_paea) || input$run_paea == 0) { return() }
-        chdir <- shiny::isolate(values$chdir)
-        casesensitive <- shiny::isolate(input$paea_casesensitive)
-        background_dataset <- shiny::isolate(input$background_dataset)
+        paea_params <- values$paea_params 
+        values$paea_running <- TRUE
         
-        if(!(is.null(chdir))) {
-            values$paea_running <- TRUE
-            
-            values$paea_params <- append(
-                list(
-                    casesensitive=casesensitive,
-                    background_dataset=background_dataset
-                ),
-                values$chdir_params
-            )
-            
-            values$paea <- tryCatch(
-                shiny::withProgress(message = 'Running PAEA', value = 0, {
-                     
-                    lapply(paea_analysis_dispatch(
-                        chdirresults=chdir$chdirprops,
-                        gmtfile=prepare_gene_sets(perturbations_data[[background_dataset]]()$genes),
-                        casesensitive=casesensitive,
-                        with_progress=TRUE
-                    ), paea_to_df)
-
-                }),
-                error = error_handler,
-                finally = { values$paea_running <- FALSE }
-            )
- 
-        }
+        chdir <- shiny::isolate(values$chdir)
+        
+        values$paea <- tryCatch(
+            shiny::withProgress(message = 'Running PAEA', value = 0, {        
+                lapply(paea_analysis_dispatch(
+                    chdirresults=chdir$chdirprops,
+                    gmtfile=prepare_gene_sets(perturbations_data[[paea_params$background_dataset]]()$genes),
+                    casesensitive=paea_params$casesensitive,
+                    with_progress=TRUE
+                ), paea_to_df)
+                
+            }),
+            error = error_handler,
+            finally = { values$paea_running <- FALSE }
+        )
     })
     
     
