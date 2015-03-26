@@ -307,20 +307,11 @@ shiny::shinyServer(function(input, output, session) {
     })
     
  
-    #' Run Characteristic Direction Analysis
+    #' Prepare Characteristic Direction Analysis params
     #'
     shiny::observe({
         if(is.null(input$run_chdir) || input$run_chdir == 0) { return() }
-        datain <- shiny::isolate(datain_preprocessed())
-        nnull <- min(as.integer(shiny::isolate(input$chdir_nnull)), 1000)
-        gamma <- shiny::isolate(input$chdir_gamma)
-        seed <- shiny::isolate(input$random_seed)
-        
-        sampleclass <- factor(ifelse(colnames(datain)[-1] %in% samples()$control, '1', '2'))
-        
-        set.seed(seed)
-        
-        values$chdir_running <- TRUE
+    
         
         #' Store parameters.
         #'
@@ -332,17 +323,31 @@ shiny::shinyServer(function(input, output, session) {
             log2_transform=input$log2_transform,
             quantile_normalize=input$quantile_normalize,
             enable_id_filter=input$enable_id_filter,
-            gamma=gamma,
-            nnull=nnull,
-            seed=seed
+            gamma=shiny::isolate(input$chdir_gamma),
+            nnull=min(as.integer(shiny::isolate(input$chdir_nnull)), 1000),
+            seed=shiny::isolate(input$random_seed)
         )
+    })
+    
+    
+    #' Run Characteristic Direction Analysis
+    #'
+    shiny::observe({
+        params <- values$chdir_params
         
+        if(is.null(params)) { return() }
+        
+        #' TODO make sure it doesn't change between click and chdir start
+        datain <- shiny::isolate(datain_preprocessed())
+        sampleclass <- factor(ifelse(colnames(datain)[-1] %in% params$control, '1', '2'))
+        set.seed(params$seed)
+        
+        values$chdir_running <- TRUE
         values$chdir <- tryCatch(
-            chdir_analysis_wrapper(preprocess_chdir_input(datain), sampleclass, gamma, nnull),
+            chdir_analysis_wrapper(preprocess_chdir_input(datain), sampleclass, params$gamma, params$nnull),
             error = error_handler,
             finally = { values$chdir_running <- FALSE }
-        )
-        
+        )  
     })
     
     
