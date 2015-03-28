@@ -318,13 +318,14 @@ shiny::shinyUI(
         analyze_panel,
         about_panel,
         
-        shiny::tags$head(
+        shiny::singleton(shiny::tags$head(
             shiny::includeCSS('www/css/tourist.css'),
             shiny::includeCSS('www/css/custom.css'),
             shiny::tags$script(src='js/underscore-min.js'),
             shiny::tags$script(src='js/backbone-min.js'),
+            shiny::tags$script(src='js/button-status-handler.js'),
             shiny::includeScript('www/js/tourist.min.js'),
             shiny::includeScript('www/js/analyze-tour.js')
-        )
+        ))
     )
 )
