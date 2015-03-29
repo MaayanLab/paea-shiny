@@ -5,11 +5,10 @@ library(nasbMicrotaskViewerHelpers)
 source('downloads_handlers.R', local=TRUE)
 source('config.R', local=TRUE)
 
+
 last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mtime)), decreasing=TRUE)[1]
 
 options(shiny.maxRequestSize=120*1024^2) 
-
-
 
 perturbations_data <- lapply(
     config$data_paths,
@@ -88,15 +87,6 @@ shiny::shinyServer(function(input, output, session) {
         session, 'disease_sigs_choices',
         choices = disease_sigs_choices, server = TRUE
     )
-    
-    output$fetch_disease_sig_container <- shiny::renderUI({
-        button <- shiny::actionButton('fetch_disease_sig', 'Fetch signature')
-        if(input$disease_sigs_choices == '' || values$disease_sig_fetch_running) {
-            list(disabledActionButton(button))
-        } else {
-            list(button)
-        }
-    })
     
     
     #' datain panel - disease sig observe
