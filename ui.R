@@ -57,7 +57,7 @@ datain_disease_input <- shiny::wellPanel(
         'disease_sigs_choices', 'Choose disease signature', 
         choices = NULL, options = list(placeholder = 'type disease name')
     ),
-    shiny::uiOutput('fetch_disease_sig_container')
+    shiny::actionButton('fetch_disease_sig', 'Fetch signature')
 )
 
 

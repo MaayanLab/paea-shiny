@@ -104,7 +104,7 @@ shiny::shinyServer(function(input, output, session) {
     shiny::observe({
         if(is.null(input$fetch_disease_sig) || input$fetch_disease_sig == 0) { return() }
         
-        values$disease_sig_fetch_running <- TRUE
+        session$sendCustomMessage('button_status_message', list(id='#fetch_disease_sig', disable=TRUE))
         
         tryCatch({
 
@@ -115,7 +115,7 @@ shiny::shinyServer(function(input, output, session) {
                 
             },
             error = error_handler,
-            finally = { values$disease_sig_fetch_running <- FALSE }
+            finally = session$sendCustomMessage('button_status_message', list(id='#fetch_disease_sig', disable=FALSE))
         )
         
         
