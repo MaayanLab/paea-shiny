@@ -94,6 +94,7 @@ shiny::shinyServer(function(input, output, session) {
     #'
     shiny::observe({
         if(is.null(input$fetch_disease_sig) || input$fetch_disease_sig == 0) { return() }
+        if(input$disease_sigs_choices == '') return()
         
         session$sendCustomMessage('button_status_message', list(id='#fetch_disease_sig', disable=TRUE))
         
@@ -116,7 +117,7 @@ shiny::shinyServer(function(input, output, session) {
     #' Read input data
     #'
     datain <- shiny::reactive({
-        if(!is.null(values$datapath)) {
+        if(!is.null(values$datapath) && file.exists(values$datapath) && !file.info(values$datapath)$isdir) {
             tryCatch(
                 if(values$manual_upload) {
                     data.table::fread(values$datapath, sep=input$sep) 
