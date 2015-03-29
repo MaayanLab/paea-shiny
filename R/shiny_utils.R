@@ -46,6 +46,6 @@ disabledNumericInput <- function(numericInput) {
 shiny_error_handler <- function(values) {
     function(e) {
         values$last_error <- e
-        NULL
+        logging::logerror(e$message)
     }
 }
