@@ -27,6 +27,16 @@ disease_sigs_choices <- setNames(
 
 shiny::shinyServer(function(input, output, session) {
     
+    disableButton <- function(id, session) {
+        session$sendCustomMessage('button_status_message', list(id=id, disable=TRUE))
+    }
+    
+    
+    enableButton <- function(id, session) {
+        session$sendCustomMessage('button_status_message', list(id=id, disable=FALSE))
+    }
+    
+    
     output$last_modified <- shiny::renderText({ last_modified })
     
     values <- shiny::reactiveValues(
@@ -96,7 +106,7 @@ shiny::shinyServer(function(input, output, session) {
         if(is.null(input$fetch_disease_sig) || input$fetch_disease_sig == 0) { return() }
         if(input$disease_sigs_choices == '') return()
         
-        session$sendCustomMessage('button_status_message', list(id='#fetch_disease_sig', disable=TRUE))
+        disableButton(id='#fetch_disease_sig', session=session)
         
         tryCatch({
 
@@ -107,7 +117,7 @@ shiny::shinyServer(function(input, output, session) {
                 
             },
             error = error_handler,
-            finally = session$sendCustomMessage('button_status_message', list(id='#fetch_disease_sig', disable=FALSE))
+            finally = enableButton(id='#fetch_disease_sig', session=session)
         )
         
         
