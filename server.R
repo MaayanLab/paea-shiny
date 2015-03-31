@@ -304,25 +304,32 @@ shiny::shinyServer(function(input, output, session) {
     })
     
  
+    #' Characteristic Direction Analysis trigger 
+    #'
+    chdir_trigger <- shiny::reactive({
+        if(is.null(input$run_chdir) || input$run_chdir == 0) { return() }
+        input$run_chdir
+    })
+     
+    
     #' Prepare Characteristic Direction Analysis params
     #'
-    shiny::observe({
-        if(is.null(input$run_chdir) || input$run_chdir == 0) { return() }
-    
+    chdir_params <- shiny::reactive({
+        if(is.null(chdir_trigger())) { return() }
         
-        #' Store parameters.
-        #'
-        values$chdir_params <- list(
-            manual_upload=values$manual_upload,
-            input_name=values$input_name,
-            control_samples=samples()$control,
-            treatment_samples=samples()$treatment,
-            log2_transform=input$log2_transform,
-            quantile_normalize=input$quantile_normalize,
-            enable_id_filter=input$enable_id_filter,
-            gamma=shiny::isolate(input$chdir_gamma),
-            nnull=min(as.integer(shiny::isolate(input$chdir_nnull)), 1000),
-            seed=shiny::isolate(input$random_seed)
+        shiny::isolate(
+            list(
+                manual_upload=values$manual_upload,
+                input_name=values$input_name,
+                control_samples=samples()$control,
+                treatment_samples=samples()$treatment,
+                log2_transform=input$log2_transform,
+                quantile_normalize=input$quantile_normalize,
+                enable_id_filter=input$enable_id_filter,
+                gamma=input$chdir_gamma,
+                nnull=min(as.integer(input$chdir_nnull), 1000),
+                seed=input$random_seed
+            )
         )
     })
     
@@ -330,7 +337,7 @@ shiny::shinyServer(function(input, output, session) {
     #' Run Characteristic Direction Analysis
     #'
     shiny::observe({
-        params <- values$chdir_params
+        params <- chdir_params()
         
         if(is.null(params)) { return() }
         
@@ -518,7 +525,7 @@ shiny::shinyServer(function(input, output, session) {
     
     output$chdir_run_summary <- shiny::renderUI({
         if(!is.null(values$chdir)) {
-            list_to_defs(values$chdir_params)
+            list_to_defs(chdir_params())
         }
     })
     
@@ -572,7 +579,7 @@ shiny::shinyServer(function(input, output, session) {
                 casesensitive=shiny::isolate(input$paea_casesensitive),
                 background_dataset=shiny::isolate(input$background_dataset)
             ),
-            values$chdir_params
+            chdir_params()
         )
     })
     
