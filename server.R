@@ -119,8 +119,6 @@ shiny::shinyServer(function(input, output, session) {
             error = error_handler,
             finally = enableButton(id='#fetch_disease_sig', session=session)
         )
-        
-        
     })
     
     
@@ -237,29 +235,26 @@ shiny::shinyServer(function(input, output, session) {
     })
     
     
-    #' chdir panel - run button
+    #' chdir panel - enable/disable run button
     #'
-    #'
-    output$run_chdir_container <- shiny::renderUI({
-        button <- shiny::actionButton(inputId = 'run_chdir', label = 'Run Characteristic Direction Analysis', icon = NULL)
+    shiny::observe({
         if(!datain_valid() | length(samples()$control) < 2 | length(samples()$treatment) < 2 | values$chdir_running) {
-             list(
-                disabledActionButton(button),
-                if (is.null(datain())) {
-                    shiny::helpText('Upload your dataset and select control samples first.')
-                } else {
-                    shiny::helpText('You need at least two control and two treatment samples to run chdir.')
-                }
-             )
-            
+            disableButton(id='#run_chdir', session=session)
         } else {
-            button
+            enableButton(id='#run_chdir', session=session)
         }
     })
     
-    #' Not the best solution, but we want to render buttons even if we switch tabs using tourist
+    
+    #' chdir panel - run button help message
     #'
-    shiny::outputOptions(output, 'run_chdir_container', suspendWhenHidden = FALSE)
+    output$run_chdir_help <- shiny::renderText({
+        if (is.null(datain())) {
+            'Upload your dataset and select control samples first.'
+        } else if ( length(samples()$control) < 2 | length(samples()$treatment) < 2) {
+            'You need at least two control and two treatment samples to run chdir.'
+        }
+    })
     
     
     #' chdir panel - random number generator seed 

@@ -138,7 +138,8 @@ chdir_parameters <- shiny::wellPanel(
         'If you want to obtain reproducible results you can set',
         'seed value.'
     )),
-    shiny::uiOutput('run_chdir_container')
+    shiny::actionButton(inputId = 'run_chdir', label = 'Run Characteristic Direction Analysis', icon = NULL),
+    shiny::helpText(shiny::textOutput('run_chdir_help'))
 )
 
 

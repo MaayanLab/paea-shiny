@@ -129,7 +129,7 @@ function initTour() {
         highlightTarget: true,
         nextButton: true,
         closeButton: true,
-        target: $('#run_chdir_container'),
+        target: $('#run_chdir'),
         my: 'bottom center',
         at: 'top center'
     }, {
