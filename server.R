@@ -224,6 +224,7 @@ shiny::shinyServer(function(input, output, session) {
     output$show_datain_results <- shiny::reactive({ datain_valid() })
     shiny::outputOptions(output, 'show_datain_results', suspendWhenHidden = FALSE)
     
+    
     #' datain tab - density plot
     #'
     shiny::observe({
@@ -234,11 +235,17 @@ shiny::shinyServer(function(input, output, session) {
     })
     
     
+    #' chdir panel - is input valid
+    #'
+    chdir_input_valid <- shiny::reactive({
+        datain_valid() && length(samples()$control) > 1 && length(samples()$treatment) > 1
+    })
+    
     
     #' chdir panel - enable/disable run button
     #'
     shiny::observe({
-        if(!datain_valid() | length(samples()$control) < 2 | length(samples()$treatment) < 2) {
+        if(!chdir_input_valid()) {
             disableButton(id='#run_chdir', session=session)
         } else {
             enableButton(id='#run_chdir', session=session)
