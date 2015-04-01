@@ -235,6 +235,7 @@ shiny::shinyServer(function(input, output, session) {
     })
     
     
+    
     #' chdir panel - enable/disable run button
     #'
     shiny::observe({
@@ -304,7 +305,7 @@ shiny::shinyServer(function(input, output, session) {
     })
     
  
-    #' Characteristic Direction Analysis trigger 
+    #' Characteristic Direction Analysis trigger
     #'
     chdir_trigger <- shiny::reactive({
         if(is.null(input$run_chdir) || input$run_chdir == 0) { return() }
@@ -336,18 +337,18 @@ shiny::shinyServer(function(input, output, session) {
     
     #' Run Characteristic Direction Analysis
     #'
-    shiny::observe({
+    
+    chdir <- shiny::reactive({
         params <- chdir_params()
         
         if(is.null(params)) { return() }
         
-        #' TODO make sure it doesn't change between click and chdir start
         datain <- shiny::isolate(datain_preprocessed())
         sampleclass <- factor(ifelse(colnames(datain)[-1] %in% params$control, '1', '2'))
         set.seed(params$seed)
         
         values$chdir_running <- TRUE
-        values$chdir <- tryCatch(
+        tryCatch(
             chdir_analysis_wrapper(preprocess_chdir_input(datain), sampleclass, params$gamma, params$nnull),
             error = error_handler,
             finally = { values$chdir_running <- FALSE }
@@ -357,7 +358,7 @@ shiny::shinyServer(function(input, output, session) {
     
     #' chdir tab - set plots visibility
     #'
-    output$show_chdir_results <- shiny::reactive({ !is.null(values$chdir) })
+    output$show_chdir_results <- shiny::reactive({ !is.null(chdir()) })
     shiny::outputOptions(output, 'show_chdir_results', suspendWhenHidden = FALSE)
 
     
@@ -366,8 +367,11 @@ shiny::shinyServer(function(input, output, session) {
     shiny::observe({
         # Not as reactive as it should be
         # https://groups.google.com/forum/#!topic/ggvis/kQQsdn1RYaE
-        if(!is.null(values$chdir)) {
-            results <- prepare_results(values$chdir$results[[1]])
+        
+        chdir <- chdir()
+        
+        if(!is.null(chdir)) {
+            results <- prepare_results(chdir$results[[1]])
             plot_top_genes(results) %>% ggvis::bind_shiny('chdir_ggvis_plot')
         }
     })
@@ -380,8 +384,10 @@ shiny::shinyServer(function(input, output, session) {
             min=1, max=config$max_ngenes_tokeep, step=1, value=100, round=TRUE
         )
         
-        if(!is.null(values$chdir)) {
-            ngenes <- length(values$chdir$results[[1]])
+        chdir <- chdir()
+        
+        if(!is.null(chdir)) {
+            ngenes <- length(chdir$results[[1]])
             limit <- min(config$max_fgenes_tokeep * ngenes, min(config$max_ngenes_tokeep, ngenes))
             slider$children[[2]]$attribs['data-max'] <- limit
             slider$children[[2]]$attribs['data-from'] <- ceiling(limit / 2)
@@ -398,7 +404,7 @@ shiny::shinyServer(function(input, output, session) {
             shiny::downloadButton('download_chdir_up', 'Download up genes'),
             shiny::downloadButton('download_chdir_down', 'Download down genes')
         ) 
-        if (is.null(values$chdir)) {
+        if (is.null(chdir())) {
             append(
                 lapply(buttons, disabledActionButton),
                 list(shiny::helpText('No data available. Did you run CHDIR analysis?'))
@@ -416,7 +422,7 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - number of significant upregulated genes
     #'
     output$n_sig_up_genes <- shiny::renderText({
-        if(!is.null(values$chdir)) {
+        if(!is.null(chdir())) {
             nrow(chdir_up_genes())
         }
     })
@@ -424,7 +430,7 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - number of significant downregulated genes
     #'
     output$n_sig_down_genes <- shiny::renderText({
-        if(!is.null(values$chdir)) {
+        if(!is.null(chdir())) {
             nrow(chdir_down_genes())
         }
     })
@@ -434,15 +440,15 @@ shiny::shinyServer(function(input, output, session) {
     #'
     output$download_chdir <- shiny::downloadHandler(
         filename = 'chdir.tsv',
-        content = chdir_download_handler(prepare_results(values$chdir$chdirprops$chdir[[1]][, 1]))
+        content = chdir_download_handler(prepare_results(chdir()$chdirprops$chdir[[1]][, 1]))
     )
     
     
     #' chdir panel - prepare down genes
     #'
     chdir_up_genes <- shiny::reactive({
-        if(!is.null(values$chdir)) {
-            head(prepare_up_genes(values$chdir$results[[1]]), input$ngenes_tokeep)
+        if(!is.null(chdir())) {
+            head(prepare_up_genes(chdir()$results[[1]]), input$ngenes_tokeep)
         }
     })
     
@@ -450,8 +456,8 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - prepare up genes
     #'
     chdir_down_genes <- shiny::reactive({
-        if(!is.null(values$chdir)) {
-            head(prepare_down_genes(values$chdir$results[[1]]), input$ngenes_tokeep)
+        if(!is.null(chdir())) {
+            head(prepare_down_genes(chdir()$results[[1]]), input$ngenes_tokeep)
         }
     })
     
@@ -474,7 +480,7 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - up genes table
     #'
     output$chdir_up_genes_table <- shiny::renderDataTable({
-        if(!is.null(values$chdir)) {
+        if(!is.null(chdir())) {
             chdir_up_genes() %>% dplyr::rename(Gene = g, 'Characteristic Direction Coefficient' = v)
         }
     })
@@ -483,7 +489,7 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - down genes table
     #'
     output$chdir_down_genes_table <- shiny::renderDataTable({
-        if(!is.null(values$chdir)) {
+        if(!is.null(chdir())) {
             chdir_down_genes() %>% dplyr::rename(Gene = g, 'Characteristic Direction Coefficient' = v)
         }
     })
@@ -492,7 +498,7 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - status message
     #'
     output$chdir_message <- shiny::renderText({
-        if(is.null(values$chdir)) {
+        if(is.null(chdir())) {
             'results not available...'
         }
     })
@@ -503,7 +509,7 @@ shiny::shinyServer(function(input, output, session) {
     output$enrichr_form <- shiny::renderUI({
         button <-shiny::tags$button('Analyze with Enrichr', class='btn btn-default')
         chdir_diff_genes <- list(up=chdir_up_genes, down=chdir_down_genes)
-        value <- if(is.null(values$chdir)) { '' } else {
+        value <- if(is.null(chdir())) { '' } else {
             chdir_diff_genes[[input$enrichr_subset]]() %>% prepare_enrichr_input() 
         }
         
@@ -515,7 +521,7 @@ shiny::shinyServer(function(input, output, session) {
             action='http://amp.pharm.mssm.edu/Enrichr/enrich',
             shiny::tags$input(name='list', type='hidden', value=value),
             shiny::tags$input(name='description', type='hidden', value=description),
-            if(is.null(values$chdir)) { disabledActionButton(button) } else { button }
+            if(is.null(chdir())) { disabledActionButton(button) } else { button }
         )
     })
     
@@ -524,7 +530,7 @@ shiny::shinyServer(function(input, output, session) {
     #'
     
     output$chdir_run_summary <- shiny::renderUI({
-        if(!is.null(values$chdir)) {
+        if(!is.null(chdir())) {
             list_to_defs(chdir_params())
         }
     })
@@ -535,7 +541,7 @@ shiny::shinyServer(function(input, output, session) {
         button <- shiny::actionButton(inputId = 'run_paea', label = 'Run Principle Angle Enrichment', icon = NULL)
         if (values$paea_running) {
            list(disabledActionButton(button))
-        } else if(is.null(values$chdir)) {
+        } else if(is.null(chdir())) {
             list(
                 list(disabledActionButton(button)),
                 shiny::helpText('Before you can run PAEA you have to execute CHDIR analysis.')
@@ -572,7 +578,7 @@ shiny::shinyServer(function(input, output, session) {
     #' Prepare Principle Angle Enrichment Analysis parameters
     #'
     shiny::observe({
-        if(is.null(input$run_paea) || input$run_paea == 0 || is.null(shiny::isolate(values$chdir))) { return() }
+        if(is.null(input$run_paea) || input$run_paea == 0 || is.null(shiny::isolate(chdir()))) { return() }
         
         values$paea_params <- append(
             list(
@@ -594,7 +600,7 @@ shiny::shinyServer(function(input, output, session) {
         values$paea <- tryCatch(
             shiny::withProgress(message = 'Running PAEA', value = 0, {        
                 lapply(paea_analysis_dispatch(
-                    chdirresults=shiny::isolate(values$chdir)$chdirprops,
+                    chdirresults=shiny::isolate(chdir())$chdirprops,
                     gmtfile=prepare_gene_sets(perturbations_data[[paea_params$background_dataset]]()$genes),
                     casesensitive=paea_params$casesensitive,
                     with_progress=TRUE
