@@ -49,7 +49,6 @@ shiny::shinyServer(function(input, output, session) {
         input_name = NULL,
     
         # Required
-        chdir_running = FALSE,
         paea_running = FALSE,
         manual_upload = TRUE,
         disease_sig_fetch_running = FALSE
@@ -239,7 +238,7 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - enable/disable run button
     #'
     shiny::observe({
-        if(!datain_valid() | length(samples()$control) < 2 | length(samples()$treatment) < 2 | values$chdir_running) {
+        if(!datain_valid() | length(samples()$control) < 2 | length(samples()$treatment) < 2) {
             disableButton(id='#run_chdir', session=session)
         } else {
             enableButton(id='#run_chdir', session=session)
@@ -347,11 +346,11 @@ shiny::shinyServer(function(input, output, session) {
         sampleclass <- factor(ifelse(colnames(datain)[-1] %in% params$control, '1', '2'))
         set.seed(params$seed)
         
-        values$chdir_running <- TRUE
+        disableButton('#run_chdir', session)
         tryCatch(
             chdir_analysis_wrapper(preprocess_chdir_input(datain), sampleclass, params$gamma, params$nnull),
             error = error_handler,
-            finally = { values$chdir_running <- FALSE }
+            finally = enableButton('#run_chdir', session)
         )  
     })
     
