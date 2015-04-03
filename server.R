@@ -585,13 +585,13 @@ shiny::shinyServer(function(input, output, session) {
         deleteFile=FALSE
     )
 
-        
+
     #' Prepare Principle Angle Enrichment Analysis parameters
     #'
-    shiny::observe({
+    paea_params <- shiny::reactive({
         if(is.null(input$run_paea) || input$run_paea == 0 || is.null(shiny::isolate(chdir()))) { return() }
         
-        values$paea_params <- append(
+        append(
             list(
                 casesensitive=shiny::isolate(input$paea_casesensitive),
                 background_dataset=shiny::isolate(input$background_dataset)
@@ -604,7 +604,8 @@ shiny::shinyServer(function(input, output, session) {
     #' Run Principle Angle Enrichment Analysis
     #'
     shiny::observe({
-        paea_params <- values$paea_params 
+        paea_params <- paea_params()
+        
         if(is.null(paea_params)) { return() }
         
         disableButton('#run_paea', session)
@@ -629,7 +630,7 @@ shiny::shinyServer(function(input, output, session) {
     #' 
     paea_results <- shiny::reactive({
         if(!is.null(values$paea)) {
-            description <- perturbations_data[[values$paea_params$background_dataset]]()$description
+            description <- perturbations_data[[paea_params()$background_dataset]]()$description
             prepare_paea_results(combine_results(values$paea, input$paea_strategy), description)
         }
     })
@@ -686,7 +687,7 @@ shiny::shinyServer(function(input, output, session) {
     #'
     output$paea_run_summary <- shiny::renderUI({
         if(!is.null(values$paea)) {
-            list_to_defs(values$paea_params)
+            list_to_defs(paea_params())
         }
     })
     
