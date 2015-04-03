@@ -541,6 +541,15 @@ shiny::shinyServer(function(input, output, session) {
         }
     })
     
+
+    shiny::observe({
+        if (is.null(chdir()))  {
+             disableButton('#run_paea', session)
+        } else {
+             enableButton('#run_paea', session)
+        }
+    })
+    
     
     #' paea panel - run button
     #'
@@ -597,7 +606,8 @@ shiny::shinyServer(function(input, output, session) {
     shiny::observe({
         paea_params <- values$paea_params 
         if(is.null(paea_params)) { return() }
-        values$paea_running <- TRUE
+        
+        disableButton('#run_paea', session)
         
         values$paea <- tryCatch(
             shiny::withProgress(message = 'Running PAEA', value = 0, {        
@@ -610,7 +620,7 @@ shiny::shinyServer(function(input, output, session) {
                 
             }),
             error = error_handler,
-            finally = { values$paea_running <- FALSE }
+            finally = enableButton('#run_paea', session)
         )
     })
     
