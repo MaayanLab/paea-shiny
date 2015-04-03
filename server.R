@@ -577,13 +577,21 @@ shiny::shinyServer(function(input, output, session) {
             setNames(datasets, stringi::stri_trans_totitle(datasets))
         )
     })
+    
+    
+    #' Trigger execution of paea
+    #'
+    paea_trigger <- shiny::reactive({
+         if(input$run_paea == 0 || is.null(shiny::isolate(chdir()))) { return() }
+         return(input$run_paea)
+    })
 
 
     #' Prepare Principle Angle Enrichment Analysis parameters
     #'
     paea_params <- shiny::reactive({
-        if(is.null(input$run_paea) || input$run_paea == 0 || is.null(shiny::isolate(chdir()))) { return() }
-        
+        if(is.null(paea_trigger())) { return() }
+            
         append(
             list(
                 casesensitive=shiny::isolate(input$paea_casesensitive),
