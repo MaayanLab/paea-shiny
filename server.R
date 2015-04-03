@@ -596,14 +596,14 @@ shiny::shinyServer(function(input, output, session) {
     
     #' Run Principle Angle Enrichment Analysis
     #'
-    shiny::observe({
+    paea <- shiny::reactive({
         paea_params <- paea_params()
         
         if(is.null(paea_params)) { return() }
         
         disableButton('#run_paea', session)
         
-        values$paea <- tryCatch(
+        tryCatch(
             shiny::withProgress(message = 'Running PAEA', value = 0, {        
                 lapply(paea_analysis_dispatch(
                     chdirresults=shiny::isolate(chdir())$chdirprops,
@@ -622,9 +622,9 @@ shiny::shinyServer(function(input, output, session) {
     #' PAEA results
     #' 
     paea_results <- shiny::reactive({
-        if(!is.null(values$paea)) {
+        if(!is.null(paea())) {
             description <- perturbations_data[[paea_params()$background_dataset]]()$description
-            prepare_paea_results(combine_results(values$paea, input$paea_strategy), description)
+            prepare_paea_results(combine_results(paea(), input$paea_strategy), description)
         }
     })
     
@@ -643,7 +643,7 @@ shiny::shinyServer(function(input, output, session) {
     output$paea_downloads_container <- shiny::renderUI({
         button <- shiny::downloadButton('download_paea', 'Download current view')
         
-        if (is.null(values$paea)) {
+        if (is.null(paea())) {
             list(
                 disabledActionButton(button),
                 shiny::helpText('No data available. Did you run PAEA analysis?')
@@ -670,7 +670,7 @@ shiny::shinyServer(function(input, output, session) {
     #' paea panel - status message
     #'
     output$paea_message <- shiny::renderText({
-        if(is.null(values$paea)) {
+        if(is.null(paea())) {
             'results not available...'
         }
     })
@@ -679,7 +679,7 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - run summary
     #'
     output$paea_run_summary <- shiny::renderUI({
-        if(!is.null(values$paea)) {
+        if(!is.null(paea())) {
             list_to_defs(paea_params())
         }
     })
