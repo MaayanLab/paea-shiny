@@ -541,19 +541,15 @@ shiny::shinyServer(function(input, output, session) {
         }
     })
     
+    
     #' paea panel - run button
     #'
     output$run_paea_container <- shiny::renderUI({
         button <- shiny::actionButton(inputId = 'run_paea', label = 'Run Principle Angle Enrichment', icon = NULL)
-        if (values$paea_running) {
-           list(disabledActionButton(button))
-        } else if(is.null(chdir())) {
+        if(is.null(chdir())) {
             list(
-                list(disabledActionButton(button)),
                 shiny::helpText('Before you can run PAEA you have to execute CHDIR analysis.')
             )
-        } else {
-            list(button)
         }
     })
     
