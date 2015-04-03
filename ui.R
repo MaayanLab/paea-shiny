@@ -263,8 +263,7 @@ paea_output <- shiny::div(
             'Enriched sets',
             shiny::p(),
             shiny::wellPanel(
-                paea_strategy_radio,
-                shiny::imageOutput('paea_strategy_chart',  width = '100%', height='100%')
+                paea_strategy_radio
             ),
             shiny::dataTableOutput('paea_results_table')
         )

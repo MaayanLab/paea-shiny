@@ -577,13 +577,6 @@ shiny::shinyServer(function(input, output, session) {
             setNames(datasets, stringi::stri_trans_totitle(datasets))
         )
     })
-    
-    #' paea panel - workflow flowchart
-    #'
-    output$paea_strategy_chart <- shiny::renderImage(
-        list(src=file.path('www/img', paste(input$paea_strategy, 'png', sep='.')), contentType='image/png'),
-        deleteFile=FALSE
-    )
 
 
     #' Prepare Principle Angle Enrichment Analysis parameters
