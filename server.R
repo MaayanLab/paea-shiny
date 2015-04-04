@@ -586,14 +586,15 @@ shiny::shinyServer(function(input, output, session) {
     #'
     paea_params <- shiny::reactive({
         if(is.null(paea_trigger())) { return() }
-            
-        append(
-            list(
-                casesensitive=shiny::isolate(input$paea_casesensitive),
-                background_dataset=shiny::isolate(input$background_dataset)
-            ),
-            chdir_params()
-        )
+        shiny::isolate({
+            append(
+                list(
+                    casesensitive=input$paea_casesensitive,
+                    background_dataset=input$background_dataset
+                ),
+                chdir_params()
+            )
+        })
     })
     
     
