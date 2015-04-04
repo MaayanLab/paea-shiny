@@ -49,7 +49,6 @@ shiny::shinyServer(function(input, output, session) {
         input_name = NULL,
     
         # Required
-        paea_running = FALSE,
         manual_upload = TRUE,
         disease_sig_fetch_running = FALSE
     )
