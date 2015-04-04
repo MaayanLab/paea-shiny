@@ -42,8 +42,6 @@ shiny::shinyServer(function(input, output, session) {
     values <- shiny::reactiveValues(
         # Not required. Just to remind myself what is stored inside
         chdir = NULL,
-        control_samples = NULL,
-        treatment_samples = NULL,
         last_error = NULL,
         chdir_params = NULL,
         input_name = NULL,
