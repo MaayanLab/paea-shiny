@@ -558,11 +558,6 @@ shiny::shinyServer(function(input, output, session) {
     })
     
     
-    #' See coment for run_chdir_container
-    #'
-    shiny::outputOptions(output, 'run_paea_container', suspendWhenHidden = FALSE)
-    
-    
     #' Choose background dataset
     #'
     output$background_dataset_container <- shiny::renderUI({
