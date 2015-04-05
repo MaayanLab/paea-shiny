@@ -232,7 +232,8 @@ paea_input_parameters <- shiny::wellPanel(
     shiny::checkboxInput('paea_casesensitive', 'Case Sensitive', FALSE),
     shiny::helpText('Check if you want gene lables comparisons to be case sensitive. Not recommended.'),
     shiny::uiOutput('background_dataset_container'),
-    shiny::actionButton(inputId = 'run_paea', label = 'Run Principle Angle Enrichment', icon = NULL)
+    shiny::actionButton(inputId = 'run_paea', label = 'Run Principle Angle Enrichment', icon = NULL),
+    shiny::helpText(shiny::textOutput('run_paea_message'))
 )
 
 
