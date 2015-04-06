@@ -40,7 +40,8 @@ datain_upload <-shiny::wellPanel(
 
 datain_sampleclass <- shiny::wellPanel(
     h3('Control samples', id='control_samples'),
-    shiny::uiOutput('sampleclass_container')
+    shiny::uiOutput('sampleclass_container'),
+    shiny::helpText(shiny::textOutput('sampleclass_message'))
 )
 
 

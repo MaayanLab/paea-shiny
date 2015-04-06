@@ -167,7 +167,7 @@ shiny::shinyServer(function(input, output, session) {
     })
     
     
-    #' datain panel - control/treatment samples checboxes
+    #' datain panel - control/treatment samples checkboxes
     #'
     output$sampleclass_container <- shiny::renderUI({
         if (values$manual_upload && datain_valid()) {
@@ -180,6 +180,8 @@ shiny::shinyServer(function(input, output, session) {
     })
     
     
+    #' datain panel - control/treatment samples help message
+    #'
     output$sampleclass_message <- shiny::renderText({
         if (!values$manual_upload) {
            'You can choose samples only for manually uploaded data sets.'
