@@ -510,20 +510,25 @@ shiny::shinyServer(function(input, output, session) {
     })
     
     
+    #' Prepare lists of genes in a format expected by the Enrichr
+    #'
+    enrichr_input <- shiny::reactive({
+        if(is.null(chdir())) {
+            list(up='', down='')
+        } else {
+            list(up=chdir_up_genes(), down=chdir_down_genes()) %>% lapply(prepare_enrichr_input)
+        }
+    })
+    
+    
     #' chdir panel - Enrichr submit form
     #'
     output$enrichr_form <- shiny::renderUI({
-        chdir_diff_genes <- list(up=chdir_up_genes, down=chdir_down_genes)
-    
-        value <- if(is.null(chdir())) { '' } else {
-            chdir_diff_genes[[input$enrichr_subset]]() %>% prepare_enrichr_input() 
-        }
-        
         #' Prepare description string for Enrichr
         description <- paste(values$input_name, ' (', input$enrichr_subset, ')', sep='')
         
         list(
-            shiny::tags$input(name='list', type='hidden', value=value),
+            shiny::tags$input(name='list', type='hidden', value=enrichr_input()[[input$enrichr_subset]]),
             shiny::tags$input(name='description', type='hidden', value=description)
         )
     })
