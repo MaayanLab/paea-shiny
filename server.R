@@ -513,7 +513,6 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - Enrichr submit form
     #'
     output$enrichr_form <- shiny::renderUI({
-        button <-shiny::tags$button('Analyze with Enrichr', class='btn btn-default')
         chdir_diff_genes <- list(up=chdir_up_genes, down=chdir_down_genes)
         value <- if(is.null(chdir())) { '' } else {
             chdir_diff_genes[[input$enrichr_subset]]() %>% prepare_enrichr_input() 
@@ -527,7 +526,7 @@ shiny::shinyServer(function(input, output, session) {
             action='http://amp.pharm.mssm.edu/Enrichr/enrich',
             shiny::tags$input(name='list', type='hidden', value=value),
             shiny::tags$input(name='description', type='hidden', value=description),
-            if(is.null(chdir())) { disabledActionButton(button) } else { button }
+            shiny::tags$button('Analyze with Enrichr', class='btn btn-default', id='send_to_enrichr')
         )
     })
     
@@ -545,8 +544,10 @@ shiny::shinyServer(function(input, output, session) {
     shiny::observe({
         if (is.null(chdir()))  {
              disableButton('#run_paea', session)
+             disableButton('#send_to_enrichr', session)
         } else {
              enableButton('#run_paea', session)
+             enableButton('#send_to_enrichr', session)
         }
     })
     
