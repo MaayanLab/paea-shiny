@@ -190,7 +190,13 @@ chdir_downloads <- shiny::wellPanel(
 chdir_enrichr <- shiny::wellPanel(
     shiny::h3('Analyze with Enrichr'),
     shiny::radioButtons('enrichr_subset', 'Subset', c('Upregulated'='up', 'Downregulated'='down')),
-    shiny::uiOutput('enrichr_form')
+    
+    shiny::tags$form(
+        target='_blank', method='post', enctype='multipart/form-data',
+        action='http://amp.pharm.mssm.edu/Enrichr/enrich',
+        shiny::uiOutput('enrichr_form'),
+        shiny::tags$button('Analyze with Enrichr', class='btn btn-default', id='send_to_enrichr')
+    )
 )
 
 

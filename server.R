@@ -514,6 +514,7 @@ shiny::shinyServer(function(input, output, session) {
     #'
     output$enrichr_form <- shiny::renderUI({
         chdir_diff_genes <- list(up=chdir_up_genes, down=chdir_down_genes)
+    
         value <- if(is.null(chdir())) { '' } else {
             chdir_diff_genes[[input$enrichr_subset]]() %>% prepare_enrichr_input() 
         }
@@ -521,15 +522,12 @@ shiny::shinyServer(function(input, output, session) {
         #' Prepare description string for Enrichr
         description <- paste(values$input_name, ' (', input$enrichr_subset, ')', sep='')
         
-        shiny::tags$form(
-            target='_blank', method='post', enctype='multipart/form-data',
-            action='http://amp.pharm.mssm.edu/Enrichr/enrich',
+        list(
             shiny::tags$input(name='list', type='hidden', value=value),
-            shiny::tags$input(name='description', type='hidden', value=description),
-            shiny::tags$button('Analyze with Enrichr', class='btn btn-default', id='send_to_enrichr')
+            shiny::tags$input(name='description', type='hidden', value=description)
         )
     })
-    
+
     
     #' chdir panel - run summary
     #'
