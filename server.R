@@ -292,7 +292,7 @@ shiny::shinyServer(function(input, output, session) {
     #' 
     output$ngenes <- shiny::renderText({
         if(datain_valid()) {
-            length(unique(datain()[[1]]))
+            datain() %>% extract2(1) %>% unique() %>% length() 
         }
     })
 
