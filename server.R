@@ -377,8 +377,11 @@ shiny::shinyServer(function(input, output, session) {
         chdir <- chdir()
         
         if(!is.null(chdir)) {
-            results <- prepare_results(chdir$results[[1]])
-            plot_top_genes(results) %>% ggvis::bind_shiny('chdir_ggvis_plot')
+            chdir$results %>%
+                extract2(1) %>%
+                prepare_results() %>%
+                plot_top_genes() %>%
+                ggvis::bind_shiny('chdir_ggvis_plot')
         }
     })
     
