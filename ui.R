@@ -322,11 +322,7 @@ about_panel <- shiny::tabPanel(
 shiny::shinyUI(
     shiny::navbarPage(
         title='NASB Microtask Viewer',
-        footer=shiny::column(width=12),
-        analyze_panel,
-        about_panel,
-        
-        shiny::singleton(shiny::tags$head(
+        header=shiny::singleton(shiny::tags$head(
             shiny::includeCSS('www/css/tourist.css'),
             shiny::includeCSS('www/css/custom.css'),
             shiny::tags$script(src='js/underscore-min.js'),
@@ -334,6 +330,9 @@ shiny::shinyUI(
             shiny::tags$script(src='js/button-status-handler.js'),
             shiny::includeScript('www/js/tourist.min.js'),
             shiny::includeScript('www/js/analyze-tour.js')
-        ))
+        )),
+        footer=shiny::column(width=12),
+        analyze_panel,
+        about_panel
     )
 )
