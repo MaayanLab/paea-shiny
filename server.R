@@ -9,7 +9,7 @@ logging::basicConfig()
 
 last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mtime)), decreasing=TRUE)[1]
 
-options(shiny.maxRequestSize=120*1024^2) 
+options(shiny.maxRequestSize=config$maxRequestSize) 
 
 perturbations_data <- lapply(
     config$data_paths,

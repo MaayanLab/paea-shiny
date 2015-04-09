@@ -12,5 +12,6 @@ config <- list(
     drop_duplicates = TRUE,
     id_filter = 'control|chr([0-9]+|[xy]):[0-9]+-[0-9]+|//',
     sigs_path = 'http://static.zero323.net/disease-signatures/',
-    sigs_list_path = 'data/disease_signatures.csv'
+    sigs_list_path = 'data/disease_signatures.csv',
+    maxRequestSize = 120*1024^2
 )
