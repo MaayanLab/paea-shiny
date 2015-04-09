@@ -77,9 +77,9 @@ preprocess_chdir_input <- function(datain) {
 #' @param nnull see GeoDE::chdirAnalysis
 #'
 chdir_analysis_wrapper <- function(datain, sampleclass, gammas, nnull) {
-
+    on.exit(dev.off())
     png('/dev/null')
-    chdir <- GeoDE::chdirAnalysis(
+    GeoDE::chdirAnalysis(
         # Group by gene label and compute mean
         datain,
         sampleclass=sampleclass,
@@ -87,7 +87,5 @@ chdir_analysis_wrapper <- function(datain, sampleclass, gammas, nnull) {
         gammas=gammas,
         nnull=nnull
     )
-    dev.off()
-    chdir
 }
 
