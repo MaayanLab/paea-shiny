@@ -457,7 +457,7 @@ shiny::shinyServer(function(input, output, session) {
     #'
     chdir_up_genes <- shiny::reactive({
         if(!is.null(chdir())) {
-            head(prepare_up_genes(chdir()$results[[1]]), input$ngenes_tokeep)
+            head(prepare_up_genes(chdir() %>% chdir_results()), input$ngenes_tokeep)
         }
     })
     
@@ -466,7 +466,7 @@ shiny::shinyServer(function(input, output, session) {
     #'
     chdir_down_genes <- shiny::reactive({
         if(!is.null(chdir())) {
-            head(prepare_down_genes(chdir()$results[[1]]), input$ngenes_tokeep)
+            head(prepare_down_genes(chdir() %>% chdir_results()), input$ngenes_tokeep)
         }
     })
     
