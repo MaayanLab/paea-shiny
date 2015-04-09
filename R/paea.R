@@ -36,10 +36,9 @@ prepare_paea_results <- function(paea, data_description) {
 
 paea_analysis_wrapper <- function(chdirresults, gmtfile, gammas = c(1), casesensitive = FALSE){
     if(length(gmtfile) > 0 & length(chdirresults) > 0) {
+        on.exit(dev.off())
         png('/dev/null')
-        paea <- GeoDE::PAEAAnalysis(chdirresults, gmtfile, gammas, casesensitive, showprogress=TRUE)
-        dev.off()
-        paea
+        GeoDE::PAEAAnalysis(chdirresults, gmtfile, gammas, casesensitive, showprogress=TRUE)
     } else {
         warning('Cannot run paea with on empty input.')
         NULL
