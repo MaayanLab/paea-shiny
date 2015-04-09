@@ -393,10 +393,9 @@ shiny::shinyServer(function(input, output, session) {
             min=1, max=config$max_ngenes_tokeep, step=1, value=100, round=TRUE
         )
         
-        chdir <- chdir()
         
-        if(!is.null(chdir)) {
-            ngenes <- length(chdir$results[[1]])
+        if(!is.null(chdir())) {
+            ngenes <- length(chdir() %>% chdir_results())
             limit <- min(config$max_fgenes_tokeep * ngenes, min(config$max_ngenes_tokeep, ngenes))
             slider$children[[2]]$attribs['data-max'] <- limit
             slider$children[[2]]$attribs['data-from'] <- ceiling(limit / 2)
@@ -408,18 +407,8 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel - download block
     #'
     output$chdir_downloads_container <- shiny::renderUI({
-        buttons <- list(
-            shiny::downloadButton('download_chdir', 'Download chdir'),
-            shiny::downloadButton('download_chdir_up', 'Download up genes'),
-            shiny::downloadButton('download_chdir_down', 'Download down genes')
-        ) 
         if (is.null(chdir())) {
-            append(
-                lapply(buttons, disabledActionButton),
                 list(shiny::helpText('No data available. Did you run CHDIR analysis?'))
-            )
-        } else {
-            buttons
         }
     })
     

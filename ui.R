@@ -181,6 +181,9 @@ chdir_downloads <- shiny::wellPanel(
         shiny::tags$dt('#{significant downregulated genes}:'),
         shiny::tags$dd(shiny::textOutput('n_sig_down_genes'))
     ),
+    shiny::downloadButton('download_chdir', 'Download chdir'),
+    shiny::downloadButton('download_chdir_up', 'Download up genes'),
+    shiny::downloadButton('download_chdir_down', 'Download down genes'),
     shiny::uiOutput('chdir_downloads_container')
 )
 
