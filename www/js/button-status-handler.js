@@ -3,9 +3,9 @@
 Shiny.addCustomMessageHandler('button_status_message',
     function(message) {
         if(message.disable) {
-            $(message.id).prop( 'disabled', 'true');
+            $(message.id).prop( 'disabled', 'true').addClass('disabled');
         } else {
-            $(message.id).removeProp('disabled');
+            $(message.id).removeProp('disabled').removeClass('disabled');
         }
     }
 );   
