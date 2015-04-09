@@ -350,7 +350,7 @@ shiny::shinyServer(function(input, output, session) {
         if(is.null(params)) { return() }
         
         datain <- shiny::isolate(datain_preprocessed())
-        sampleclass <- factor(ifelse(colnames(datain)[-1] %in% params$control, '1', '2'))
+        sampleclass <- factor(ifelse(colnames(datain) %>% extract(-1) %>% is_in(params$control), '1', '2'))
         set.seed(params$seed)
         
         disableButton('#run_chdir', session)
