@@ -540,9 +540,16 @@ shiny::shinyServer(function(input, output, session) {
         if (is.null(chdir()))  {
              disableButton('#run_paea', session)
              disableButton('#send_to_enrichr', session)
+             disableButton('#download_chdir', session)
+             disableButton('#download_chdir_up', session)
+             disableButton('#download_chdir_down', session)
+
         } else {
              enableButton('#run_paea', session)
              enableButton('#send_to_enrichr', session)
+             enableButton('#download_chdir', session)
+             enableButton('#download_chdir_up', session)
+             enableButton('#download_chdir_down', session)
         }
     })
     
