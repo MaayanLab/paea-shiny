@@ -1,3 +1,19 @@
+#' Prepare input for density plot 
+#'
+#' @param datain data.table with genenames in first columns and samples in following
+#' @return data.frame 
+#'
+prepare_density_plot_input <- function(datain) {
+    if(is.null(datain)) { return() }
+
+    # Rename first column to identifier
+    datain %>% dplyr::rename_(identifier = as.symbol(colnames(datain)[1])) %>%
+    # Convert to long
+    tidyr::gather(sample, value, -identifier) %>%
+    # Ugly and slow but works for now    
+    as.data.frame()
+}
+
 #' Create density plots for input data
 #' 
 #' @param datain data.table with genenames in first columns and samples in following
@@ -6,13 +22,8 @@
 plot_density <- function(datain) {
     properties_y <- ggvis::axis_props(labels=list(fontSize=12), title=list(fontSize=12, dy=-35))
     properties_x <- ggvis::axis_props(labels=list(fontSize=12), title=list(fontSize=12, dx=-35))
-    # Rename first column to identifier
-    datain  %>% dplyr::rename_(identifier = as.symbol(colnames(datain)[1])) %>%
-    # Convert to long
-    tidyr::gather(sample, value, -identifier) %>%
-    # Ugly and slow but works for now    
-    as.data.frame() %>%
     # Create plot 
+    datain %>%
     ggvis::ggvis(~value) %>% ggvis::group_by(sample) %>%
     ggvis::layer_densities(stroke = ~sample, fill := NA) %>%
     ggvis::add_axis('y',  properties=properties_y) %>%
