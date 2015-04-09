@@ -449,7 +449,7 @@ shiny::shinyServer(function(input, output, session) {
     #'
     output$download_chdir <- shiny::downloadHandler(
         filename = 'chdir.tsv',
-        content = chdir_download_handler(prepare_results(chdir()$chdirprops$chdir[[1]][, 1]))
+        content = chdir_download_handler(prepare_results(chdir() %>% chdir_props() %>% extract(, 1)))
     )
     
     
