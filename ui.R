@@ -184,7 +184,7 @@ chdir_downloads <- shiny::wellPanel(
     shiny::downloadButton('download_chdir', 'Download chdir'),
     shiny::downloadButton('download_chdir_up', 'Download up genes'),
     shiny::downloadButton('download_chdir_down', 'Download down genes'),
-    shiny::uiOutput('chdir_downloads_container')
+    shiny::uiOutput('chdir_downloads_message')
 )
 
 

@@ -406,16 +406,12 @@ shiny::shinyServer(function(input, output, session) {
     
     #' chdir panel - download block
     #'
-    output$chdir_downloads_container <- shiny::renderUI({
+    output$chdir_downloads_message <- shiny::renderText({
         if (is.null(chdir())) {
-                list(shiny::helpText('No data available. Did you run CHDIR analysis?'))
+            'No data available. Did you run CHDIR analysis?'
         }
     })
-    
-    #' See coment for run_chdir_container
-    #'
-    shiny::outputOptions(output, 'chdir_downloads_container', suspendWhenHidden = FALSE)
-    
+
 
     #' chdir panel - number of significant upregulated genes
     #'
