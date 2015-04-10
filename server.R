@@ -390,20 +390,26 @@ shiny::shinyServer(function(input, output, session) {
     #' chdir panel number of significant genes to keep
     #' 
     output$ngenes_tokeep_contatiner <- shiny::renderUI({
-        slider <- shiny::sliderInput(
-            'ngenes_tokeep', label='Limit number of genes to return',
-            min=1, max=config$max_ngenes_tokeep, step=1, value=100, round=TRUE
-        )
-        
-        
-        if(!is.null(chdir())) {
-            ngenes <- length(chdir() %>% chdir_results())
-            limit <- min(config$max_fgenes_tokeep * ngenes, min(config$max_ngenes_tokeep, ngenes))
-            slider$children[[2]]$attribs['data-max'] <- limit
-            slider$children[[2]]$attribs['data-from'] <- ceiling(limit / 2)
+        limit <- if(!is.null(chdir())) {
+            #' Number of genes in chdir output
+            chdir() %>%
+                chdir_results() %>%
+                length() %>%
+                #' All or fraction
+                multiply_by(c(1, config$max_fgenes_tokeep)) %>%
+                c(config$max_ngenes_tokeep) %>% 
+                #' Overall min
+                min()
+        } else {
+            config$max_ngenes_tokeep
         }
-        slider
+
+        shiny::sliderInput(
+            'ngenes_tokeep', label='Limit number of genes to return',
+            min=1, max=limit, step=1, value=ceiling(limit / 2), round=TRUE
+        )
     })
+
     
     
     #' chdir panel - download block
