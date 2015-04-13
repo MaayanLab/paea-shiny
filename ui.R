@@ -324,6 +324,7 @@ about_panel <- shiny::tabPanel(
 #'
 shiny::shinyUI(
     shiny::navbarPage(
+        theme='css/bootstrap.min.css',
         title='NASB Microtask Viewer',
         header=shiny::singleton(shiny::tags$head(
             shiny::includeCSS('www/css/tourist.css'),
