@@ -9,6 +9,7 @@ RUN Rscript -e "install.packages('dplyr')"
 RUN Rscript -e "install.packages('data.table')"
 RUN Rscript -e "install.packages('ggvis')"
 RUN Rscript -e "install.packages('devtools')"
+RUN Rscript -e "install.packages('logging')"
 
 RUN Rscript -e "source('http://bioconductor.org/biocLite.R'); biocLite('preprocessCore')"
 
