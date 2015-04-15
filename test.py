@@ -9,7 +9,6 @@ class BasicWorkflowTest(unittest.TestCase):
     def setUp(self):
         self.browser = webdriver.Firefox()
 
-
     def test_can_load(self):
         self.browser.get(URL)
         self.assertEqual(
