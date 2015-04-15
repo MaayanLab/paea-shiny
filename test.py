@@ -15,7 +15,8 @@ class BasicWorkflowTest(unittest.TestCase):
         self.browser.get(URL)
         self.assertEqual(
             'NASB Microtask Viewer',
-            self.browser.title
+            self.browser.title,
+            'We should see page title'
         )
 
     def test_can_load_chdir(self):
@@ -30,14 +31,17 @@ class BasicWorkflowTest(unittest.TestCase):
         self.assertTrue(
             'Upload your dataset' in self.browser
             .find_element_by_id('run_chdir_help')
-            .text
+            .text,
+            'We should see chdir run message'
         )
 
         self.assertTrue(
             'No data' in self.browser
             .find_element_by_id('chdir_downloads_message')
-            .text
+            .text,
+            'We should see chdir downloads message'
         )
+
 
     def tearDown(self):
         self.browser.quit()
