@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -106,6 +106,17 @@ class BasicWorkflowTest(unittest.TestCase):
             self.browser.find_elements_by_xpath("//td[text()='NR2C2AP']"),
             "We should see preview table"
         )
+
+        self.browser.find_element_by_link_text('Plots').click()
+
+        try:
+            wait.until(expected_conditions.visibility_of_element_located((
+                By.TAG_NAME,
+                'svg'
+            )))
+
+        except TimeoutException:
+            self.fail('We should see density plot')
 
     def tearDown(self):
         self.browser.quit()
