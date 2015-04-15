@@ -12,7 +12,6 @@ class BasicWorkflowTest(unittest.TestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(2)
 
     def test_can_load(self):
         """ Test if page loads up to the point
