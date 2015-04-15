@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -6,6 +7,7 @@ import unittest
 import os
 
 URL = os.environ['VIEWER_URL']
+TESTS_PATH = os.path.abspath(os.path.dirname(__file__))
 
 
 class BasicWorkflowTest(unittest.TestCase):
@@ -79,8 +81,34 @@ class BasicWorkflowTest(unittest.TestCase):
             'We should see paea run message'
         )
 
+    def test_can_upload_expression_data(self):
+        """ Test if we can upload expression data
+        """
+        self.browser.get(URL)
+
+        wait = WebDriverWait(self.browser, 10)
+
+        (
+            wait.until(
+                expected_conditions.visibility_of_element_located((
+                    By.ID,
+                    'datain'
+                )))
+            .send_keys(os.path.join(TESTS_PATH, 'data/example_expression_data.csv'))
+        )
+
+        wait.until(expected_conditions.visibility_of_element_located((
+            By.ID,
+            'sampleclass'
+        )))
+
+        try:
+            self.browser.find_element_by_xpath("//td[text()='NR2C2AP']")
+        except NoSuchElementException:
+            self.fail()
+
     def tearDown(self):
-        self.browser.quit()
+        self.browser.quit("We should see preview table")
 
 
 if __name__ == '__main__':
