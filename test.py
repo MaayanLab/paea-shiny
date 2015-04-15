@@ -105,10 +105,10 @@ class BasicWorkflowTest(unittest.TestCase):
         try:
             self.browser.find_element_by_xpath("//td[text()='NR2C2AP']")
         except NoSuchElementException:
-            self.fail()
+            self.fail("We should see preview table")
 
     def tearDown(self):
-        self.browser.quit("We should see preview table")
+        self.browser.quit()
 
 
 if __name__ == '__main__':
