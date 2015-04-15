@@ -1,4 +1,7 @@
 from selenium import webdriver
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
 import unittest
 import os
 
@@ -34,17 +37,23 @@ class BasicWorkflowTest(unittest.TestCase):
                 .click()
         )
 
+        wait = WebDriverWait(self.browser, 10)
+
         self.assertTrue(
-            'Upload your dataset' in self.browser
-            .find_element_by_id('run_chdir_help')
-            .text,
+            'Upload your dataset' in wait.until(
+                expected_conditions.visibility_of_element_located((
+                    By.ID,
+                    'run_chdir_help'
+                ))).text,
             'We should see chdir run message'
         )
 
         self.assertTrue(
-            'No data' in self.browser
-            .find_element_by_id('chdir_downloads_message')
-            .text,
+            'No data' in wait.until(
+                expected_conditions.visibility_of_element_located((
+                    By.ID,
+                    'chdir_downloads_message'
+                ))).text,
             'We should see chdir downloads message'
         )
 
