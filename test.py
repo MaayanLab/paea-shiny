@@ -79,8 +79,6 @@ class BasicWorkflowTest(unittest.TestCase):
             'We should see paea run message'
         )
 
-
-
     def tearDown(self):
         self.browser.quit()
 
