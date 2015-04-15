@@ -56,6 +56,31 @@ class BasicWorkflowTest(unittest.TestCase):
             'We should see chdir downloads message'
         )
 
+    def test_can_load_paea(self):
+        """ Test if we can access paea tab
+        and read help messages
+        """
+        self.browser.get(URL)
+        (
+            self.browser
+                .find_element_by_id('workflow_panel')
+                .find_element_by_link_text('Principle Angle Enrichment Analysis')
+                .click()
+        )
+
+        wait = WebDriverWait(self.browser, 10)
+
+        self.assertTrue(
+            'Before you can' in wait.until(
+                expected_conditions.visibility_of_element_located((
+                    By.ID,
+                    'run_paea_message'
+                ))).text,
+            'We should see paea run message'
+        )
+
+
+
     def tearDown(self):
         self.browser.quit()
 
