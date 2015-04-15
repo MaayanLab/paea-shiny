@@ -12,6 +12,9 @@ class BasicWorkflowTest(unittest.TestCase):
         self.browser.implicitly_wait(2)
 
     def test_can_load(self):
+        """ Test if page loads up to the point
+        when we can access title
+        """
         self.browser.get(URL)
         self.assertEqual(
             'NASB Microtask Viewer',
@@ -20,6 +23,9 @@ class BasicWorkflowTest(unittest.TestCase):
         )
 
     def test_can_load_chdir(self):
+        """ Test if we can access chdir tab
+        and read help messages
+        """
         self.browser.get(URL)
         (
             self.browser
