@@ -24,7 +24,7 @@ class BasicWorkflowTest(unittest.TestCase):
             'We should see page title'
         )
 
-    def test_can_load_chdir(self):
+    def test_can_load_chdir_tab(self):
         """ Test if we can access chdir tab
         and read help messages
         """
@@ -56,7 +56,7 @@ class BasicWorkflowTest(unittest.TestCase):
             'We should see chdir downloads message'
         )
 
-    def test_can_load_paea(self):
+    def test_can_load_paea_tab(self):
         """ Test if we can access paea tab
         and read help messages
         """
