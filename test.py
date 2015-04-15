@@ -48,7 +48,6 @@ class BasicWorkflowTest(unittest.TestCase):
             'We should see chdir downloads message'
         )
 
-
     def tearDown(self):
         self.browser.quit()
 
