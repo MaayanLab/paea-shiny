@@ -541,20 +541,17 @@ shiny::shinyServer(function(input, output, session) {
     
 
     shiny::observe({
-        if (is.null(chdir()))  {
-             disableButton('#run_paea', session)
-             disableButton('#send_to_enrichr', session)
-             disableButton('#download_chdir', session)
-             disableButton('#download_chdir_up', session)
-             disableButton('#download_chdir_down', session)
+        chdir_consumers <- c(
+            '#run_paea', '#send_to_enrichr', '#download_chdir',
+            '#download_chdir_up', '#download_chdir_down'
+        )
 
+        if (is.null(chdir()))  {
+            lapply(chdir_consumers, disableButton, session=session)
         } else {
-             enableButton('#run_paea', session)
-             enableButton('#send_to_enrichr', session)
-             enableButton('#download_chdir', session)
-             enableButton('#download_chdir_up', session)
-             enableButton('#download_chdir_down', session)
+            lapply(chdir_consumers, enableButton, session=session)
         }
+
     })
     
     
