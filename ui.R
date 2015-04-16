@@ -252,7 +252,8 @@ paea_input_parameters <- shiny::wellPanel(
 #'
 paea_downloads <- shiny::wellPanel(
     shiny::h3('Downloads', id='paea_downloads'),
-    shiny::uiOutput('paea_downloads_container')
+    shiny::downloadButton('download_paea', 'Download current view'),
+    shiny::helpText(shiny::textOutput('paea_downloads_message'))
 )
 
 

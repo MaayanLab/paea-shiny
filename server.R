@@ -643,25 +643,13 @@ shiny::shinyServer(function(input, output, session) {
     })
     
     
-    #' paea panel - download block
+    #' paea panel - download message
     #'
-    output$paea_downloads_container <- shiny::renderUI({
-        button <- shiny::downloadButton('download_paea', 'Download current view')
-        
+    output$paea_downloads_message <- shiny::renderText({
         if (is.null(paea())) {
-            list(
-                disabledActionButton(button),
-                shiny::helpText('No data available. Did you run PAEA analysis?')
-            )
-        } else {
-            list(button)
+            'No data available. Did you run PAEA analysis?'
         }
     })
-    
-    
-    #' See coment for run_chdir_container
-    #'
-    shiny::outputOptions(output, 'paea_downloads_container', suspendWhenHidden = FALSE)
     
     
     #' paea panel - downloads handler
