@@ -641,6 +641,16 @@ shiny::shinyServer(function(input, output, session) {
             paea_results()
         }
     })
+
+
+    #
+    shiny::observe({
+        if(is.null(paea())) {
+            disableButton('#download_paea', session)
+        } else {
+            enableButton('#download_paea', session)
+        }
+    })
     
     
     #' paea panel - download message
