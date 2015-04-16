@@ -1,4 +1,5 @@
 library(shiny)
+source('config.R', local=TRUE)
 
 #' Disappearing plot help 
 #' https://groups.google.com/forum/#!topic/ggvis/kQQsdn1RYaE
@@ -325,7 +326,7 @@ about_panel <- shiny::tabPanel(
 shiny::shinyUI(
     shiny::navbarPage(
         theme='css/bootstrap.min.css',
-        title='NASB Microtask Viewer',
+        title=config$app_name,
         header=shiny::singleton(shiny::tags$head(
             shiny::includeCSS('www/css/tourist.css'),
             shiny::includeCSS('www/css/custom.css'),

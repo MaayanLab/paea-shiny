@@ -1,4 +1,5 @@
 config <- list(
+    app_name = 'NASB Microtask Viewer',
     # Data path
     data_paths = list(
         genes = 'data/microtask_gene_lists.csv',
