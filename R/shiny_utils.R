@@ -11,8 +11,7 @@ list_to_defs <- function(params) {
         function(x) {
             shiny::span(shiny::tags$dt(x), shiny::tags$dd(params[[x]]))
         }
-    )
-    )
+    ))
 }
 
 
