@@ -1,5 +1,6 @@
 library(shiny)
-source('config.R', local=TRUE)
+# Load config
+library(nasbMicrotaskViewerConfig)
 
 #' Disappearing plot help 
 #' https://groups.google.com/forum/#!topic/ggvis/kQQsdn1RYaE

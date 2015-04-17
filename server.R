@@ -1,9 +1,10 @@
 library(shiny)
 library(magrittr)
+# Load config
+library(nasbMicrotaskViewerConfig)
 library(nasbMicrotaskViewerHelpers)
 
 source('downloads_handlers.R', local=TRUE)
-source('config.R', local=TRUE)
 
 logging::basicConfig()
 
