@@ -13,10 +13,10 @@ last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mti
 options(shiny.maxRequestSize=config$maxRequestSize) 
 
 perturbations_data <- lapply(
-    config$data_paths,
-    function(data_path) {
-        force(data_path)
-        shiny::reactive({ nasbMicrotaskViewerHelpers::preprocess(data_path, drop_duplicates=config$drop_duplicates) })
+    config$datasets,
+    function(dataset) {
+        force(dataset)
+        shiny::reactive({ nasbMicrotaskViewerHelpers::preprocess(dataset$path, drop_duplicates=config$drop_duplicates) })
     }
 )
 
