@@ -643,8 +643,8 @@ shiny::shinyServer(function(input, output, session) {
         }
     })
 
-
-    #
+    #' paea panel - control download button status
+    #'
     shiny::observe({
         if(is.null(paea())) {
             disableButton('#download_paea', session)
