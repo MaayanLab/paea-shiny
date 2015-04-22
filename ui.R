@@ -2,9 +2,8 @@ library(shiny)
 # Load config
 library(nasbMicrotaskViewerConfig)
 devtools::load_all('./components/datain/')
-devtools::load_all('./components/chdir/')
+source('./components/chdir/R/ui.R', local=TRUE)
 source('./components/paea/R/ui.R', local=TRUE)
-
 
 #' Data analysis tab
 #'
