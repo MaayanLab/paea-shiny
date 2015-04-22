@@ -12,9 +12,9 @@ analyze_panel <- shiny::tabPanel(
     title='Analyze',
     shiny::tabsetPanel(
         id='workflow_panel',
-        datain::datain_tab,
-        chdir::chdir_tab,
-        paea::paea_tab
+        app.datain::datain_tab,
+        app.chdir::chdir_tab,
+        app.paea::paea_tab
     )
 )
 
