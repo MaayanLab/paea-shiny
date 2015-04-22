@@ -1,9 +1,9 @@
 library(shiny)
 # Load config
 library(nasbMicrotaskViewerConfig)
-devtools::load_all('./components/datain/')
-source('./components/chdir/R/ui.R', local=TRUE)
+source('./components/datain/R/ui.R', local=TRUE)
 source('./components/paea/R/ui.R', local=TRUE)
+source('./components/chdir/R/ui.R', local=TRUE)
 
 #' Data analysis tab
 #'
@@ -11,8 +11,8 @@ analyze_panel <- shiny::tabPanel(
     title='Analyze',
     shiny::tabsetPanel(
         id='workflow_panel',
-        app.datain::datain_tab,
-        app.chdir::chdir_tab,
+        datain_tab,
+        chdir_tab,
         paea_tab
     )
 )
