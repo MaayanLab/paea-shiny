@@ -680,7 +680,7 @@ shiny::shinyServer(function(input, output, session) {
     })
     
     
-    #' chdir panel - run summary
+    #' paea panel - run summary
     #'
     output$paea_run_summary <- shiny::renderUI({
         if(!is.null(paea())) {
