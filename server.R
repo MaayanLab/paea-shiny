@@ -7,7 +7,7 @@ library(nasbMicrotaskViewerHelpers)
 
 source('components/handlers/R/downloads.R', local=TRUE)
 source('components/handlers/R/input.R', local=TRUE)
-
+source('components/handlers/R/dataset_loaders.R', local=TRUE)
 
 logging::basicConfig()
 
@@ -15,13 +15,7 @@ last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mti
 
 options(shiny.maxRequestSize=config$maxRequestSize) 
 
-perturbations_data <- lapply(
-    config$datasets,
-    function(dataset) {
-        force(dataset)
-        shiny::reactive({ nasbMicrotaskViewerHelpers::preprocess(dataset$path, drop_duplicates=config$drop_duplicates) })
-    }
-)
+perturbations_data <- load_perturbations_data(config$datasets)
 
 disease_sigs <- data.table::fread(config$sigs_list_path)
 disease_sigs_choices <- setNames(
