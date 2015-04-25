@@ -4,7 +4,10 @@ library(magrittr)
 library(nasbMicrotaskViewerConfig)
 library(nasbMicrotaskViewerHelpers)
 
-source('downloads_handlers.R', local=TRUE)
+
+source('components/handlers/R/downloads.R', local=TRUE)
+source('components/handlers/R/input.R', local=TRUE)
+
 
 logging::basicConfig()
 
@@ -27,16 +30,6 @@ disease_sigs_choices <- setNames(
 )
 
 shiny::shinyServer(function(input, output, session) {
-    
-    disableButton <- function(id, session) {
-        session$sendCustomMessage('button_status_message', list(id=id, disable=TRUE))
-    }
-    
-    
-    enableButton <- function(id, session) {
-        session$sendCustomMessage('button_status_message', list(id=id, disable=FALSE))
-    }
-    
     
     output$last_modified <- shiny::renderText({ last_modified })
     

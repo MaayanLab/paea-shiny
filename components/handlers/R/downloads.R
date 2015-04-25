@@ -1,4 +1,5 @@
-#' 
+#' Download handler for chdir 
+#'
 #' @param chdir list
 #' @return function
 #'
@@ -14,6 +15,8 @@ chdir_download_handler <- function(chdir) {
     }
 }
 
+#' Download handler for paea
+#'
 #' @param paea results
 #' @return function
 #'
