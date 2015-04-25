@@ -38,7 +38,7 @@ shiny::updateSelectizeInput(
 #'
 shiny::observe({
     if(is.null(input$fetch_disease_sig) || input$fetch_disease_sig == 0) { return() }
-    if(input$disease_sigs_choices == '') return()
+    if(isolate(input$disease_sigs_choices == '')) return()
     
     disableButton(id='#fetch_disease_sig', session=session)
     
