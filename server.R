@@ -1,33 +1,29 @@
 logging::basicConfig()
+options(shiny.maxRequestSize=config$maxRequestSize) 
 
+# Required libraries
 library(shiny)
 library(magrittr)
-# Load config
+
+# Load config and helpers
 library(nasbMicrotaskViewerConfig)
 library(nasbMicrotaskViewerHelpers)
 
-
+# Load components
 source('components/handlers/R/downloads.R', local=TRUE)
 source('components/handlers/R/input.R', local=TRUE)
 source('components/handlers/R/dataset_loaders.R', local=TRUE)
 
-
+# Load data
 last_modified <- get_last_modified()
-
-options(shiny.maxRequestSize=config$maxRequestSize) 
-
 perturbations_data <- load_perturbations_data(config$datasets)
-
-disease_sigs <- data.table::fread(config$sigs_list_path)
-disease_sigs_choices <- setNames(
-    disease_sigs$file_name,
-    paste(disease_sigs$disease, disease_sigs$cell_type, disease_sigs$geo_id, sep = ' | ')
-)
+disease_sigs <- load_disease_sigs(config$sigs_list_path)
 
 shiny::shinyServer(function(input, output, session) {
     
     output$last_modified <- shiny::renderText({ last_modified })
     
+    #' Init reactive values
     values <- shiny::reactiveValues(
         # Not required. Just to remind myself what is stored inside
         last_error = NULL,
@@ -38,6 +34,7 @@ shiny::shinyServer(function(input, output, session) {
         disease_sig_fetch_running = FALSE
     )
     
+    #' Setup error handler
     error_handler <- shiny_error_handler(values)
     
     #' Render last error
@@ -46,7 +43,7 @@ shiny::shinyServer(function(input, output, session) {
         values$last_error$message
     })
     
-    
+    #' Load components   
     source('./components/datain/R/server.R', local=TRUE)
     source('./components/chdir/R/server.R', local=TRUE)
     source('./components/paea/R/server.R', local=TRUE)

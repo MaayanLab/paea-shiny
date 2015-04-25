@@ -30,7 +30,7 @@ shiny::observe({
 #'
 shiny::updateSelectizeInput(
     session, 'disease_sigs_choices',
-    choices = disease_sigs_choices, server = TRUE
+    choices = disease_sigs$choices, server = TRUE
 )
 
 
@@ -141,7 +141,7 @@ samples <- shiny::reactive({
             treatment = setdiff(colnames(datain())[-1], input$sampleclass)
         )
     } else if (!values$manual_upload && !is.null(values$input_name)) {
-        sig <- disease_sigs %>% dplyr::filter(file_name == values$input_name)
+        sig <- disease_sigs$sigs %>% dplyr::filter(file_name == values$input_name)
         list(
             control=unlist(stringi::stri_split_fixed(sig$ctrl_ids, ',')),
             treatment=unlist(stringi::stri_split_fixed(sig$pert_ids, ','))

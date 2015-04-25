@@ -24,3 +24,17 @@ get_last_modified <- function() {
         decreasing=TRUE
     )[1]
 }
+
+
+#' Load disease signatures
+#'
+#' @return list with sigs and choices fields
+#'
+load_disease_sigs <- function(sigs_list_path) {
+    disease_sigs <- data.table::fread(sigs_list_path)
+    disease_sigs_choices <- setNames(
+        disease_sigs$file_name,
+        paste(disease_sigs$disease, disease_sigs$cell_type, disease_sigs$geo_id, sep = ' | ')
+    )
+    list(sigs=disease_sigs, choices=disease_sigs_choices)
+}
