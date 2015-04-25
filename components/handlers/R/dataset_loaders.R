@@ -28,6 +28,7 @@ get_last_modified <- function() {
 
 #' Load disease signatures
 #'
+#' @param sigs_list_path path to signature list
 #' @return list with sigs and choices fields
 #'
 load_disease_sigs <- function(sigs_list_path) {
