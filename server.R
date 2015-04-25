@@ -11,7 +11,7 @@ source('components/handlers/R/dataset_loaders.R', local=TRUE)
 
 logging::basicConfig()
 
-last_modified <- sort(sapply(list.files(), function(x) strftime(file.info(x)$mtime)), decreasing=TRUE)[1]
+last_modified <- get_last_modified()
 
 options(shiny.maxRequestSize=config$maxRequestSize) 
 

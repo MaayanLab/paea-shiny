@@ -10,3 +10,17 @@ load_perturbations_data <- function(datasets) {
     }
     lapply(datasets, load_reactive)
 }
+
+#' Get latest modification date
+#'
+#' @return character representation of the date
+#'
+get_last_modified <- function() {
+    sort(
+        sapply(
+            list.files(recursive=TRUE),
+            function(x) strftime(file.info(x)$mtime)
+        ),
+        decreasing=TRUE
+    )[1]
+}
