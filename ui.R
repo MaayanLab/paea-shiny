@@ -1,4 +1,3 @@
-library(shiny)
 # Load config
 library(nasbMicrotaskViewerConfig)
 source('./components/datain/R/ui.R', local=TRUE)

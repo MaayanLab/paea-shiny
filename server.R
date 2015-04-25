@@ -2,7 +2,6 @@ logging::basicConfig()
 options(shiny.maxRequestSize=config$maxRequestSize) 
 
 # Required libraries
-library(shiny)
 library(magrittr)
 
 # Load config and helpers
