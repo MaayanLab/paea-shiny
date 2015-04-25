@@ -1,3 +1,5 @@
+logging::basicConfig()
+
 library(shiny)
 library(magrittr)
 # Load config
@@ -9,7 +11,6 @@ source('components/handlers/R/downloads.R', local=TRUE)
 source('components/handlers/R/input.R', local=TRUE)
 source('components/handlers/R/dataset_loaders.R', local=TRUE)
 
-logging::basicConfig()
 
 last_modified <- get_last_modified()
 
