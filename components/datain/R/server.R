@@ -77,6 +77,24 @@ datain <- shiny::reactive({
 datain_valid <- shiny::reactive({ datain_is_valid(datain()) })
 
 
+#'
+#'
+enable_log_transform <- shiny::reactive({ 
+    datain_valid() && all(datain() %>% dplyr::select_(-1) > 0)
+})
+
+
+#'
+#'
+shiny::observe({
+    if(enable_log_transform()) {
+        enableButton('#log2_transform', session)
+    } else {
+        disableButton('#log2_transform', session, uncheck=TRUE)
+    }
+})
+
+
 id_filter <- reactive({
     if(input$enable_id_filter) { config$id_filter }
 })
@@ -90,7 +108,7 @@ datain_preprocessed <- shiny::reactive({
         
         datain_preprocess(
             datain=datain(),
-            log2_transform=input$log2_transform,
+            log2_transform=input$log2_transform && enable_log_transform(),
             quantile_normalize=input$quantile_normalize,
             id_filter=id_filter()
         )

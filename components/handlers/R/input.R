@@ -3,8 +3,8 @@
 #' @param id character css id selector excluding #
 #' @param session shiny session
 #'
-disableButton <- function(id, session) {
-    session$sendCustomMessage('button_status_message', list(id=id, disable=TRUE))
+disableButton <- function(id, session, uncheck=FALSE) {
+    session$sendCustomMessage('button_status_message', list(id=id, disable=TRUE, uncheck=uncheck))
 }
 
 

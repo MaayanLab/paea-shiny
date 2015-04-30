@@ -3,7 +3,13 @@
 Shiny.addCustomMessageHandler('button_status_message',
     function(message) {
         if(message.disable) {
-            $(message.id).prop( 'disabled', 'true').addClass('disabled');
+
+            if(message.uncheck) {
+                $(message.id).prop( 'disabled', 'true').addClass('disabled').removeProp('checked');
+            } else {
+                $(message.id).prop( 'disabled', 'true').addClass('disabled');
+            }
+
         } else {
             $(message.id).removeProp('disabled').removeClass('disabled');
         }
