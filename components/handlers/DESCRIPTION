@@ -1,4 +1,5 @@
 Package: app.handlers
 Version: 0.0.1
 Depends: magrittr
+Imports: shiny
 
