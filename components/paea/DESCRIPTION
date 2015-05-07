@@ -2,4 +2,5 @@ Package: app.paea
 Version: 0.0.1
 Depends: magrittr
 Imports: shiny,
-    dplyr
+    dplyr,
+    app.chdir
