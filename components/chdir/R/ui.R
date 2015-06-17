@@ -59,11 +59,11 @@ chdir_results <- shiny::div(
         ),
         shiny::tabPanel(
             'Upregulated genes',
-            shiny::dataTableOutput('chdir_up_genes_table')
+            DT::dataTableOutput('chdir_up_genes_table')
         ),
         shiny::tabPanel(
             'Downregulated genes',
-            shiny::dataTableOutput('chdir_down_genes_table')
+            DT::dataTableOutput('chdir_down_genes_table')
         )
     )
 )

@@ -242,7 +242,7 @@ output$download_chdir_down <- shiny::downloadHandler(
 
 #' chdir panel - up genes table
 #'
-output$chdir_up_genes_table <- shiny::renderDataTable({
+output$chdir_up_genes_table <- DT::renderDataTable({
     if(!is.null(chdir())) {
         chdir_up_genes() %>% dplyr::rename(Gene = g, 'Characteristic Direction Coefficient' = v)
     }
@@ -251,7 +251,7 @@ output$chdir_up_genes_table <- shiny::renderDataTable({
 
 #' chdir panel - down genes table
 #'
-output$chdir_down_genes_table <- shiny::renderDataTable({
+output$chdir_down_genes_table <- DT::renderDataTable({
     if(!is.null(chdir())) {
         chdir_down_genes() %>% dplyr::rename(Gene = g, 'Characteristic Direction Coefficient' = v)
     }

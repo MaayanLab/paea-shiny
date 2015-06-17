@@ -4,6 +4,7 @@ Depends: magrittr
 Imports: shiny,
     dplyr,
     ggvis,
+    DT,
     app.datain
     
 
