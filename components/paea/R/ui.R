@@ -59,7 +59,7 @@ paea_output <- shiny::div(
             shiny::wellPanel(
                 paea_strategy_radio
             ),
-            shiny::dataTableOutput('paea_results_table')
+            DT::dataTableOutput('paea_results_table')
         )
     )
 )

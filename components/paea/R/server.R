@@ -79,7 +79,7 @@ paea_results <- shiny::reactive({
 
 #' PAEA output
 #'
-output$paea_results_table <- shiny::renderDataTable({
+output$paea_results_table <- DT::renderDataTable({
     if(!is.null(paea_results())) {
         paea_results()
     }
