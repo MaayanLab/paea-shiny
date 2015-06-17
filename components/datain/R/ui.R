@@ -67,7 +67,7 @@ datain_preview <- shiny::div(
         shiny::tabPanel(
             'Input data',
             shiny::p(shiny::textOutput('upload_message')),
-            shiny::dataTableOutput('contents')
+            DT::dataTableOutput('contents')
         ),
         shiny::tabPanel(
             "Plots",

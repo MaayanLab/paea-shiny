@@ -3,4 +3,5 @@ Version: 0.0.1
 Depends: magrittr
 Imports: shiny,
     dplyr,
-    ggvis
+    ggvis,
+    DT

@@ -120,7 +120,7 @@ datain_preprocessed <- shiny::reactive({
 
 #' datain - input data preview
 #'
-output$contents <- shiny::renderDataTable({
+output$contents <- DT::renderDataTable({
     datain_preprocessed()
 })
 
