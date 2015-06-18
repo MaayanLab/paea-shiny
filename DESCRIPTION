@@ -2,7 +2,7 @@ Package: GeoDE
 Type: Package
 Title: A geometrical Approach to Differential expression and gene-set
         enrichment
-Version: 0.9
+Version: 1.0.1
 Date: 2014-06-06
 Author: Neil R. Clark and Avi Ma'ayan
 Maintainer: Neil Clark <neil.clark@mssm.edu>
