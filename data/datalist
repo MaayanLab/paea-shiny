@@ -1,0 +1,32 @@
+AllGMTfiles
+BioCarta_pathways.gmt: gmt
+CORUM.gmt: gmt
+Cancer_Cell_Line_Encyclopedia.gmt: gmt
+ChEA.gmt: gmt
+Chromosome_location.gmt: gmt
+GeneOntology_BP.gmt: gmt
+GeneOntology_CC.gmt: gmt
+GeneOntology_MF.gmt: gmt
+GeneSigDB.gmt: gmt
+Genome_Browser_PWMs.gmt: gmt
+HMDB_Metabolites.gmt: gmt
+Human_Gene_Atlas.gmt: gmt
+KEA.gmt: gmt
+KEGG_pathways.gmt: gmt
+MGI_MP_top3.gmt: gmt
+MGI_MP_top4.gmt: gmt
+Mouse_Gene_Atlas.gmt: gmt
+NCI60.gmt: gmt
+NURSA-IPMS.gmt: gmt
+OMIM_Expanded.gmt: gmt
+OMIM_disease_genes.gmt: gmt
+PPI_Hub_Proteins.gmt: gmt
+Pfam-InterPro-domains.gmt: gmt
+Reactome_pathways.gmt: gmt
+TF_PPIs.gmt: gmt
+VirusMINT.gmt: gmt
+WikiPathways_pathways.gmt: gmt
+example_expression_data
+example_gammas
+example_sampleclass
+microRNA.gmt: gmt

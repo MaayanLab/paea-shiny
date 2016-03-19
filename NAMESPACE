@@ -1,0 +1,2 @@
+export(chdirAnalysis,PAEAAnalysis,multigmtPAEAAnalysis)
+import(Matrix, MASS)
