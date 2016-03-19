@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/19086/zero323/paea-shiny.svg)](https://zenodo.org/badge/latestdoi/19086/zero323/paea-shiny)
+
 Components:
 
 - [Shiny application](./shiny-app) - [PAEA: Principal Angle Enrichment Analysis](http://amp.pharm.mssm.edu/PAEA/).
