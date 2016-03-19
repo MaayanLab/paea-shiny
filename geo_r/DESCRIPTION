@@ -1,0 +1,15 @@
+Package: geoWorkflows
+Type: Package
+Title: geoWorkflows
+Version: 1.0
+Date: 2015-02-28
+Author: Maciej Szymkiewicz
+Maintainer: Maciej Szymkiewicz <matthew.szymkiewicz@gmail.com>
+Description: Extracts exprs from gse files
+License: MIT
+Depends: R (>= 2.10),
+    data.table
+Imports: dplyr,
+    GEOquery,
+    Biobase
+Suggests: testthat
